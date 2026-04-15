@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Shopee Stock App",
-  description: "Dashboard stok dengan Next.js dan Supabase Auth",
+  title: "MultiStock — Inventory Manager",
+  description: "Dashboard stok multi-toko dengan Next.js dan Supabase Auth",
 };
 
 export default function RootLayout({
@@ -19,10 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} h-full antialiased`}
-    >
+    <html lang="id" className={`${inter.variable} dark h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
   );

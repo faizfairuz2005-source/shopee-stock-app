@@ -46,7 +46,7 @@ export default function LoginPage() {
         <div className="absolute bottom-1/4 right-1/4 h-64 w-64 rounded-full bg-indigo-400 blur-3xl" />
       </div>
       
-      <Card className="relative w-full max-w-md shadow-2xl border-blue-200/50">
+      <Card className="relative w-full max-w-md border-blue-200/50 shadow-2xl transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18)]">
         <CardHeader className="space-y-3 text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg">
             <Package className="h-8 w-8 text-white" />
@@ -71,7 +71,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 required
-                className="border-blue-200 focus:border-blue-500 focus:ring-blue-500"
+                className="border-blue-200/90 bg-white/80 transition-[border-color,box-shadow] duration-200 ease-out focus-visible:border-blue-500 focus-visible:ring-blue-500/30"
               />
             </div>
             <div className="space-y-2">
@@ -83,7 +83,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 required
-                className="border-blue-200 focus:border-blue-500 focus:ring-blue-500"
+                className="border-blue-200/90 bg-white/80 transition-[border-color,box-shadow] duration-200 ease-out focus-visible:border-blue-500 focus-visible:ring-blue-500/30"
               />
             </div>
 
@@ -93,7 +93,12 @@ export default function LoginPage() {
               </div>
             ) : null}
 
-            <Button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all" type="submit" disabled={isLoading} suppressHydrationWarning>
+            <Button
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg transition-[transform,box-shadow] duration-200 ease-in-out hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl active:scale-[0.98]"
+              type="submit"
+              disabled={isLoading}
+              suppressHydrationWarning
+            >
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
