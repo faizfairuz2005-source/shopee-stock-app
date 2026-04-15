@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Boxes, LayoutDashboard, Link2, ShoppingCart, Package } from "lucide-react";
+import { BarChart3, Boxes, LayoutDashboard, Link2, ShoppingCart, Package } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
@@ -60,6 +60,13 @@ export default async function DashboardLayout({
           >
             <ShoppingCart className="h-4 w-4 transition-colors group-hover:text-blue-600" />
             Orders
+          </Link>
+          <Link
+            href="/laporan"
+            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-600 transition-all hover:bg-blue-100/70 hover:text-blue-900"
+          >
+            <BarChart3 className="h-4 w-4 transition-colors group-hover:text-blue-600" />
+            Laporan
           </Link>
         </nav>
 

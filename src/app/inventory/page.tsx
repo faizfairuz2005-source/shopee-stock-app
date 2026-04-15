@@ -1,298 +1,226 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { RefreshCw, Search, Package } from "lucide-react";
+import { Edit, MoreHorizontal, Package, Plus, Trash2, TrendingDown } from "lucide-react";
 
-interface Product {
-  item_id: number;
-  name: string;
-  description: string;
-  image: string;
-  price: number;
-  currency: string;
-  stock_info_v2?: {
-    total_reserved_stock: number;
-  };
-  sales: number;
-  historical_sold: number;
-  item_status: string;
-  item_sku?: string;
-}
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+// Data dummy untuk contoh
+const dummyProducts = [
+  {
+    sku: "SKU-001",
+    name: "Kaos Polos Premium Cotton",
+    totalStock: 450,
+    price: 89000,
+    connectedStores: 3,
+  },
+  {
+    sku: "SKU-002",
+    name: "Celana Jeans Slim Fit",
+    totalStock: 120,
+    price: 249000,
+    connectedStores: 1,
+  },
+  {
+    sku: "SKU-003",
+    name: "Jaket Hoodie Unisex",
+    totalStock: 8,
+    price: 175000,
+    connectedStores: 4,
+  },
+  {
+    sku: "SKU-004",
+    name: "Sepatu Sneakers Classic",
+    totalStock: 65,
+    price: 399000,
+    connectedStores: 0,
+  },
+  {
+    sku: "SKU-005",
+    name: "Tas Ransel Waterproof",
+    totalStock: 3,
+    price: 285000,
+    connectedStores: 2,
+  },
+  {
+    sku: "SKU-006",
+    name: "Topi Baseball Cap",
+    totalStock: 320,
+    price: 55000,
+    connectedStores: 4,
+  },
+];
+
+const LOW_STOCK_THRESHOLD = 10;
 
 export default function InventoryPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [editingStock, setEditingStock] = useState<number | null>(null);
-  const [newStock, setNewStock] = useState<number>(0);
-  const [updating, setUpdating] = useState(false);
+  const totalProducts = dummyProducts.length;
+  const totalStock = dummyProducts.reduce((sum, p) => sum + p.totalStock, 0);
+  const lowStockCount = dummyProducts.filter(
+    (p) => p.totalStock <= LOW_STOCK_THRESHOLD
+  ).length;
 
-  const fetchProducts = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/shopee/products");
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "Gagal mengambil data produk");
-        return;
-      }
-
-      setProducts(data.products || []);
-    } catch {
-      setError("Terjadi kesalahan saat mengambil data");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const handleEditStock = (itemId: number, currentStock: number) => {
-    setEditingStock(itemId);
-    setNewStock(currentStock);
-  };
-
-  const handleUpdateStock = async (itemId: number) => {
-    setUpdating(true);
-    try {
-      const res = await fetch("/api/shopee/stock", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ item_id: itemId, stock: newStock }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Gagal update stok");
-        return;
-      }
-
-      // Refresh products
-      await fetchProducts();
-      setEditingStock(null);
-    } catch {
-      setError("Terjadi kesalahan saat update stok");
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  const filteredProducts = products.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    (p.item_sku && p.item_sku.toLowerCase().includes(search.toLowerCase()))
-  );
-
-  const totalStock = products.reduce(
-    (sum, p) => sum + (p.stock_info_v2?.total_reserved_stock || 0),
-    0
-  );
-
-  const totalSales = products.reduce((sum, p) => sum + p.sales, 0);
+  const formatRupiah = (amount: number) =>
+    new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(amount);
 
   return (
     <section className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            Inventory
-          </h1>
-          <p className="mt-1 text-sm font-normal text-muted-foreground">
-            Kelola stok produk Shopee Anda
+          <h1 className="text-2xl font-semibold tracking-tight">Stok Sentral</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Kelola dan pantau stok produk dari semua toko terhubung
           </p>
         </div>
-        <Button onClick={fetchProducts} disabled={loading} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all">
-          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-          Sync Produk
+        <Button>
+          <Plus className="mr-2 h-4 w-4" />
+          Tambah Produk Baru
         </Button>
       </div>
 
-      {/* Stats Cards */}
+      {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="card-hover border-blue-200/50 shadow-md">
+        <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-normal">Total Produk</CardTitle>
+            <CardTitle className="text-sm font-normal text-muted-foreground">
+              Total Produk
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold text-blue-600">{products.length}</div>
+            <div className="flex items-center gap-2">
+              <Package className="h-5 w-5 text-blue-600" />
+              <span className="text-3xl font-bold">{totalProducts}</span>
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Produk aktif di semua toko
+            </p>
           </CardContent>
         </Card>
-        <Card className="card-hover border-blue-200/50 shadow-md">
+
+        <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-normal">Total Stok</CardTitle>
+            <CardTitle className="text-sm font-normal text-muted-foreground">
+              Total Stok
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold text-indigo-600">{totalStock}</div>
+            <div className="flex items-center gap-2">
+              <span className="text-3xl font-bold">{totalStock}</span>
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Unit tersedia di semua toko
+            </p>
           </CardContent>
         </Card>
-        <Card className="card-hover border-blue-200/50 shadow-md">
+
+        <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-normal">Total Terjual</CardTitle>
+            <CardTitle className="text-sm font-normal text-muted-foreground">
+              Stok Rendah
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold text-purple-600">{totalSales}</div>
+            <div className="flex items-center gap-2">
+              <TrendingDown className="h-5 w-5 text-red-600" />
+              <span className="text-3xl font-bold text-red-600">
+                {lowStockCount}
+              </span>
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Produk dengan stok ≤ {LOW_STOCK_THRESHOLD} unit
+            </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Search */}
-      <Card className="border-blue-200/50 shadow-md">
+      {/* Products Table */}
+      <Card>
         <CardHeader>
-          <CardTitle className="text-lg font-semibold">Daftar Produk</CardTitle>
+          <CardTitle>Daftar Produk</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-blue-400" />
-              <Input
-                placeholder="Cari produk berdasarkan nama atau SKU..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 border-blue-200 focus:border-blue-500 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-
-          {error && (
-            <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600">
-              {error}
-            </div>
-          )}
-
-          {loading ? (
-            <div className="flex min-h-64 items-center justify-center">
-              <div className="text-center">
-                <RefreshCw className="mx-auto h-8 w-8 animate-spin text-blue-500" />
-                <p className="mt-2 text-sm text-muted-foreground">Memuat data...</p>
-              </div>
-            </div>
-          ) : filteredProducts.length === 0 ? (
-            <div className="flex min-h-64 flex-col items-center justify-center rounded-lg border-2 border-dashed border-blue-200 bg-blue-50/50 p-8 text-center">
-              <Package className="mb-3 h-12 w-12 text-blue-300" />
-              <p className="text-sm text-muted-foreground">
-                {search
-                  ? "Tidak ada produk yang sesuai dengan pencarian"
-                  : "Belum ada data produk. Klik \"Sync Produk\" untuk menarik data dari Shopee."}
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="border-b border-blue-200 bg-blue-50">
-                  <tr className="text-left text-blue-700">
-                    <th className="pb-3 pt-3 font-medium">Produk</th>
-                    <th className="pb-3 pt-3 font-medium">SKU</th>
-                    <th className="pb-3 pt-3 font-medium text-right">Harga</th>
-                    <th className="pb-3 pt-3 font-medium text-right">Stok</th>
-                    <th className="pb-3 pt-3 font-medium text-right">Terjual</th>
-                    <th className="pb-3 pt-3 font-medium text-center">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredProducts.map((product) => (
-                    <tr
-                      key={product.item_id}
-                      className="border-b last:border-b-0"
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>SKU</TableHead>
+                <TableHead>Nama Produk</TableHead>
+                <TableHead className="text-right">Stok Total</TableHead>
+                <TableHead className="text-right">Harga</TableHead>
+                <TableHead className="text-right">Toko Terhubung</TableHead>
+                <TableHead className="text-right">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {dummyProducts.map((product) => (
+                <TableRow key={product.sku}>
+                  <TableCell className="font-mono text-sm">
+                    {product.sku}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      {product.totalStock <= LOW_STOCK_THRESHOLD && (
+                        <span className="inline-block h-2 w-2 rounded-full bg-red-500" />
+                      )}
+                      <span className="font-medium">{product.name}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <span
+                      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
+                        product.totalStock <= LOW_STOCK_THRESHOLD
+                          ? "bg-red-100 text-red-700"
+                          : product.totalStock <= 50
+                          ? "bg-yellow-100 text-yellow-700"
+                          : "bg-green-100 text-green-700"
+                      }`}
                     >
-                      <td className="py-3 pr-4">
-                        <div className="flex items-center gap-3">
-                          {product.image ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src={product.image}
-                              alt={product.name}
-                              className="h-10 w-10 rounded object-cover"
-                            />
-                          ) : (
-                            <div className="flex h-10 w-10 items-center justify-center rounded bg-muted">
-                              <Package className="h-5 w-5 text-muted-foreground" />
-                            </div>
-                          )}
-                          <div className="max-w-[200px] truncate font-medium">
-                            {product.name}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-3 pr-4 text-muted-foreground">
-                        {product.item_sku || "-"}
-                      </td>
-                      <td className="py-3 pr-4 text-right">
-                        Rp {product.price.toLocaleString("id-ID")}
-                      </td>
-                      <td className="py-3 pr-4 text-right">
-                        {editingStock === product.item_id ? (
-                          <div className="flex items-center justify-end gap-1">
-                            <Input
-                              type="number"
-                              value={newStock}
-                              onChange={(e) => setNewStock(Number(e.target.value))}
-                              className="h-7 w-20 text-right"
-                              min={0}
-                            />
-                            <Button
-                              size="sm"
-                              onClick={() => handleUpdateStock(product.item_id)}
-                              disabled={updating}
-                              className="h-7 px-2"
-                            >
-                              {updating ? "..." : "✓"}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => setEditingStock(null)}
-                              className="h-7 px-2"
-                            >
-                              ✕
-                            </Button>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() =>
-                              handleEditStock(
-                                product.item_id,
-                                product.stock_info_v2?.total_reserved_stock || 0
-                              )
-                            }
-                            className={`rounded-full px-2 py-1 text-xs font-medium transition-colors hover:opacity-80 ${
-                              (product.stock_info_v2?.total_reserved_stock || 0) > 10
-                                ? "bg-green-100 text-green-700"
-                                : (product.stock_info_v2?.total_reserved_stock || 0) > 0
-                                  ? "bg-yellow-100 text-yellow-700"
-                                  : "bg-red-100 text-red-700"
-                            }`}
-                          >
-                            {product.stock_info_v2?.total_reserved_stock || 0}
-                          </button>
-                        )}
-                      </td>
-                      <td className="py-3 pr-4 text-right">
-                        {product.sales || product.historical_sold || 0}
-                      </td>
-                      <td className="py-3 text-center">
-                        <span
-                          className={`rounded-full px-2 py-1 text-xs ${
-                            product.item_status === "NORMAL"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-gray-100 text-gray-700"
-                          }`}
-                        >
-                          {product.item_status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                      {product.totalStock}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right font-medium">
+                    {formatRupiah(product.price)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <span
+                      className={`inline-flex items-center justify-center rounded-md px-2.5 py-1 text-xs font-medium ${
+                        product.connectedStores > 0
+                          ? "bg-green-100 text-green-700"
+                          : "bg-gray-100 text-gray-500"
+                      }`}
+                    >
+                      {product.connectedStores} Toko
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-1">
+                      <Button variant="ghost" size="icon-sm">
+                        <Edit className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button variant="ghost" size="icon-sm">
+                        <Trash2 className="h-3.5 w-3.5 text-red-600" />
+                      </Button>
+                      <Button variant="ghost" size="icon-sm">
+                        <MoreHorizontal className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </section>
