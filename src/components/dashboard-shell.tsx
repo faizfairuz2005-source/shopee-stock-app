@@ -43,9 +43,13 @@ export function DashboardShell({
     <DashboardProfileContext.Provider value={contextValue}>
       <div className="min-h-screen bg-background">
         <Sidebar activePath={pathname} userEmail={userEmail} userName={displayName} />
-        <div className="pl-64">
+        <div className="flex flex-col pl-64">
           <Header userEmail={userEmail} userName={displayName} />
-          <main className="p-6">{children}</main>
+          <main className="flex-1">
+            <div className="mx-auto w-full max-w-[1280px] px-6 py-6 sm:px-8 sm:py-8">
+              {children}
+            </div>
+          </main>
         </div>
       </div>
     </DashboardProfileContext.Provider>

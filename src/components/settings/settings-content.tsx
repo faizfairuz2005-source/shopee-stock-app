@@ -11,6 +11,7 @@ import {
   Shield,
   Store,
   User,
+  Loader2,
 } from "lucide-react"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -23,6 +24,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { updateProfileAction } from "@/app/settings/actions"
+import { useLogout } from "@/hooks/use-logout"
 
 type NotificationState = {
   lowStockAlert: boolean
@@ -54,6 +56,7 @@ export function SettingsContent({
   initialPhone: string
 }) {
   const { setDisplayName } = useDashboardProfile()
+  const { logout, isLoading } = useLogout()
   const [notifications, setNotifications] = useState<NotificationState>({
     lowStockAlert: true,
     newOrderAlert: true,
@@ -335,17 +338,41 @@ export function SettingsContent({
             <CardHeader>
               <CardTitle className="text-destructive">Zona Keamanan</CardTitle>
             </CardHeader>
-            <CardContent className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Logout semua perangkat</p>
-                <p className="text-xs text-muted-foreground">
-                  Semua session selain perangkat ini akan dihentikan.
-                </p>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Logout dari akun</p>
+                  <p className="text-xs text-muted-foreground">
+                    Keluar dari akun Anda di perangkat ini.
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={logout}
+                  disabled={isLoading}
+                  className="gap-2 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <LogOut className="h-4 w-4" />
+                  )}
+                  {isLoading ? 'Logging out...' : 'Logout'}
+                </Button>
               </div>
-              <Button variant="destructive" className="gap-2">
-                <LogOut className="h-4 w-4" />
-                Logout Semua
-              </Button>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Logout semua perangkat</p>
+                  <p className="text-xs text-muted-foreground">
+                    Semua session selain perangkat ini akan dihentikan.
+                  </p>
+                </div>
+                <Button variant="destructive" className="gap-2">
+                  <LogOut className="h-4 w-4" />
+                  Logout Semua
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ErrorBoundary } from "@/components/error-boundary";
+import { ToastProvider } from "@/components/toast";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,7 +22,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={`${inter.variable} dark h-full antialiased`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <ToastProvider>
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
+        </ToastProvider>
+      </body>
     </html>
   );
 }

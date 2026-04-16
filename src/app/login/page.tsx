@@ -1,7 +1,7 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+import { FormEvent, useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Package, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -12,10 +12,14 @@ import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Get redirect path from URL params
+  const redirectTo = searchParams.get('redirect') || '/dashboard';
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -35,7 +39,8 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/dashboard");
+    // Redirect to the intended page or dashboard
+    router.push(redirectTo);
     router.refresh();
   };
 
