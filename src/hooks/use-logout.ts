@@ -36,7 +36,7 @@ export function useLogout(): UseLogoutReturn {
 
       // Small delay to show the toast before redirect
       setTimeout(() => {
-        router.push('/login');
+        router.replace('/login');
         router.refresh();
       }, 500);
 

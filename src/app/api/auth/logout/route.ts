@@ -8,23 +8,22 @@ export async function POST() {
     // Create response that clears all Supabase-related cookies
     const response = NextResponse.json({ success: true })
 
-    // Clear all Supabase cookies
+    // Clear the known Supabase auth cookies.
     const cookiesToClear = [
       'sb-access-token',
       'sb-refresh-token',
       'supabase-auth-token',
-      'sb-[a-zA-Z0-9-]+-auth-token', // Project-specific tokens
+      'sb-auth-token',
     ]
 
-    cookiesToClear.forEach(cookieName => {
+    cookiesToClear.forEach((cookieName) => {
       response.cookies.set(cookieName, '', {
         expires: new Date(0),
         path: '/',
-        domain: process.env.NEXT_PUBLIC_SUPABASE_URL?.replace('https://', '').split('.')[0] || undefined,
       })
     })
 
-    // Also clear cookies with different patterns
+    // Ensure the main auth cookies are cleared.
     response.cookies.set('sb-access-token', '', {
       expires: new Date(0),
       path: '/',

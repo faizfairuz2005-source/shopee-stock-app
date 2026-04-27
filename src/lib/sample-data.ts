@@ -1,0 +1,1201 @@
+export interface InventoryProduct {
+  sku: string;
+  name: string;
+  price: number;
+  totalStock: number;
+  description: string;
+  connectedStores: number;
+  sales: number;
+}
+
+export interface SalesRecord {
+  id: number;
+  tanggal_penjualan: string;
+  nama_produk: string;
+  sku: string;
+  harga: number;
+  quantity: number;
+  total: number;
+  seller: string;
+  email: string;
+}
+
+export const sampleStoreCount = 3;
+
+export const inventoryProducts: InventoryProduct[] = [
+  {
+    "sku": "SKU-001",
+    "name": "Kaos Polos Premium Cotton",
+    "price": 89000,
+    "totalStock": 84,
+    "description": "Kaos berbahan cotton lembut dengan potongan modern.",
+    "connectedStores": 3,
+    "sales": 34
+  },
+  {
+    "sku": "SKU-002",
+    "name": "Celana Jeans Slim Fit",
+    "price": 249000,
+    "totalStock": 5,
+    "description": "Celana jeans slim fit untuk gaya kasual sehari-hari.",
+    "connectedStores": 2,
+    "sales": 30
+  },
+  {
+    "sku": "SKU-003",
+    "name": "Jaket Hoodie Unisex",
+    "price": 175000,
+    "totalStock": 85,
+    "description": "Hoodie nyaman dengan bahan tebal untuk musim dingin.",
+    "connectedStores": 3,
+    "sales": 49
+  },
+  {
+    "sku": "SKU-004",
+    "name": "Sepatu Sneakers Classic",
+    "price": 399000,
+    "totalStock": 66,
+    "description": "Sneakers klasik dengan sol empuk dan desain elegan.",
+    "connectedStores": 1,
+    "sales": 42
+  },
+  {
+    "sku": "SKU-005",
+    "name": "Tas Ransel Waterproof",
+    "price": 285000,
+    "totalStock": 0,
+    "description": "Tas ransel anti air untuk pekerja hariannya.",
+    "connectedStores": 2,
+    "sales": 35
+  },
+  {
+    "sku": "SKU-006",
+    "name": "Topi Baseball Cap",
+    "price": 55000,
+    "totalStock": 107,
+    "description": "Topi trendi dengan bordir logo minimalis.",
+    "connectedStores": 3,
+    "sales": 36
+  },
+  {
+    "sku": "SKU-007",
+    "name": "Sweater Rajut Winter",
+    "price": 195000,
+    "totalStock": 8,
+    "description": "Sweater hangat dengan pola rajut modern.",
+    "connectedStores": 1,
+    "sales": 49
+  },
+  {
+    "sku": "SKU-008",
+    "name": "Kemeja Flannel Kotak",
+    "price": 135000,
+    "totalStock": 84,
+    "description": "Kemeja flannel nyaman untuk gaya smart casual.",
+    "connectedStores": 2,
+    "sales": 26
+  }
+];
+
+export const salesRecords: SalesRecord[] = [
+  {
+    "id": 1,
+    "tanggal_penjualan": "2024-01-01",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 1,
+    "total": 195000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 2,
+    "tanggal_penjualan": "2024-01-03",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 3,
+    "total": 525000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 3,
+    "tanggal_penjualan": "2024-01-05",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 1,
+    "total": 175000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 4,
+    "tanggal_penjualan": "2024-01-07",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 2,
+    "total": 498000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 5,
+    "tanggal_penjualan": "2024-01-07",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 3,
+    "total": 585000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 6,
+    "tanggal_penjualan": "2024-01-09",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 3,
+    "total": 585000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 7,
+    "tanggal_penjualan": "2024-01-10",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 4,
+    "total": 996000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 8,
+    "tanggal_penjualan": "2024-01-11",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 2,
+    "total": 350000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 9,
+    "tanggal_penjualan": "2024-01-12",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 2,
+    "total": 498000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 10,
+    "tanggal_penjualan": "2024-01-14",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 5,
+    "total": 875000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 11,
+    "tanggal_penjualan": "2024-01-15",
+    "nama_produk": "Sepatu Sneakers Classic",
+    "sku": "SKU-004",
+    "harga": 399000,
+    "quantity": 2,
+    "total": 798000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 12,
+    "tanggal_penjualan": "2024-01-16",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 1,
+    "total": 249000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 13,
+    "tanggal_penjualan": "2024-01-16",
+    "nama_produk": "Topi Baseball Cap",
+    "sku": "SKU-006",
+    "harga": 55000,
+    "quantity": 3,
+    "total": 165000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 14,
+    "tanggal_penjualan": "2024-01-17",
+    "nama_produk": "Topi Baseball Cap",
+    "sku": "SKU-006",
+    "harga": 55000,
+    "quantity": 2,
+    "total": 110000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 15,
+    "tanggal_penjualan": "2024-01-17",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 5,
+    "total": 875000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 16,
+    "tanggal_penjualan": "2024-01-17",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 1,
+    "total": 249000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 17,
+    "tanggal_penjualan": "2024-01-19",
+    "nama_produk": "Kemeja Flannel Kotak",
+    "sku": "SKU-008",
+    "harga": 135000,
+    "quantity": 4,
+    "total": 540000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 18,
+    "tanggal_penjualan": "2024-01-20",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 1,
+    "total": 249000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 19,
+    "tanggal_penjualan": "2024-01-20",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 4,
+    "total": 700000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 20,
+    "tanggal_penjualan": "2024-01-21",
+    "nama_produk": "Kemeja Flannel Kotak",
+    "sku": "SKU-008",
+    "harga": 135000,
+    "quantity": 2,
+    "total": 270000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 21,
+    "tanggal_penjualan": "2024-01-23",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 1,
+    "total": 249000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 22,
+    "tanggal_penjualan": "2024-01-23",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 3,
+    "total": 585000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 23,
+    "tanggal_penjualan": "2024-01-25",
+    "nama_produk": "Tas Ransel Waterproof",
+    "sku": "SKU-005",
+    "harga": 285000,
+    "quantity": 3,
+    "total": 855000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 24,
+    "tanggal_penjualan": "2024-01-27",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 4,
+    "total": 780000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 25,
+    "tanggal_penjualan": "2024-01-29",
+    "nama_produk": "Kemeja Flannel Kotak",
+    "sku": "SKU-008",
+    "harga": 135000,
+    "quantity": 1,
+    "total": 135000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 26,
+    "tanggal_penjualan": "2024-01-29",
+    "nama_produk": "Kemeja Flannel Kotak",
+    "sku": "SKU-008",
+    "harga": 135000,
+    "quantity": 2,
+    "total": 270000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 27,
+    "tanggal_penjualan": "2024-01-31",
+    "nama_produk": "Kaos Polos Premium Cotton",
+    "sku": "SKU-001",
+    "harga": 89000,
+    "quantity": 1,
+    "total": 89000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 28,
+    "tanggal_penjualan": "2024-02-02",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 4,
+    "total": 780000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 29,
+    "tanggal_penjualan": "2024-02-02",
+    "nama_produk": "Tas Ransel Waterproof",
+    "sku": "SKU-005",
+    "harga": 285000,
+    "quantity": 2,
+    "total": 570000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 30,
+    "tanggal_penjualan": "2024-02-03",
+    "nama_produk": "Kemeja Flannel Kotak",
+    "sku": "SKU-008",
+    "harga": 135000,
+    "quantity": 4,
+    "total": 540000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 31,
+    "tanggal_penjualan": "2024-02-04",
+    "nama_produk": "Kaos Polos Premium Cotton",
+    "sku": "SKU-001",
+    "harga": 89000,
+    "quantity": 5,
+    "total": 445000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 32,
+    "tanggal_penjualan": "2024-02-06",
+    "nama_produk": "Sepatu Sneakers Classic",
+    "sku": "SKU-004",
+    "harga": 399000,
+    "quantity": 5,
+    "total": 1995000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 33,
+    "tanggal_penjualan": "2024-02-08",
+    "nama_produk": "Sepatu Sneakers Classic",
+    "sku": "SKU-004",
+    "harga": 399000,
+    "quantity": 4,
+    "total": 1596000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 34,
+    "tanggal_penjualan": "2024-02-10",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 2,
+    "total": 498000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 35,
+    "tanggal_penjualan": "2024-02-11",
+    "nama_produk": "Kemeja Flannel Kotak",
+    "sku": "SKU-008",
+    "harga": 135000,
+    "quantity": 5,
+    "total": 675000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 36,
+    "tanggal_penjualan": "2024-02-11",
+    "nama_produk": "Sepatu Sneakers Classic",
+    "sku": "SKU-004",
+    "harga": 399000,
+    "quantity": 2,
+    "total": 798000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 37,
+    "tanggal_penjualan": "2024-02-13",
+    "nama_produk": "Topi Baseball Cap",
+    "sku": "SKU-006",
+    "harga": 55000,
+    "quantity": 3,
+    "total": 165000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 38,
+    "tanggal_penjualan": "2024-02-13",
+    "nama_produk": "Sepatu Sneakers Classic",
+    "sku": "SKU-004",
+    "harga": 399000,
+    "quantity": 1,
+    "total": 399000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 39,
+    "tanggal_penjualan": "2024-02-13",
+    "nama_produk": "Tas Ransel Waterproof",
+    "sku": "SKU-005",
+    "harga": 285000,
+    "quantity": 1,
+    "total": 285000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 40,
+    "tanggal_penjualan": "2024-02-13",
+    "nama_produk": "Kaos Polos Premium Cotton",
+    "sku": "SKU-001",
+    "harga": 89000,
+    "quantity": 5,
+    "total": 445000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 41,
+    "tanggal_penjualan": "2024-02-13",
+    "nama_produk": "Topi Baseball Cap",
+    "sku": "SKU-006",
+    "harga": 55000,
+    "quantity": 1,
+    "total": 55000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 42,
+    "tanggal_penjualan": "2024-02-13",
+    "nama_produk": "Topi Baseball Cap",
+    "sku": "SKU-006",
+    "harga": 55000,
+    "quantity": 2,
+    "total": 110000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 43,
+    "tanggal_penjualan": "2024-02-14",
+    "nama_produk": "Sepatu Sneakers Classic",
+    "sku": "SKU-004",
+    "harga": 399000,
+    "quantity": 5,
+    "total": 1995000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 44,
+    "tanggal_penjualan": "2024-02-16",
+    "nama_produk": "Tas Ransel Waterproof",
+    "sku": "SKU-005",
+    "harga": 285000,
+    "quantity": 5,
+    "total": 1425000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 45,
+    "tanggal_penjualan": "2024-02-17",
+    "nama_produk": "Sepatu Sneakers Classic",
+    "sku": "SKU-004",
+    "harga": 399000,
+    "quantity": 4,
+    "total": 1596000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 46,
+    "tanggal_penjualan": "2024-02-19",
+    "nama_produk": "Kaos Polos Premium Cotton",
+    "sku": "SKU-001",
+    "harga": 89000,
+    "quantity": 2,
+    "total": 178000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 47,
+    "tanggal_penjualan": "2024-02-20",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 2,
+    "total": 498000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 48,
+    "tanggal_penjualan": "2024-02-20",
+    "nama_produk": "Topi Baseball Cap",
+    "sku": "SKU-006",
+    "harga": 55000,
+    "quantity": 4,
+    "total": 220000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 49,
+    "tanggal_penjualan": "2024-02-22",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 4,
+    "total": 700000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 50,
+    "tanggal_penjualan": "2024-02-22",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 5,
+    "total": 875000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 51,
+    "tanggal_penjualan": "2024-02-23",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 5,
+    "total": 975000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 52,
+    "tanggal_penjualan": "2024-02-23",
+    "nama_produk": "Tas Ransel Waterproof",
+    "sku": "SKU-005",
+    "harga": 285000,
+    "quantity": 3,
+    "total": 855000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 53,
+    "tanggal_penjualan": "2024-02-24",
+    "nama_produk": "Kaos Polos Premium Cotton",
+    "sku": "SKU-001",
+    "harga": 89000,
+    "quantity": 3,
+    "total": 267000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 54,
+    "tanggal_penjualan": "2024-02-24",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 4,
+    "total": 996000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 55,
+    "tanggal_penjualan": "2024-02-26",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 4,
+    "total": 700000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 56,
+    "tanggal_penjualan": "2024-02-26",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 4,
+    "total": 780000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 57,
+    "tanggal_penjualan": "2024-02-28",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 2,
+    "total": 390000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 58,
+    "tanggal_penjualan": "2024-02-29",
+    "nama_produk": "Topi Baseball Cap",
+    "sku": "SKU-006",
+    "harga": 55000,
+    "quantity": 4,
+    "total": 220000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 59,
+    "tanggal_penjualan": "2024-02-29",
+    "nama_produk": "Topi Baseball Cap",
+    "sku": "SKU-006",
+    "harga": 55000,
+    "quantity": 3,
+    "total": 165000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 60,
+    "tanggal_penjualan": "2024-02-29",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 1,
+    "total": 175000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 61,
+    "tanggal_penjualan": "2024-02-29",
+    "nama_produk": "Kaos Polos Premium Cotton",
+    "sku": "SKU-001",
+    "harga": 89000,
+    "quantity": 1,
+    "total": 89000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 62,
+    "tanggal_penjualan": "2024-03-01",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 2,
+    "total": 350000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 63,
+    "tanggal_penjualan": "2024-03-02",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 4,
+    "total": 780000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 64,
+    "tanggal_penjualan": "2024-03-04",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 4,
+    "total": 780000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 65,
+    "tanggal_penjualan": "2024-03-04",
+    "nama_produk": "Kaos Polos Premium Cotton",
+    "sku": "SKU-001",
+    "harga": 89000,
+    "quantity": 5,
+    "total": 445000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 66,
+    "tanggal_penjualan": "2024-03-05",
+    "nama_produk": "Sepatu Sneakers Classic",
+    "sku": "SKU-004",
+    "harga": 399000,
+    "quantity": 4,
+    "total": 1596000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 67,
+    "tanggal_penjualan": "2024-03-07",
+    "nama_produk": "Sepatu Sneakers Classic",
+    "sku": "SKU-004",
+    "harga": 399000,
+    "quantity": 4,
+    "total": 1596000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 68,
+    "tanggal_penjualan": "2024-03-07",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 2,
+    "total": 390000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 69,
+    "tanggal_penjualan": "2024-03-07",
+    "nama_produk": "Kaos Polos Premium Cotton",
+    "sku": "SKU-001",
+    "harga": 89000,
+    "quantity": 2,
+    "total": 178000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 70,
+    "tanggal_penjualan": "2024-03-09",
+    "nama_produk": "Sepatu Sneakers Classic",
+    "sku": "SKU-004",
+    "harga": 399000,
+    "quantity": 3,
+    "total": 1197000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 71,
+    "tanggal_penjualan": "2024-03-11",
+    "nama_produk": "Tas Ransel Waterproof",
+    "sku": "SKU-005",
+    "harga": 285000,
+    "quantity": 1,
+    "total": 285000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 72,
+    "tanggal_penjualan": "2024-03-13",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 3,
+    "total": 525000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 73,
+    "tanggal_penjualan": "2024-03-14",
+    "nama_produk": "Topi Baseball Cap",
+    "sku": "SKU-006",
+    "harga": 55000,
+    "quantity": 2,
+    "total": 110000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 74,
+    "tanggal_penjualan": "2024-03-14",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 4,
+    "total": 700000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 75,
+    "tanggal_penjualan": "2024-03-15",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 1,
+    "total": 175000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 76,
+    "tanggal_penjualan": "2024-03-16",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 4,
+    "total": 996000,
+    "seller": "Fairuz",
+    "email": "fairuz@gmail.com"
+  },
+  {
+    "id": 77,
+    "tanggal_penjualan": "2024-03-16",
+    "nama_produk": "Tas Ransel Waterproof",
+    "sku": "SKU-005",
+    "harga": 285000,
+    "quantity": 4,
+    "total": 1140000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 78,
+    "tanggal_penjualan": "2024-03-18",
+    "nama_produk": "Jaket Hoodie Unisex",
+    "sku": "SKU-003",
+    "harga": 175000,
+    "quantity": 5,
+    "total": 875000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 79,
+    "tanggal_penjualan": "2024-03-18",
+    "nama_produk": "Tas Ransel Waterproof",
+    "sku": "SKU-005",
+    "harga": 285000,
+    "quantity": 2,
+    "total": 570000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 80,
+    "tanggal_penjualan": "2024-03-18",
+    "nama_produk": "Topi Baseball Cap",
+    "sku": "SKU-006",
+    "harga": 55000,
+    "quantity": 3,
+    "total": 165000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 81,
+    "tanggal_penjualan": "2024-03-19",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 1,
+    "total": 249000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 82,
+    "tanggal_penjualan": "2024-03-20",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 2,
+    "total": 390000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 83,
+    "tanggal_penjualan": "2024-03-22",
+    "nama_produk": "Celana Jeans Slim Fit",
+    "sku": "SKU-002",
+    "harga": 249000,
+    "quantity": 5,
+    "total": 1245000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 84,
+    "tanggal_penjualan": "2024-03-23",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 1,
+    "total": 195000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 85,
+    "tanggal_penjualan": "2024-03-24",
+    "nama_produk": "Sepatu Sneakers Classic",
+    "sku": "SKU-004",
+    "harga": 399000,
+    "quantity": 4,
+    "total": 1596000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 86,
+    "tanggal_penjualan": "2024-03-25",
+    "nama_produk": "Sepatu Sneakers Classic",
+    "sku": "SKU-004",
+    "harga": 399000,
+    "quantity": 4,
+    "total": 1596000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 87,
+    "tanggal_penjualan": "2024-03-27",
+    "nama_produk": "Kaos Polos Premium Cotton",
+    "sku": "SKU-001",
+    "harga": 89000,
+    "quantity": 2,
+    "total": 178000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 88,
+    "tanggal_penjualan": "2024-03-29",
+    "nama_produk": "Kemeja Flannel Kotak",
+    "sku": "SKU-008",
+    "harga": 135000,
+    "quantity": 2,
+    "total": 270000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 89,
+    "tanggal_penjualan": "2024-03-29",
+    "nama_produk": "Topi Baseball Cap",
+    "sku": "SKU-006",
+    "harga": 55000,
+    "quantity": 5,
+    "total": 275000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 90,
+    "tanggal_penjualan": "2024-03-29",
+    "nama_produk": "Tas Ransel Waterproof",
+    "sku": "SKU-005",
+    "harga": 285000,
+    "quantity": 3,
+    "total": 855000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 91,
+    "tanggal_penjualan": "2024-03-29",
+    "nama_produk": "Kemeja Flannel Kotak",
+    "sku": "SKU-008",
+    "harga": 135000,
+    "quantity": 4,
+    "total": 540000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 92,
+    "tanggal_penjualan": "2024-03-29",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 5,
+    "total": 975000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 93,
+    "tanggal_penjualan": "2024-03-31",
+    "nama_produk": "Tas Ransel Waterproof",
+    "sku": "SKU-005",
+    "harga": 285000,
+    "quantity": 4,
+    "total": 1140000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 94,
+    "tanggal_penjualan": "2024-04-01",
+    "nama_produk": "Tas Ransel Waterproof",
+    "sku": "SKU-005",
+    "harga": 285000,
+    "quantity": 2,
+    "total": 570000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 95,
+    "tanggal_penjualan": "2024-04-01",
+    "nama_produk": "Kaos Polos Premium Cotton",
+    "sku": "SKU-001",
+    "harga": 89000,
+    "quantity": 5,
+    "total": 445000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 96,
+    "tanggal_penjualan": "2024-04-01",
+    "nama_produk": "Sweater Rajut Winter",
+    "sku": "SKU-007",
+    "harga": 195000,
+    "quantity": 2,
+    "total": 390000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 97,
+    "tanggal_penjualan": "2024-04-02",
+    "nama_produk": "Kaos Polos Premium Cotton",
+    "sku": "SKU-001",
+    "harga": 89000,
+    "quantity": 3,
+    "total": 267000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 98,
+    "tanggal_penjualan": "2024-04-02",
+    "nama_produk": "Topi Baseball Cap",
+    "sku": "SKU-006",
+    "harga": 55000,
+    "quantity": 4,
+    "total": 220000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 99,
+    "tanggal_penjualan": "2024-04-04",
+    "nama_produk": "Tas Ransel Waterproof",
+    "sku": "SKU-005",
+    "harga": 285000,
+    "quantity": 5,
+    "total": 1425000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  },
+  {
+    "id": 100,
+    "tanggal_penjualan": "2024-04-06",
+    "nama_produk": "Kemeja Flannel Kotak",
+    "sku": "SKU-008",
+    "harga": 135000,
+    "quantity": 2,
+    "total": 270000,
+    "seller": "Faiz",
+    "email": "faiz@gmail.com"
+  }
+];

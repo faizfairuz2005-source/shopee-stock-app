@@ -1,0 +1,962 @@
+[
+  {
+    "id": 1,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-04",
+    "nama_produk": "Smartphone Android",
+    "harga": 1299000
+  },
+  {
+    "id": 2,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-06",
+    "nama_produk": "Kamera Mirrorless",
+    "harga": 2599000
+  },
+  {
+    "id": 3,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-08",
+    "nama_produk": "Laptop Gaming",
+    "harga": 7199000
+  },
+  {
+    "id": 4,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-10",
+    "nama_produk": "Sepeda Lipat",
+    "harga": 1599000
+  },
+  {
+    "id": 5,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-12",
+    "nama_produk": "Speaker Bluetooth",
+    "harga": 499000
+  },
+  {
+    "id": 6,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-14",
+    "nama_produk": "Jam Tangan Pintar",
+    "harga": 2199000
+  },
+  {
+    "id": 7,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-16",
+    "nama_produk": "Headphone Noise Cancelling",
+    "harga": 899000
+  },
+  {
+    "id": 8,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-18",
+    "nama_produk": "Tas Ransel",
+    "harga": 349000
+  },
+  {
+    "id": 9,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-20",
+    "nama_produk": "Printer Wireless",
+    "harga": 599000
+  },
+  {
+    "id": 10,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-22",
+    "nama_produk": "Wireless Mouse",
+    "harga": 179000
+  },
+  {
+    "id": 11,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-24",
+    "nama_produk": "Kulkas Mini",
+    "harga": 899000
+  },
+  {
+    "id": 12,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-26",
+    "nama_produk": "Meja Belajar",
+    "harga": 749000
+  },
+  {
+    "id": 13,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-28",
+    "nama_produk": "Kursi Kantor",
+    "harga": 1299000
+  },
+  {
+    "id": 14,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-01-30",
+    "nama_produk": "Power Bank 20.000mAh",
+    "harga": 299000
+  },
+  {
+    "id": 15,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-01",
+    "nama_produk": "Lampu LED",
+    "harga": 159000
+  },
+  {
+    "id": 16,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-03",
+    "nama_produk": "Kipas Angin Portable",
+    "harga": 249000
+  },
+  {
+    "id": 17,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-05",
+    "nama_produk": "Kamera Aksi",
+    "harga": 1799000
+  },
+  {
+    "id": 18,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-07",
+    "nama_produk": "Kacamata VR",
+    "harga": 1299000
+  },
+  {
+    "id": 19,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-09",
+    "nama_produk": "Printer Foto",
+    "harga": 599000
+  },
+  {
+    "id": 20,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-11",
+    "nama_produk": "Monitor 24 inch",
+    "harga": 1799000
+  },
+  {
+    "id": 21,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-13",
+    "nama_produk": "SSD 1TB",
+    "harga": 899000
+  },
+  {
+    "id": 22,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-15",
+    "nama_produk": "Keyboard Mechanical",
+    "harga": 1299000
+  },
+  {
+    "id": 23,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-17",
+    "nama_produk": "Speaker Soundbar",
+    "harga": 999000
+  },
+  {
+    "id": 24,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-19",
+    "nama_produk": "Earbuds Nirkabel",
+    "harga": 499000
+  },
+  {
+    "id": 25,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-21",
+    "nama_produk": "Kulkas 2 Pintu",
+    "harga": 349000
+  },
+  {
+    "id": 26,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-23",
+    "nama_produk": "Kompor Gas Portable",
+    "harga": 649000
+  },
+  {
+    "id": 27,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-25",
+    "nama_produk": "Rice Cooker Digital",
+    "harga": 399000
+  },
+  {
+    "id": 28,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-27",
+    "nama_produk": "Blender Multifungsi",
+    "harga": 1299000
+  },
+  {
+    "id": 29,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-02-29",
+    "nama_produk": "AC Portable",
+    "harga": 799000
+  },
+  {
+    "id": 30,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-02",
+    "nama_produk": "Panci Elektrik",
+    "harga": 1499000
+  },
+  {
+    "id": 31,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-04",
+    "nama_produk": "Sofa Single",
+    "harga": 559000
+  },
+  {
+    "id": 32,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-06",
+    "nama_produk": "Sepeda Olahraga",
+    "harga": 299000
+  },
+  {
+    "id": 33,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-08",
+    "nama_produk": "Jaket Musim Dingin",
+    "harga": 289000
+  },
+  {
+    "id": 34,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-10",
+    "nama_produk": "Celana Jeans",
+    "harga": 199000
+  },
+  {
+    "id": 35,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-12",
+    "nama_produk": "Tas Selempang",
+    "harga": 169000
+  },
+  {
+    "id": 36,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-14",
+    "nama_produk": "Sandal Kulit",
+    "harga": 319000
+  },
+  {
+    "id": 37,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-16",
+    "nama_produk": "Peralatan Makeup",
+    "harga": 459000
+  },
+  {
+    "id": 38,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-18",
+    "nama_produk": "Set Peralatan Masak",
+    "harga": 199000
+  },
+  {
+    "id": 39,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-20",
+    "nama_produk": "Botol Minum Stainless",
+    "harga": 749000
+  },
+  {
+    "id": 40,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-22",
+    "nama_produk": "Panci Presto",
+    "harga": 329000
+  },
+  {
+    "id": 41,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-24",
+    "nama_produk": "Sepatu Casual",
+    "harga": 129000
+  },
+  {
+    "id": 42,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-26",
+    "nama_produk": "Kaos Polo",
+    "harga": 559000
+  },
+  {
+    "id": 43,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-28",
+    "nama_produk": "Payung Otomatis",
+    "harga": 799000
+  },
+  {
+    "id": 44,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-03-30",
+    "nama_produk": "Kamera DSLR",
+    "harga": 899000
+  },
+  {
+    "id": 45,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-01",
+    "nama_produk": "TV LED 43 inch",
+    "harga": 1299000
+  },
+  {
+    "id": 46,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-03",
+    "nama_produk": "Kulkas Kecil",
+    "harga": 599000
+  },
+  {
+    "id": 47,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-05",
+    "nama_produk": "Meja Multifungsi",
+    "harga": 999000
+  },
+  {
+    "id": 48,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-07",
+    "nama_produk": "Speaker Smart",
+    "harga": 459000
+  },
+  {
+    "id": 49,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-09",
+    "nama_produk": "Mouse Gaming",
+    "harga": 649000
+  },
+  {
+    "id": 50,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-11",
+    "nama_produk": "Keyboard RGB",
+    "harga": 1299000
+  },
+  {
+    "id": 51,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-13",
+    "nama_produk": "Smartphone Android",
+    "harga": 2599000
+  },
+  {
+    "id": 52,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-15",
+    "nama_produk": "Kamera Mirrorless",
+    "harga": 7199000
+  },
+  {
+    "id": 53,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-17",
+    "nama_produk": "Laptop Gaming",
+    "harga": 1599000
+  },
+  {
+    "id": 54,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-19",
+    "nama_produk": "Sepeda Lipat",
+    "harga": 499000
+  },
+  {
+    "id": 55,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-21",
+    "nama_produk": "Speaker Bluetooth",
+    "harga": 2199000
+  },
+  {
+    "id": 56,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-23",
+    "nama_produk": "Jam Tangan Pintar",
+    "harga": 899000
+  },
+  {
+    "id": 57,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-25",
+    "nama_produk": "Headphone Noise Cancelling",
+    "harga": 349000
+  },
+  {
+    "id": 58,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-27",
+    "nama_produk": "Tas Ransel",
+    "harga": 599000
+  },
+  {
+    "id": 59,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-04-29",
+    "nama_produk": "Printer Wireless",
+    "harga": 179000
+  },
+  {
+    "id": 60,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-05-01",
+    "nama_produk": "Wireless Mouse",
+    "harga": 899000
+  },
+  {
+    "id": 61,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-05-03",
+    "nama_produk": "Kulkas Mini",
+    "harga": 749000
+  },
+  {
+    "id": 62,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-05-05",
+    "nama_produk": "Meja Belajar",
+    "harga": 1299000
+  },
+  {
+    "id": 63,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-05-07",
+    "nama_produk": "Kursi Kantor",
+    "harga": 299000
+  },
+  {
+    "id": 64,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-05-09",
+    "nama_produk": "Power Bank 20.000mAh",
+    "harga": 159000
+  },
+  {
+    "id": 65,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-05-11",
+    "nama_produk": "Lampu LED",
+    "harga": 249000
+  },
+  {
+    "id": 66,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-05-13",
+    "nama_produk": "Kipas Angin Portable",
+    "harga": 1799000
+  },
+  {
+    "id": 67,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-05-15",
+    "nama_produk": "Kamera Aksi",
+    "harga": 1299000
+  },
+  {
+    "id": 68,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-05-17",
+    "nama_produk": "Kacamata VR",
+    "harga": 599000
+  },
+  {
+    "id": 69,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-05-19",
+    "nama_produk": "Printer Foto",
+    "harga": 1799000
+  },
+  {
+    "id": 70,
+    "nama_penjual": "Faiz",
+    "email_penjual": "faiz@gmail.com",
+    "tanggal_penjualan": "2024-05-21",
+    "nama_produk": "Monitor 24 inch",
+    "harga": 899000
+  },
+  {
+    "id": 71,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-05-23",
+    "nama_produk": "SSD 1TB",
+    "harga": 1299000
+  },
+  {
+    "id": 72,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-05-25",
+    "nama_produk": "Keyboard Mechanical",
+    "harga": 999000
+  },
+  {
+    "id": 73,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-05-27",
+    "nama_produk": "Speaker Soundbar",
+    "harga": 499000
+  },
+  {
+    "id": 74,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-05-29",
+    "nama_produk": "Earbuds Nirkabel",
+    "harga": 349000
+  },
+  {
+    "id": 75,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-05-31",
+    "nama_produk": "Kulkas 2 Pintu",
+    "harga": 649000
+  },
+  {
+    "id": 76,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-02",
+    "nama_produk": "Kompor Gas Portable",
+    "harga": 399000
+  },
+  {
+    "id": 77,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-04",
+    "nama_produk": "Rice Cooker Digital",
+    "harga": 1299000
+  },
+  {
+    "id": 78,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-06",
+    "nama_produk": "Blender Multifungsi",
+    "harga": 799000
+  },
+  {
+    "id": 79,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-08",
+    "nama_produk": "AC Portable",
+    "harga": 1499000
+  },
+  {
+    "id": 80,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-10",
+    "nama_produk": "Panci Elektrik",
+    "harga": 559000
+  },
+  {
+    "id": 81,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-12",
+    "nama_produk": "Sofa Single",
+    "harga": 299000
+  },
+  {
+    "id": 82,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-14",
+    "nama_produk": "Sepeda Olahraga",
+    "harga": 289000
+  },
+  {
+    "id": 83,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-16",
+    "nama_produk": "Jaket Musim Dingin",
+    "harga": 199000
+  },
+  {
+    "id": 84,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-18",
+    "nama_produk": "Celana Jeans",
+    "harga": 169000
+  },
+  {
+    "id": 85,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-20",
+    "nama_produk": "Tas Selempang",
+    "harga": 319000
+  },
+  {
+    "id": 86,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-22",
+    "nama_produk": "Sandal Kulit",
+    "harga": 459000
+  },
+  {
+    "id": 87,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-24",
+    "nama_produk": "Peralatan Makeup",
+    "harga": 199000
+  },
+  {
+    "id": 88,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-26",
+    "nama_produk": "Set Peralatan Masak",
+    "harga": 749000
+  },
+  {
+    "id": 89,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-28",
+    "nama_produk": "Botol Minum Stainless",
+    "harga": 329000
+  },
+  {
+    "id": 90,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-06-30",
+    "nama_produk": "Panci Presto",
+    "harga": 129000
+  },
+  {
+    "id": 91,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-02",
+    "nama_produk": "Sepatu Casual",
+    "harga": 559000
+  },
+  {
+    "id": 92,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-04",
+    "nama_produk": "Kaos Polo",
+    "harga": 799000
+  },
+  {
+    "id": 93,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-06",
+    "nama_produk": "Payung Otomatis",
+    "harga": 899000
+  },
+  {
+    "id": 94,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-08",
+    "nama_produk": "Kamera DSLR",
+    "harga": 1299000
+  },
+  {
+    "id": 95,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-10",
+    "nama_produk": "TV LED 43 inch",
+    "harga": 599000
+  },
+  {
+    "id": 96,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-12",
+    "nama_produk": "Kulkas Kecil",
+    "harga": 999000
+  },
+  {
+    "id": 97,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-14",
+    "nama_produk": "Meja Multifungsi",
+    "harga": 459000
+  },
+  {
+    "id": 98,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-16",
+    "nama_produk": "Speaker Smart",
+    "harga": 649000
+  },
+  {
+    "id": 99,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-18",
+    "nama_produk": "Mouse Gaming",
+    "harga": 1299000
+  },
+  {
+    "id": 100,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-20",
+    "nama_produk": "Keyboard RGB",
+    "harga": 2599000
+  },
+  {
+    "id": 101,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-22",
+    "nama_produk": "Smartphone Android",
+    "harga": 7199000
+  },
+  {
+    "id": 102,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-24",
+    "nama_produk": "Kamera Mirrorless",
+    "harga": 1599000
+  },
+  {
+    "id": 103,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-26",
+    "nama_produk": "Laptop Gaming",
+    "harga": 499000
+  },
+  {
+    "id": 104,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-28",
+    "nama_produk": "Sepeda Lipat",
+    "harga": 2199000
+  },
+  {
+    "id": 105,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-07-30",
+    "nama_produk": "Speaker Bluetooth",
+    "harga": 899000
+  },
+  {
+    "id": 106,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-01",
+    "nama_produk": "Jam Tangan Pintar",
+    "harga": 349000
+  },
+  {
+    "id": 107,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-03",
+    "nama_produk": "Headphone Noise Cancelling",
+    "harga": 599000
+  },
+  {
+    "id": 108,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-05",
+    "nama_produk": "Tas Ransel",
+    "harga": 179000
+  },
+  {
+    "id": 109,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-07",
+    "nama_produk": "Printer Wireless",
+    "harga": 899000
+  },
+  {
+    "id": 110,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-09",
+    "nama_produk": "Wireless Mouse",
+    "harga": 749000
+  },
+  {
+    "id": 111,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-11",
+    "nama_produk": "Kulkas Mini",
+    "harga": 1299000
+  },
+  {
+    "id": 112,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-13",
+    "nama_produk": "Meja Belajar",
+    "harga": 299000
+  },
+  {
+    "id": 113,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-15",
+    "nama_produk": "Kursi Kantor",
+    "harga": 159000
+  },
+  {
+    "id": 114,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-17",
+    "nama_produk": "Power Bank 20.000mAh",
+    "harga": 249000
+  },
+  {
+    "id": 115,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-19",
+    "nama_produk": "Lampu LED",
+    "harga": 1799000
+  },
+  {
+    "id": 116,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-21",
+    "nama_produk": "Kipas Angin Portable",
+    "harga": 1299000
+  },
+  {
+    "id": 117,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-23",
+    "nama_produk": "Kamera Aksi",
+    "harga": 599000
+  },
+  {
+    "id": 118,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-25",
+    "nama_produk": "Kacamata VR",
+    "harga": 1799000
+  },
+  {
+    "id": 119,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-27",
+    "nama_produk": "Printer Foto",
+    "harga": 899000
+  },
+  {
+    "id": 120,
+    "nama_penjual": "Fairuuz",
+    "email_penjual": "fairuz@gmail.com",
+    "tanggal_penjualan": "2024-08-29",
+    "nama_produk": "Monitor 24 inch",
+    "harga": 1299000
+  }
+]

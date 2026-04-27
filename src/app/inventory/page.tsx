@@ -1,8 +1,9 @@
 "use client";
 
-import { Edit, MoreHorizontal, Package, Plus, Search, TrendingDown, Store, X, Eye, Trash2 } from "lucide-react";
+import { Edit, MoreHorizontal, Package, Plus, Search, TrendingDown, Store, X, Eye, Trash2, AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 
+import { getAppData, updateInventory, InventoryProduct as Product } from "@/app/actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,25 +27,7 @@ import {
 
 type StockFilter = "semua" | "aman" | "rendah" | "habis";
 
-interface Product {
-  sku: string;
-  name: string;
-  price: number;
-  totalStock: number;
-  description?: string;
-  connectedStores: number;
-}
 
-const initialDummyProducts: Product[] = [
-  { sku: "SKU-001", name: "Kaos Polos Premium Cotton", totalStock: 450, price: 89000, description: "Kaos berkualitas tinggi dari bahan cotton 100%", connectedStores: 3 },
-  { sku: "SKU-002", name: "Celana Jeans Slim Fit", totalStock: 0, price: 249000, description: "Celana jeans dengan potongan modern dan nyaman", connectedStores: 1 },
-  { sku: "SKU-003", name: "Jaket Hoodie Unisex", totalStock: 5, price: 175000, description: "Hoodie hangat dengan desain minimalis", connectedStores: 4 },
-  { sku: "SKU-004", name: "Sepatu Sneakers Classic", totalStock: 65, price: 399000, description: "Sneakers klasik dengan sol empuk", connectedStores: 0 },
-  { sku: "SKU-005", name: "Tas Ransel Waterproof", totalStock: 0, price: 285000, description: "Tas ransel tahan air untuk outdoor", connectedStores: 2 },
-  { sku: "SKU-006", name: "Topi Baseball Cap", totalStock: 320, price: 55000, description: "Topi baseball dengan desain trendy", connectedStores: 4 },
-  { sku: "SKU-007", name: "Sweater Rajut Winter", totalStock: 8, price: 195000, description: "Sweater rajut hangat untuk musim dingin", connectedStores: 2 },
-  { sku: "SKU-008", name: "Kemeja Flannel Kotak", totalStock: 50, price: 135000, description: "Kemeja flannel dengan motif kotak klasik", connectedStores: 3 },
-];
 
 const STOCK_FILTERS: { key: StockFilter; label: string }[] = [
   { key: "semua", label: "Semua" },
@@ -64,9 +47,21 @@ function formatRupiah(amount: number) {
 }
 
 export default function InventoryPage() {
-  const [products, setProducts] = useState<Product[]>(initialDummyProducts);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [stockFilter, setStockFilter] = useState<StockFilter>("semua");
+
+  // Read filter from URL if present
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const filterParam = params.get("filter");
+      if (filterParam && ["semua", "aman", "rendah", "habis"].includes(filterParam)) {
+        setStockFilter(filterParam as StockFilter);
+      }
+    }
+  }, []);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editForm, setEditForm] = useState<Product | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -84,12 +79,25 @@ export default function InventoryPage() {
       (stockFilter === "rendah" && status === "rendah") ||
       (stockFilter === "habis" && status === "habis");
     return matchSearch && matchStock;
+  }).sort((a, b) => {
+    if (a.totalStock === 0 && b.totalStock !== 0) return -1;
+    if (a.totalStock !== 0 && b.totalStock === 0) return 1;
+    return 0;
   });
 
   const totalProducts = products.length;
   const totalStock = products.reduce((s, p) => s + p.totalStock, 0);
   const lowStockCount = products.filter((p) => p.totalStock > 0 && p.totalStock <= 10).length;
+  const outOfStockCount = products.filter((p) => p.totalStock === 0).length;
   const uniqueStores = products.reduce((max, p) => Math.max(max, p.connectedStores), 0);
+
+  // Load data
+  useEffect(() => {
+    getAppData().then(data => {
+      setProducts(data.inventoryProducts);
+      setIsLoading(false);
+    });
+  }, []);
 
   // Toast notification effect
   useEffect(() => {
@@ -105,16 +113,21 @@ export default function InventoryPage() {
   };
 
   // Handle Save Changes
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     if (!editForm) return;
 
-    // Update products array
-    setProducts((prevProducts) =>
-      prevProducts.map((p) => (p.sku === editForm.sku ? editForm : p))
-    );
+    // Update products array locally first for fast feedback
+    const updated = products.map((p) => (p.sku === editForm.sku ? editForm : p));
+    setProducts(updated);
 
-    // Show toast and close modal
-    setToastMessage("Produk berhasil diupdate");
+    // Save to server
+    const res = await updateInventory(updated);
+    if (res.success) {
+      setToastMessage("Produk berhasil diupdate");
+    } else {
+      setToastMessage("Gagal menyimpan perubahan");
+    }
+
     setIsEditOpen(false);
     setEditForm(null);
   };
@@ -131,16 +144,21 @@ export default function InventoryPage() {
   };
 
   // Handle Confirm Delete
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (!deleteConfirm) return;
 
-    // Remove product from list
-    setProducts((prevProducts) =>
-      prevProducts.filter((p) => p.sku !== deleteConfirm.sku)
-    );
+    // Remove product from list locally
+    const updated = products.filter((p) => p.sku !== deleteConfirm.sku);
+    setProducts(updated);
 
-    // Show toast and close confirmation
-    setToastMessage(`Produk "${deleteConfirm.name}" berhasil dihapus`);
+    // Save to server
+    const res = await updateInventory(updated);
+    if (res.success) {
+      setToastMessage(`Produk "${deleteConfirm.name}" berhasil dihapus`);
+    } else {
+      setToastMessage("Gagal menghapus produk");
+    }
+    
     setDeleteConfirm(null);
   };
 
@@ -166,7 +184,7 @@ export default function InventoryPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <Card className="card-hover cursor-pointer">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Produk</CardTitle>
@@ -190,11 +208,21 @@ export default function InventoryPage() {
         <Card className="card-hover cursor-pointer">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Stok Rendah</CardTitle>
-            <TrendingDown className="h-4 w-4 text-destructive transition-transform duration-200 ease-out group-hover/card:scale-110" />
+            <TrendingDown className="h-4 w-4 text-amber-500 transition-transform duration-200 ease-out group-hover/card:scale-110" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-destructive">{lowStockCount}</p>
+            <p className="text-2xl font-bold text-amber-500">{lowStockCount}</p>
             <p className="text-xs text-muted-foreground">Perlu restok</p>
+          </CardContent>
+        </Card>
+        <Card className="card-hover cursor-pointer border-destructive/50 bg-destructive/5 dark:bg-destructive/10">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-destructive">Stok Habis</CardTitle>
+            <AlertCircle className="h-4 w-4 text-destructive transition-transform duration-200 ease-out group-hover/card:scale-110" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold text-destructive">{outOfStockCount}</p>
+            <p className="text-xs text-destructive/80">Produk kosong</p>
           </CardContent>
         </Card>
         <Card className="card-hover cursor-pointer">
@@ -267,7 +295,14 @@ export default function InventoryPage() {
                 {filteredProducts.map((product) => {
                   const status = getStockStatus(product.totalStock);
                   return (
-                    <TableRow key={product.sku} className="group">
+                    <TableRow 
+                      key={product.sku} 
+                      className={`group ${
+                        status === "habis" 
+                          ? "bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-950/40" 
+                          : ""
+                      }`}
+                    >
                       <TableCell className="font-mono text-xs text-muted-foreground">
                         {product.sku}
                       </TableCell>
@@ -280,17 +315,24 @@ export default function InventoryPage() {
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        <span
-                          className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium transition-transform duration-200 ease-out group-hover:scale-105 ${
-                            status === "habis"
-                              ? "bg-destructive/10 text-destructive"
-                              : status === "rendah"
-                              ? "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400"
-                              : "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400"
-                          }`}
-                        >
-                          {product.totalStock}
-                        </span>
+                        {status === "habis" ? (
+                          <div className="flex justify-end">
+                            <Badge variant="destructive" className="flex items-center gap-1.5 px-2 py-0.5 shadow-sm">
+                              <AlertCircle className="h-3.5 w-3.5" />
+                              Stok Habis
+                            </Badge>
+                          </div>
+                        ) : (
+                          <span
+                            className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium transition-transform duration-200 ease-out group-hover:scale-105 ${
+                              status === "rendah"
+                                ? "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400"
+                                : "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400"
+                            }`}
+                          >
+                            {product.totalStock}
+                          </span>
+                        )}
                       </TableCell>
                       <TableCell className="text-right font-medium tabular-nums">
                         {formatRupiah(product.price)}

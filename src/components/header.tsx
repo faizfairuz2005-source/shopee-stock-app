@@ -4,10 +4,10 @@ import { useState } from "react";
 import { Bell, Check, ChevronDown, LogOut, Loader2 } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -87,21 +87,6 @@ export function Header({ userEmail, userName }: HeaderProps) {
     alert(`Notifikasi: ${message}`);
   };
 
-  const getNotificationBgColor = (type: Notification["type"]) => {
-    switch (type) {
-      case "warning":
-        return "bg-yellow-50 dark:bg-yellow-950/30 border-yellow-100 dark:border-yellow-900/30";
-      case "alert":
-        return "bg-red-50 dark:bg-red-950/30 border-red-100 dark:border-red-900/30";
-      case "success":
-        return "bg-green-50 dark:bg-green-950/30 border-green-100 dark:border-green-900/30";
-      case "info":
-        return "bg-blue-50 dark:bg-blue-950/30 border-blue-100 dark:border-blue-900/30";
-      default:
-        return "bg-muted/50 dark:bg-muted/30 border-border";
-    }
-  };
-
   const getTypeColor = (type: Notification["type"]) => {
     switch (type) {
       case "warning":
@@ -124,15 +109,13 @@ export function Header({ userEmail, userName }: HeaderProps) {
       <div className="flex items-center gap-3">
         {/* Notification Bell Dropdown */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon-xs" className="relative">
-              <Bell className="h-4 w-4 transition-transform duration-200 ease-in-out group-hover/button:scale-110" />
-              {unreadCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[0.6rem] font-bold text-white transition-transform duration-200 ease-in-out group-hover/button:scale-110">
-                  {unreadCount}
-                </span>
-              )}
-            </Button>
+          <DropdownMenuTrigger className="relative inline-flex h-8 w-8 items-center justify-center rounded-md border border-input bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
+            <Bell className="h-4 w-4 transition-transform duration-200 ease-in-out hover:scale-110" />
+            {unreadCount > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[0.6rem] font-bold text-white">
+                {unreadCount}
+              </span>
+            )}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
             <div className="flex items-center justify-between px-2 py-1.5">
@@ -199,24 +182,24 @@ export function Header({ userEmail, userName }: HeaderProps) {
 
         {/* User Menu Dropdown */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div className="group/menu flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-medium transition-[background-color,transform] duration-200 ease-out hover:bg-accent active:scale-[0.98]">
-              <Avatar className="h-7 w-7 transition-transform duration-200 ease-out group-hover/menu:scale-105">
-                <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
-              <span className="max-w-40 truncate">{displayName}</span>
-              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 ease-out group-hover/menu:translate-y-0.5" />
-            </div>
+          <DropdownMenuTrigger className="group/menu flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-medium transition-[background-color,transform] duration-200 ease-out hover:bg-accent active:scale-[0.98]">
+            <Avatar className="h-7 w-7 transition-transform duration-200 ease-out group-hover/menu:scale-105">
+              <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            <span className="max-w-40 truncate">{displayName}</span>
+            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 ease-out group-hover/menu:translate-y-0.5" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-52">
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium">Account</p>
-                <p className="text-xs text-muted-foreground">{userEmail}</p>
-              </div>
-            </DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium">Account</p>
+                  <p className="text-xs text-muted-foreground">{userEmail}</p>
+                </div>
+              </DropdownMenuLabel>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => window.location.href = '/settings'}>
               Settings
