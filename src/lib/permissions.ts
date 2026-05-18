@@ -41,6 +41,11 @@ export type Permission =
   | 'user.change-role'
   | 'customers.view'
   | 'customers.create'
+  | 'inventory.adjust-stok'
+  | 'returns.create'
+  | 'expenses.view'
+  | 'expenses.create'
+  | 'inventory.transfer-rak'
 
 export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
   Admin: [
@@ -66,6 +71,11 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'user.change-role',
     'customers.view',
     'customers.create',
+    'inventory.adjust-stok',
+    'returns.create',
+    'expenses.view',
+    'expenses.create',
+    'inventory.transfer-rak',
   ],
   Manager: [
     'dashboard.view',
@@ -83,6 +93,11 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'customers.create',
     'settings.access',
     'connect-shopee',
+    'inventory.adjust-stok',
+    'returns.create',
+    'expenses.view',
+    'expenses.create',
+    'inventory.transfer-rak',
   ],
   Kasir: [
     'dashboard.view',

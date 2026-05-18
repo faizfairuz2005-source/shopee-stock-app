@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  AlertCircle,
   ArrowDown,
   ArrowUp,
   Banknote,
@@ -18,11 +19,12 @@ import {
   Landmark,
   Minus,
   PiggyBank,
+  RotateCcw,
   TrendingDown,
   TrendingUp,
   Wallet,
 } from "lucide-react";
-import type { Order } from "@/app/actions";
+import type { Order, StockAdjustment, GoodsReturn, Expense } from "@/app/actions";
 
 function formatRupiah(value: number) {
   return new Intl.NumberFormat("id-ID", {
@@ -79,8 +81,7 @@ function computeMonthlyPL(orders: Order[]): MonthlyPL[] {
     const year = parseInt(yearStr, 10);
 
     const grossProfit = data.revenue - data.hpp;
-    const opCostRate = 0.18 + (month % 3) * 0.02;
-    const operationalCosts = Math.round(data.revenue * opCostRate);
+    const operationalCosts = 0; // Will be replaced by real expenses in the component
     const netProfit = grossProfit - operationalCosts;
 
     result.push({
@@ -96,6 +97,13 @@ function computeMonthlyPL(orders: Order[]): MonthlyPL[] {
   }
 
   return result.sort((a, b) => a.year - b.year || a.month - b.month);
+}
+
+function getExpenseTotal(expenses: Expense[], month: number, year: number): number {
+  const prefix = `${year}-${String(month + 1).padStart(2, "0")}`;
+  return expenses
+    .filter((e) => e.tanggal.startsWith(prefix))
+    .reduce((sum, e) => sum + e.jumlah, 0);
 }
 
 function getComparison(current: number, previous: number) {
@@ -150,14 +158,109 @@ function getStoreBreakdown(orders: Order[], month: number, year: number): StoreB
 
 export default function ProfitLossSection({
   orders,
+  stockAdjustments,
+  goodsReturns,
+  expenses,
 }: {
   orders: Order[];
+  stockAdjustments?: StockAdjustment[];
+  goodsReturns?: GoodsReturn[];
+  expenses?: Expense[];
 }) {
   const now = new Date();
   const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
   const [selectedYear, setSelectedYear] = useState(now.getFullYear());
 
   const allData = useMemo(() => computeMonthlyPL(orders), [orders]);
+
+  // ── Compute stock adjustment losses for selected month ──────────────
+  const adjustmentLossesThisMonth = useMemo(() => {
+    if (!stockAdjustments || stockAdjustments.length === 0) return 0;
+    const prefix = `${selectedYear}-${String(selectedMonth + 1).padStart(2, "0")}`;
+    return stockAdjustments
+      .filter((a) => a.created_at?.startsWith(prefix) && a.nilai_kerugian)
+      .reduce((sum, a) => sum + (a.nilai_kerugian || 0), 0);
+  }, [stockAdjustments, selectedMonth, selectedYear]);
+
+  const adjustmentLossesPrevMonth = useMemo(() => {
+    if (!stockAdjustments || stockAdjustments.length === 0) return 0;
+    let prevMonth = selectedMonth - 1;
+    let prevYear = selectedYear;
+    if (prevMonth < 0) {
+      prevMonth = 11;
+      prevYear--;
+    }
+    const prefix = `${prevYear}-${String(prevMonth + 1).padStart(2, "0")}`;
+    return stockAdjustments
+      .filter((a) => a.created_at?.startsWith(prefix) && a.nilai_kerugian)
+      .reduce((sum, a) => sum + (a.nilai_kerugian || 0), 0);
+  }, [stockAdjustments, selectedMonth, selectedYear]);
+
+  // ── Return losses for selected & previous month ────────────────
+  // Total refund (uang ke pelanggan) + HPP loss (barang rusak tidak bisa dijual)
+  const returnTotalLoss = (r: GoodsReturn) => r.total_refund + (r.hpp_loss || 0);
+
+  const returnLossesThisMonth = useMemo(() => {
+    if (!goodsReturns || goodsReturns.length === 0) return 0;
+    const prefix = `${selectedYear}-${String(selectedMonth + 1).padStart(2, "0")}`;
+    return goodsReturns
+      .filter((r) => r.tanggal.startsWith(prefix))
+      .reduce((sum, r) => sum + returnTotalLoss(r), 0);
+  }, [goodsReturns, selectedMonth, selectedYear]);
+
+  const returnLossesPrevMonth = useMemo(() => {
+    if (!goodsReturns || goodsReturns.length === 0) return 0;
+    let prevMonth = selectedMonth - 1;
+    let prevYear = selectedYear;
+    if (prevMonth < 0) {
+      prevMonth = 11;
+      prevYear--;
+    }
+    const prefix = `${prevYear}-${String(prevMonth + 1).padStart(2, "0")}`;
+    return goodsReturns
+      .filter((r) => r.tanggal.startsWith(prefix))
+      .reduce((sum, r) => sum + returnTotalLoss(r), 0);
+  }, [goodsReturns, selectedMonth, selectedYear]);
+
+  // ── HPP loss from damaged returns (separate breakdown) ──────────
+  const returnHppLossThisMonth = useMemo(() => {
+    if (!goodsReturns || goodsReturns.length === 0) return 0;
+    const prefix = `${selectedYear}-${String(selectedMonth + 1).padStart(2, "0")}`;
+    return goodsReturns
+      .filter((r) => r.tanggal.startsWith(prefix))
+      .reduce((sum, r) => sum + (r.hpp_loss || 0), 0);
+  }, [goodsReturns, selectedMonth, selectedYear]);
+
+  const returnHppLossPrevMonth = useMemo(() => {
+    if (!goodsReturns || goodsReturns.length === 0) return 0;
+    let prevMonth = selectedMonth - 1;
+    let prevYear = selectedYear;
+    if (prevMonth < 0) {
+      prevMonth = 11;
+      prevYear--;
+    }
+    const prefix = `${prevYear}-${String(prevMonth + 1).padStart(2, "0")}`;
+    return goodsReturns
+      .filter((r) => r.tanggal.startsWith(prefix))
+      .reduce((sum, r) => sum + (r.hpp_loss || 0), 0);
+  }, [goodsReturns, selectedMonth, selectedYear]);
+
+  // ── Real Operational Costs from Expense Data ─────────────────
+  const realOperationalCosts = useMemo(() => {
+    if (!expenses || expenses.length === 0) return 0;
+    return getExpenseTotal(expenses, selectedMonth, selectedYear);
+  }, [expenses, selectedMonth, selectedYear]);
+
+  const realOperationalCostsPrev = useMemo(() => {
+    if (!expenses || expenses.length === 0) return 0;
+    let prevMonth = selectedMonth - 1;
+    let prevYear = selectedYear;
+    if (prevMonth < 0) {
+      prevMonth = 11;
+      prevYear--;
+    }
+    return getExpenseTotal(expenses, prevMonth, prevYear);
+  }, [expenses, selectedMonth, selectedYear]);
 
   const currentPL = useMemo(
     () => allData.find((d) => d.month === selectedMonth && d.year === selectedYear),
@@ -175,10 +278,14 @@ export default function ProfitLossSection({
     for (let i = 5; i >= 0; i--) {
       const d = new Date(selectedYear, selectedMonth - i, 1);
       const pl = allData.find((x) => x.month === d.getMonth() && x.year === d.getFullYear());
-      if (pl) result.push(pl);
+      if (pl) {
+        // Use real expenses for trend data if available
+        const expTotal = expenses ? getExpenseTotal(expenses, d.getMonth(), d.getFullYear()) : 0;
+        result.push({ ...pl, operationalCosts: expTotal, netProfit: pl.grossProfit - expTotal });
+      }
     }
     return result;
-  }, [allData, selectedMonth, selectedYear]);
+  }, [allData, selectedMonth, selectedYear, expenses]);
 
   const storeBreakdown = useMemo(
     () => getStoreBreakdown(orders, selectedMonth, selectedYear),
@@ -192,12 +299,20 @@ export default function ProfitLossSection({
 
   if (!currentPL) return null;
 
+  const totalDeductions = adjustmentLossesThisMonth + returnLossesThisMonth + realOperationalCosts;
+  const totalPrevDeductions = adjustmentLossesPrevMonth + returnLossesPrevMonth + realOperationalCostsPrev;
+  const netProfit = currentPL.grossProfit - totalDeductions;
+  const prevNetProfit = (previousPL?.grossProfit ?? 0) - totalPrevDeductions;
+
   const comparisons = [
     { label: "Pendapatan", value: currentPL.revenue, prev: previousPL?.revenue ?? 0, icon: Banknote },
     { label: "HPP", value: currentPL.hpp, prev: previousPL?.hpp ?? 0, icon: TrendingDown },
     { label: "Laba Kotor", value: currentPL.grossProfit, prev: previousPL?.grossProfit ?? 0, icon: TrendingUp },
-    { label: "Biaya Operasional", value: currentPL.operationalCosts, prev: previousPL?.operationalCosts ?? 0, icon: Wallet },
-    { label: "Laba Bersih", value: currentPL.netProfit, prev: previousPL?.netProfit ?? 0, icon: PiggyBank },
+    { label: "Kerugian Stok", value: adjustmentLossesThisMonth, prev: adjustmentLossesPrevMonth, icon: AlertCircle },
+    { label: "Retur", value: returnLossesThisMonth, prev: returnLossesPrevMonth, icon: RotateCcw },
+    ...(returnHppLossThisMonth > 0 ? [{ label: "Retur (HPP Rusak)", value: returnHppLossThisMonth, prev: returnHppLossPrevMonth, icon: AlertCircle }] : []),
+    { label: "Biaya Operasional", value: realOperationalCosts, prev: realOperationalCostsPrev, icon: Wallet },
+    { label: "Laba Bersih", value: netProfit, prev: prevNetProfit, icon: PiggyBank },
   ];
 
   const maxChartValue = Math.max(...trendData.map((d) => Math.max(d.grossProfit, d.netProfit)), 1);

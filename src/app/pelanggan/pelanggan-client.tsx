@@ -369,6 +369,7 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                     <TableHead>No. HP</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Total Transaksi</TableHead>
+                    <TableHead className="text-center">Pesanan</TableHead>
                     <TableHead>Terakhir Transaksi</TableHead>
                     <TableHead className="text-right">Aksi</TableHead>
                   </TableRow>
@@ -419,6 +420,11 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                         <span className="font-semibold tabular-nums text-sm">
                           {formatCurrency(customer.total_transaksi)}
                         </span>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Badge variant="outline" className="text-xs font-mono tabular-nums">
+                          {customer.total_orders ?? 0}x
+                        </Badge>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {formatDate(customer.terakhir_transaksi)}
@@ -646,6 +652,10 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                 <span className="inline-flex items-center gap-1 text-xs font-medium text-primary">
                   <ShoppingCart className="h-3 w-3" />
                   Total: {formatCurrency(historyCustomer?.total_transaksi || 0)}
+                </span>
+                <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                  <Receipt className="h-3 w-3" />
+                  {historyCustomer?.total_orders ?? 0} transaksi
                 </span>
               </div>
             </DialogDescription>

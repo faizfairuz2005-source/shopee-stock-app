@@ -5,6 +5,7 @@ import { ExportButton } from "@/components/export-button"
 import {
   LAPORAN_SALES_EXPORT_COLUMNS,
   LAPORAN_STOK_EXPORT_COLUMNS,
+  LAPORAN_ADJUSTMENT_EXPORT_COLUMNS,
 } from "@/lib/export-utils"
 
 interface FlattenedSale {
@@ -25,11 +26,25 @@ interface StockStatusItem {
   status: string
 }
 
+interface StockAdjustmentExport {
+  tanggal: string
+  nama_produk: string
+  sku: string
+  jenis: string
+  jumlah: number
+  stok_sebelum: number
+  stok_sesudah: number
+  alasan: string
+  nilai_kerugian?: number
+  user_name?: string
+}
+
 interface LaporanExportActionsProps {
   flattenedSales: FlattenedSale[]
   stockItems: StockStatusItem[]
   lowStockItems: StockStatusItem[]
   outOfStockItems: StockStatusItem[]
+  stockAdjustments?: StockAdjustmentExport[]
 }
 
 export function LaporanExportActions({
@@ -37,9 +52,10 @@ export function LaporanExportActions({
   stockItems,
   lowStockItems,
   outOfStockItems,
+  stockAdjustments,
 }: LaporanExportActionsProps) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 flex-wrap">
       <ExportButton
         data={flattenedSales.slice().reverse() as unknown as Record<string, unknown>[]}
         columns={LAPORAN_SALES_EXPORT_COLUMNS}
@@ -54,6 +70,15 @@ export function LaporanExportActions({
         label="Export Stok"
         variant="outline"
       />
+      {stockAdjustments && stockAdjustments.length > 0 && (
+        <ExportButton
+          data={stockAdjustments as unknown as Record<string, unknown>[]}
+          columns={LAPORAN_ADJUSTMENT_EXPORT_COLUMNS}
+          filenamePrefix="Laporan-Adjust-Stok"
+          label="Export Adjust Stok"
+          variant="outline"
+        />
+      )}
     </div>
   )
 }

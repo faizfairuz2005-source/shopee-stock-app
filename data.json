@@ -5,7 +5,7 @@
       "name": "Celana Jeans Slim Fit",
       "price": 249000,
       "hpp": 155000,
-      "totalStock": 16,
+      "totalStock": 15,
       "description": "Celana jeans slim fit untuk gaya kasual sehari-hari.",
       "connectedStores": 2,
       "sales": 19,
@@ -77,7 +77,7 @@
       "name": "Kemeja Flannel",
       "price": 139000,
       "hpp": 85000,
-      "totalStock": 8,
+      "totalStock": 9,
       "description": "Kemeja flannel kotak-kotak gaya casual smart.",
       "connectedStores": 2,
       "sales": 21,
@@ -2609,6 +2609,27 @@
       "created_at": "2026-05-18T03:54:11.538Z",
       "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
       "user_name": "fairuz"
+    },
+    {
+      "id": 5,
+      "tanggal": "2026-05-18",
+      "supplier": "fauzan",
+      "nomor_faktur": "",
+      "items": [
+        {
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "quantity": 1,
+          "harga_beli": 155000,
+          "lokasiRak": "Rak-A-01",
+          "catatan": ""
+        }
+      ],
+      "total_item": 1,
+      "total_biaya": 155000,
+      "created_at": "2026-05-18T09:38:17.168Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "user_name": "fairuz"
     }
   ],
   "categories": [
@@ -2641,6 +2662,60 @@
       "id": "6",
       "name": "Perlengkapan",
       "color": "#EC4899"
+    }
+  ],
+  "stockAdjustments": [
+    {
+      "id": 1,
+      "tanggal": "2026-05-18",
+      "sku": "SKU-002",
+      "nama_produk": "Celana Jeans Slim Fit",
+      "stok_sebelum": 15,
+      "stok_sesudah": 14,
+      "jenis": "kurangi",
+      "jumlah": 1,
+      "alasan": "Barang rusak",
+      "created_at": "2026-05-18T07:06:04.520Z",
+      "user_name": "fairuz",
+      "nilai_kerugian": 155000
+    }
+  ],
+  "racks": [],
+  "goodsReturns": [
+    {
+      "id": 1,
+      "nomor_retur": "RET-000001",
+      "tanggal": "2026-05-18",
+      "original_order_id": 34,
+      "nomor_order": "SPX-000034",
+      "customer_name": "Fajar Nugroho",
+      "alasan": "Barang cacat/rusak",
+      "items": [
+        {
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "quantity": 1,
+          "harga_jual": 139000,
+          "hpp": 85000,
+          "subtotal_retur": 139000
+        }
+      ],
+      "total_item": 1,
+      "total_refund": 139000,
+      "created_at": "2026-05-18T09:12:53.910Z",
+      "user_name": "fairuz"
+    }
+  ],
+  "expenses": [
+    {
+      "id": 1,
+      "tanggal": "2026-05-18",
+      "kategori": "Konsumsi",
+      "deskripsi": "makan siang",
+      "jumlah": 100000,
+      "metode": "tunai",
+      "created_at": "2026-05-18T09:38:56.000Z",
+      "user_name": "fairuz"
     }
   ]
 }

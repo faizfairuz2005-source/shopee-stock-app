@@ -2,8 +2,21 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
-import { AlertCircle, BarChart3, Package, Store, TrendingUp } from "lucide-react";
-import { getAppData, Order } from "@/app/actions";
+import {
+  AlertCircle,
+  BarChart3,
+  Package,
+  Store,
+  TrendingUp,
+  ArrowUpDown,
+  Minus,
+  Plus,
+  History,
+  DollarSign,
+  RotateCcw,
+  Wallet,
+} from "lucide-react";
+import { getAppData, getReturns, type Order, type StockAdjustment, type GoodsReturn, type Expense } from "@/app/actions";
 import ProfitLossSection from "@/components/profit-loss-section";
 import { LaporanExportActions } from "@/components/laporan-export-actions";
 import {
@@ -64,7 +77,8 @@ function getSellerPerformance(orders: Order[]) {
 }
 
 export default async function LaporanPage() {
-  const { inventoryProducts, orders, sampleStoreCount } = await getAppData();
+  const { inventoryProducts, orders, sampleStoreCount, stockAdjustments, expenses } = await getAppData();
+  const goodsReturns = await getReturns();
 
   const totalRevenue = orders.reduce((sum, order) => sum + order.grand_total, 0);
   const totalTransactions = orders.length;
@@ -74,6 +88,27 @@ export default async function LaporanPage() {
   const sellerPerformance = getSellerPerformance(orders);
   const topSeller = sellerPerformance[0] ?? { seller: "-", transactions: 0, units: 0, revenue: 0 };
   const flattenedSales = getFlattenedSales(orders);
+
+  // ── Stock Adjustment Stats ────────────────────────────────────────
+  const adjustments = stockAdjustments || [];
+  const totalAdjustedItems = adjustments.reduce((s, a) => s + a.jumlah, 0);
+  const totalAdjustedTambah = adjustments.filter((a) => a.jenis === "tambah").reduce((s, a) => s + a.jumlah, 0);
+  const totalAdjustedKurang = adjustments.filter((a) => a.jenis === "kurangi").reduce((s, a) => s + a.jumlah, 0);
+  const totalKerugian = adjustments.reduce((s, a) => s + (a.nilai_kerugian || 0), 0);
+  const recentAdjustments = [...adjustments].slice(0, 10);
+
+  // ── Return Stats ───────────────────────────────────────────────────
+  const totalRetur = goodsReturns.reduce((s, r) => s + r.total_refund, 0);
+  const totalReturItems = goodsReturns.reduce((s, r) => s + r.total_item, 0);
+
+  // ── Expense Stats ───────────────────────────────────────────────────
+  const allExpenses = expenses || [];
+  const totalExpenses = allExpenses.reduce((s, e) => s + e.jumlah, 0);
+  const expenseCategories = allExpenses.reduce<Record<string, number>>((acc, e) => {
+    acc[e.kategori] = (acc[e.kategori] || 0) + e.jumlah;
+    return acc;
+  }, {});
+  const topExpenseCategory = Object.entries(expenseCategories).sort(([, a], [, b]) => b - a)[0];
 
   return (
     <div className="space-y-6 page-enter">
@@ -111,8 +146,109 @@ export default async function LaporanPage() {
             totalStock: p.totalStock,
             status: "Habis",
           }))}
+          stockAdjustments={adjustments}
         />
       </div>
+
+      {/* ── Expense Summary Cards ── */}
+      {allExpenses.length > 0 && (
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card className="card-hover border-violet-200 dark:border-violet-900/30">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Pengeluaran</CardTitle>
+              <Wallet className="h-4 w-4 text-violet-500" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-violet-600 dark:text-violet-400">{formatRupiah(totalExpenses)}</p>
+              <p className="text-xs text-muted-foreground">{allExpenses.length} transaksi pengeluaran</p>
+            </CardContent>
+          </Card>
+          {topExpenseCategory && (
+            <Card className="card-hover border-indigo-200 dark:border-indigo-900/30">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Kategori Terbesar</CardTitle>
+                <BarChart3 className="h-4 w-4 text-indigo-500" />
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{topExpenseCategory[0]}</p>
+                <p className="text-xs text-muted-foreground">{formatRupiah(topExpenseCategory[1])} total</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
+
+      {/* ── Retur Summary Cards ── */}
+      {goodsReturns.length > 0 && (
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card className="card-hover border-orange-200 dark:border-orange-900/30">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Retur Barang</CardTitle>
+              <RotateCcw className="h-4 w-4 text-orange-500" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{goodsReturns.length}</p>
+              <p className="text-xs text-muted-foreground">{totalReturItems} item diretur</p>
+            </CardContent>
+          </Card>
+          <Card className="card-hover border-red-200 dark:border-red-900/30">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Nilai Retur</CardTitle>
+              <DollarSign className="h-4 w-4 text-red-500" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-red-600 dark:text-red-400">{formatRupiah(totalRetur)}</p>
+              <p className="text-xs text-muted-foreground">Total refund ke pelanggan</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* ── Stock Adjustment Summary Cards ── */}
+      {adjustments.length > 0 && (
+        <div className="grid gap-4 md:grid-cols-4">
+          <Card className="card-hover border-primary/20">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Penyesuaian Stok</CardTitle>
+              <ArrowUpDown className="h-4 w-4 text-primary" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">{adjustments.length}</p>
+              <p className="text-xs text-muted-foreground">Total transaksi penyesuaian</p>
+            </CardContent>
+          </Card>
+          <Card className="card-hover border-emerald-200 dark:border-emerald-900/30">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Stok Ditambah</CardTitle>
+              <Plus className="h-4 w-4 text-emerald-500" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{totalAdjustedTambah.toLocaleString("id-ID")}</p>
+              <p className="text-xs text-muted-foreground">Unit stok ditambahkan</p>
+            </CardContent>
+          </Card>
+          <Card className="card-hover border-red-200 dark:border-red-900/30">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Stok Dikurangi</CardTitle>
+              <Minus className="h-4 w-4 text-red-500" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-red-600 dark:text-red-400">{totalAdjustedKurang.toLocaleString("id-ID")}</p>
+              <p className="text-xs text-muted-foreground">Unit stok dikurangi</p>
+            </CardContent>
+          </Card>
+          <Card className="card-hover border-amber-200 dark:border-amber-900/30">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Kerugian</CardTitle>
+              <AlertCircle className="h-4 w-4 text-amber-500" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">{formatRupiah(totalKerugian)}</p>
+              <p className="text-xs text-muted-foreground">Dari barang rusak/hilang</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card className={"card-hover " + (outOfStockItems.length > 0 ? "border-destructive/30 bg-destructive/5" : lowStockItems.length > 0 ? "border-amber-300 dark:border-amber-800" : "")}>
@@ -284,52 +420,198 @@ export default async function LaporanPage() {
         </Card>
       </div>
 
-      <div className="border-t border-border pt-6">
-        <ProfitLossSection orders={orders} />
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Laporan Lengkap */}
+        <Card className="card-hover">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4 transition-transform duration-200 ease-out group-hover/card:scale-110" />
+              Laporan Penjualan Lengkap
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border max-h-[400px] overflow-auto">
+              <Table>
+                <TableHeader className="sticky top-0 bg-background z-10 shadow-sm">
+                  <TableRow>
+                    <TableHead>No. Order</TableHead>
+                    <TableHead>Tanggal</TableHead>
+                    <TableHead>SKU</TableHead>
+                    <TableHead>Produk</TableHead>
+                    <TableHead>Penjual</TableHead>
+                    <TableHead className="text-right">Kuantitas</TableHead>
+                    <TableHead className="text-right">Subtotal</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {flattenedSales.slice().reverse().map((record, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-mono text-xs">{record.orderNumber}</TableCell>
+                      <TableCell className="whitespace-nowrap">{new Date(record.date).toLocaleDateString('id-ID')}</TableCell>
+                      <TableCell className="font-mono text-xs text-muted-foreground">{record.sku}</TableCell>
+                      <TableCell className="font-medium">{record.nama_produk}</TableCell>
+                      <TableCell>
+                        <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary dark:bg-primary/20">
+                          {record.seller}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right">{record.quantity}</TableCell>
+                      <TableCell className="text-right font-medium tabular-nums">{formatRupiah(record.subtotal)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Riwayat Penyesuaian Stok */}
+        <Card className="card-hover">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <History className="h-4 w-4" />
+              Riwayat Penyesuaian Stok
+              {adjustments.length > 0 && (
+                <Badge variant="outline" className="text-xs font-mono ml-1">
+                  {adjustments.length}
+                </Badge>
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {adjustments.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4 text-center">
+                Belum ada penyesuaian stok.
+              </p>
+            ) : (
+              <div className="rounded-md border max-h-[400px] overflow-auto">
+                <Table>
+                  <TableHeader className="sticky top-0 bg-background z-10 shadow-sm">
+                    <TableRow>
+                      <TableHead>Tanggal</TableHead>
+                      <TableHead>Produk</TableHead>
+                      <TableHead className="text-center">Jenis</TableHead>
+                      <TableHead className="text-right">Jumlah</TableHead>
+                      <TableHead>Alasan</TableHead>
+                      {totalKerugian > 0 && <TableHead className="text-right">Kerugian</TableHead>}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {recentAdjustments.map((adj) => (
+                      <TableRow key={adj.id} className={
+                        adj.jenis === "tambah"
+                          ? ""
+                          : ""
+                      }>
+                        <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                          {new Date(adj.created_at).toLocaleDateString('id-ID')}
+                        </TableCell>
+                        <TableCell>
+                          <p className="text-sm font-medium">{adj.nama_produk}</p>
+                          <p className="text-xs text-muted-foreground font-mono">{adj.sku}</p>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {adj.jenis === "tambah" ? (
+                            <Badge variant="outline" className="border-emerald-300 text-emerald-600 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/20 text-xs">
+                              <Plus className="h-3 w-3 mr-0.5" />
+                              Tambah
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="border-red-300 text-red-600 dark:text-red-400 bg-red-50/50 dark:bg-red-950/20 text-xs">
+                              <Minus className="h-3 w-3 mr-0.5" />
+                              Kurang
+                            </Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right tabular-nums text-sm font-medium">{adj.jumlah}</TableCell>
+                        <TableCell className="text-xs text-muted-foreground max-w-[140px] truncate" title={adj.alasan}>
+                          {adj.alasan}
+                        </TableCell>
+                        {totalKerugian > 0 && (
+                          <TableCell className="text-right text-xs tabular-nums text-amber-600 dark:text-amber-400">
+                            {adj.nilai_kerugian ? formatRupiah(adj.nilai_kerugian) : "—"}
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+            {adjustments.length > 10 && (
+              <div className="mt-3 text-center">
+                <Link
+                  href="/adjust-stok"
+                  className="text-xs font-medium text-primary hover:underline"
+                >
+                  Lihat semua penyesuaian ({adjustments.length}) →
+                </Link>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
-      <Card className="card-hover">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4 transition-transform duration-200 ease-out group-hover/card:scale-110" />
-            Laporan Lengkap
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-md border max-h-[400px] overflow-auto">
-            <Table>
-              <TableHeader className="sticky top-0 bg-background z-10 shadow-sm">
-                <TableRow>
-                  <TableHead>No. Order</TableHead>
-                  <TableHead>Tanggal</TableHead>
-                  <TableHead>SKU</TableHead>
-                  <TableHead>Produk</TableHead>
-                  <TableHead>Penjual</TableHead>
-                  <TableHead className="text-right">Kuantitas</TableHead>
-                  <TableHead className="text-right">Subtotal</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {flattenedSales.slice().reverse().map((record, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-mono text-xs">{record.orderNumber}</TableCell>
-                    <TableCell className="whitespace-nowrap">{new Date(record.date).toLocaleDateString('id-ID')}</TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">{record.sku}</TableCell>
-                    <TableCell className="font-medium">{record.nama_produk}</TableCell>
-                    <TableCell>
-                      <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary dark:bg-primary/20">
-                        {record.seller}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">{record.quantity}</TableCell>
-                    <TableCell className="text-right font-medium tabular-nums">{formatRupiah(record.subtotal)}</TableCell>
+      {/* ── Riwayat Retur Barang ── */}
+      {goodsReturns.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <RotateCcw className="h-4 w-4" />
+              Riwayat Retur Barang
+              <Badge variant="outline" className="text-xs font-mono ml-1">
+                {goodsReturns.length}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border max-h-[300px] overflow-auto">
+              <Table>
+                <TableHeader className="sticky top-0 bg-background z-10 shadow-sm">
+                  <TableRow>
+                    <TableHead>No. Retur</TableHead>
+                    <TableHead>Tanggal</TableHead>
+                    <TableHead>Pesanan Asal</TableHead>
+                    <TableHead>Pelanggan</TableHead>
+                    <TableHead className="text-center">Item</TableHead>
+                    <TableHead className="text-right">Total Refund</TableHead>
+                    <TableHead>Alasan</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+                </TableHeader>
+                <TableBody>
+                  {goodsReturns.map((ret) => (
+                    <TableRow key={ret.id}>
+                      <TableCell>
+                        <span className="font-mono text-xs font-medium text-orange-600 dark:text-orange-400">
+                          {ret.nomor_retur}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                        {new Date(ret.tanggal).toLocaleDateString('id-ID')}
+                      </TableCell>
+                      <TableCell className="text-xs font-mono">{ret.nomor_order}</TableCell>
+                      <TableCell className="text-sm">{ret.customer_name}</TableCell>
+                      <TableCell className="text-center text-sm tabular-nums">
+                        {ret.total_item}
+                      </TableCell>
+                      <TableCell className="text-right tabular-nums font-medium text-destructive">
+                        {formatRupiah(ret.total_refund)}
+                      </TableCell>
+                      <TableCell className="text-xs max-w-[140px] truncate" title={ret.alasan}>
+                        {ret.alasan}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="border-t border-border pt-6">
+        <ProfitLossSection orders={orders} stockAdjustments={adjustments} goodsReturns={goodsReturns} expenses={allExpenses} />
+      </div>
     </div>
   );
 }

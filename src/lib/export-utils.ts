@@ -132,3 +132,16 @@ export const GOODS_RECEIPT_EXPORT_COLUMNS: ExportColumn[] = [
   { key: "totalBiaya", label: "Total Biaya", format: (v) => (typeof v === "number" ? v : 0) },
   { key: "userName", label: "Diinput Oleh" },
 ]
+
+export const LAPORAN_ADJUSTMENT_EXPORT_COLUMNS: ExportColumn[] = [
+  { key: "tanggal", label: "Tanggal" },
+  { key: "nama_produk", label: "Nama Produk" },
+  { key: "sku", label: "SKU" },
+  { key: "jenis", label: "Jenis", format: (v) => (v === "tambah" ? "Tambah" : "Kurangi") },
+  { key: "jumlah", label: "Jumlah", format: (v) => String(v ?? 0) },
+  { key: "stok_sebelum", label: "Stok Sebelum", format: (v) => String(v ?? 0) },
+  { key: "stok_sesudah", label: "Stok Sesudah", format: (v) => String(v ?? 0) },
+  { key: "alasan", label: "Alasan" },
+  { key: "nilai_kerugian", label: "Nilai Kerugian", format: (v) => (typeof v === "number" && v > 0 ? v : "-") },
+  { key: "user_name", label: "User", format: (v) => (v ? String(v) : "-") },
+]

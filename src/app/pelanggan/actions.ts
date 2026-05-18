@@ -14,6 +14,7 @@ export interface Customer {
   catatan: string;
   total_transaksi: number;
   total_poin: number;
+  total_orders: number;
   terakhir_transaksi: string | null;
   created_at: string;
   updated_at: string;
@@ -63,7 +64,7 @@ export async function getCustomers(): Promise<{
 
 export async function getCustomersForPos(): Promise<{
   success: boolean;
-  customers: Pick<Customer, "id" | "nama_lengkap" | "nomor_hp" | "total_transaksi">[];
+  customers: Pick<Customer, "id" | "nama_lengkap" | "nomor_hp" | "total_transaksi" | "total_orders">[];
   error?: string;
 }> {
   try {
@@ -71,7 +72,7 @@ export async function getCustomersForPos(): Promise<{
 
     const { data, error } = await supabase
       .from("customers")
-      .select("id, nama_lengkap, nomor_hp, total_transaksi")
+      .select("id, nama_lengkap, nomor_hp, total_transaksi, total_orders")
       .order("nama_lengkap", { ascending: true });
 
     if (error) {
@@ -117,6 +118,7 @@ export async function addCustomer(
         alamat: input.alamat?.trim() || "",
         catatan: input.catatan?.trim() || "",
         total_transaksi: 0,
+        total_orders: 0,
         total_poin: 0,
       })
       .select()
