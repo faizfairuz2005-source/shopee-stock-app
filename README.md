@@ -206,4 +206,4 @@ src/
 
 ## 📄 Lisensi
 
-Hak cipta © 2024 Faiz Fairuz. Dibuat dengan ❤️ untuk kemudahan bisnis UMKM.
+Hak cipta © 2026 Faiz Fairuz. Dibuat dengan ❤️ untuk kemudahan bisnis UMKM.
