@@ -1,1212 +1,2646 @@
 {
   "inventoryProducts": [
     {
-      "sku": "SKU-001",
-      "name": "Kaos Polos Premium Cotton",
-      "price": 89000,
-      "totalStock": 80,
-      "description": "Kaos berbahan cotton lembut dengan potongan modern.",
-      "connectedStores": 3,
-      "sales": 38
-    },
-    {
       "sku": "SKU-002",
       "name": "Celana Jeans Slim Fit",
       "price": 249000,
-      "totalStock": 0,
+      "hpp": 155000,
+      "totalStock": 16,
       "description": "Celana jeans slim fit untuk gaya kasual sehari-hari.",
       "connectedStores": 2,
-      "sales": 35
-    },
-    {
-      "sku": "SKU-003",
-      "name": "Jaket Hoodie Unisex",
-      "price": 175000,
-      "totalStock": 85,
-      "description": "Hoodie nyaman dengan bahan tebal untuk musim dingin.",
-      "connectedStores": 3,
-      "sales": 49
-    },
-    {
-      "sku": "SKU-004",
-      "name": "Sepatu Sneakers Classic",
-      "price": 399000,
-      "totalStock": 66,
-      "description": "Sneakers klasik dengan sol empuk dan desain elegan.",
-      "connectedStores": 1,
-      "sales": 42
+      "sales": 19,
+      "lokasiRak": "Rak-A-01",
+      "kategori": "Pakaian Bawah"
     },
     {
       "sku": "SKU-005",
       "name": "Tas Ransel Waterproof",
       "price": 285000,
-      "totalStock": 3,
-      "description": "Tas ransel anti air untuk pekerja hariannya.",
+      "hpp": 175000,
+      "totalStock": 1,
+      "description": "Tas ransel anti air untuk pekerja harian.",
       "connectedStores": 2,
-      "sales": 35
-    },
-    {
-      "sku": "SKU-006",
-      "name": "Topi Baseball Cap",
-      "price": 55000,
-      "totalStock": 107,
-      "description": "Topi trendi dengan bordir logo minimalis.",
-      "connectedStores": 3,
-      "sales": 36
+      "sales": 13,
+      "lokasiRak": "Rak-A-02",
+      "kategori": "Tas & Ransel"
     },
     {
       "sku": "SKU-007",
       "name": "Sweater Rajut Winter",
-      "price": 195000,
-      "totalStock": 8,
+      "price": 215000,
+      "hpp": 135000,
+      "totalStock": 7,
       "description": "Sweater hangat dengan pola rajut modern.",
-      "connectedStores": 1,
-      "sales": 49
+      "connectedStores": 2,
+      "sales": 19,
+      "lokasiRak": "Rak-A-03",
+      "kategori": "Pakaian Atas"
     },
     {
-      "sku": "SKU-008",
-      "name": "Kemeja Flannel Kotak",
-      "price": 135000,
-      "totalStock": 84,
-      "description": "Kemeja flannel nyaman untuk gaya smart casual.",
+      "sku": "SKU-012",
+      "name": "Kaos Polos Oversize",
+      "price": 79000,
+      "hpp": 47000,
+      "totalStock": 31,
+      "description": "Kaos oversized dengan potongan relaxed fit yang nyaman.",
       "connectedStores": 2,
-      "sales": 26
+      "sales": 41,
+      "lokasiRak": "Rak-B-01",
+      "kategori": "Pakaian Atas"
+    },
+    {
+      "sku": "SKU-018",
+      "name": "Sepatu Sneakers Hitam",
+      "price": 349000,
+      "hpp": 210000,
+      "totalStock": 36,
+      "description": "Sepatu sneakers hitam时尚 untuk gaya sehari-hari yang sporty.",
+      "connectedStores": 1,
+      "sales": 31,
+      "lokasiRak": "Rak-B-02",
+      "kategori": "Alas Kaki"
+    },
+    {
+      "sku": "SKU-023",
+      "name": "Hoodie Basic",
+      "price": 189000,
+      "hpp": 115000,
+      "totalStock": 42,
+      "description": "Hoodie basic nyaman dengan bahan cotton fleece tebal.",
+      "connectedStores": 2,
+      "sales": 38,
+      "lokasiRak": "Rak-C-01",
+      "kategori": "Pakaian Atas"
+    },
+    {
+      "sku": "SKU-029",
+      "name": "Kemeja Flannel",
+      "price": 139000,
+      "hpp": 85000,
+      "totalStock": 8,
+      "description": "Kemeja flannel kotak-kotak gaya casual smart.",
+      "connectedStores": 2,
+      "sales": 21,
+      "lokasiRak": "Rak-C-02",
+      "kategori": "Pakaian Atas"
+    },
+    {
+      "sku": "SKU-035",
+      "name": "Botol Minum Tumbler",
+      "price": 69000,
+      "hpp": 40000,
+      "totalStock": 60,
+      "description": "Botol minum tumbler stainless tahan panas dan dingin.",
+      "connectedStores": 2,
+      "sales": 35,
+      "lokasiRak": "Rak-D-01",
+      "kategori": "Perlengkapan"
+    },
+    {
+      "sku": "SKU-041",
+      "name": "Jaket Parka Anti Air",
+      "price": 379000,
+      "hpp": 230000,
+      "totalStock": 5,
+      "description": "Jaket parka anti air dengan hoodie untuk musim hujan.",
+      "connectedStores": 1,
+      "sales": 16,
+      "lokasiRak": "Rak-D-02",
+      "kategori": "Pakaian Atas"
+    },
+    {
+      "sku": "SKU-048",
+      "name": "Dompet Kulit Premium",
+      "price": 159000,
+      "hpp": 95000,
+      "totalStock": 23,
+      "description": "Dompet kulit asli premium dengan banyak kompartemen.",
+      "connectedStores": 2,
+      "sales": 25,
+      "lokasiRak": "Rak-E-01",
+      "kategori": "Aksesoris"
     }
   ],
-  "salesRecords": [
+  "orders": [
     {
       "id": 1,
-      "tanggal_penjualan": "2024-01-01",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 1,
-      "total": 195000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000001",
+      "tanggal_pesanan": "2026-01-01",
+      "user_id": "usr_41849",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Aditya Pratama",
+      "alamat_pengiriman": "Jl. Gatot Subroto No. 321, Medan, Sumatera Utara",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "dikirim",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "hpp": 155000,
+          "quantity": 2,
+          "subtotal": 498000
+        }
+      ],
+      "subtotal": 498000,
+      "ongkir": 19920,
+      "grand_total": 517920
     },
     {
       "id": 2,
-      "tanggal_penjualan": "2024-01-03",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 3,
-      "total": 525000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000002",
+      "tanggal_pesanan": "2026-01-23",
+      "user_id": "usr_69281",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Nadia Safitri",
+      "alamat_pengiriman": "Jl. Ahmad Yani No. 654, Makassar, Sulawesi Selatan",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "dikirim",
+      "items": [
+        {
+          "id": 2,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 2,
+          "subtotal": 378000
+        },
+        {
+          "id": 3,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 2,
+          "subtotal": 138000
+        }
+      ],
+      "subtotal": 516000,
+      "ongkir": 20640,
+      "grand_total": 536640
     },
     {
       "id": 3,
-      "tanggal_penjualan": "2024-01-05",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 1,
-      "total": 175000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000003",
+      "tanggal_pesanan": "2026-01-14",
+      "user_id": "usr_11031",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Tari Lestari",
+      "alamat_pengiriman": "Jl. Dipatiukur No. 888, Bandung, Jawa Barat",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 4,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 1,
+          "subtotal": 69000
+        },
+        {
+          "id": 5,
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "harga": 285000,
+          "hpp": 175000,
+          "quantity": 2,
+          "subtotal": 570000
+        }
+      ],
+      "subtotal": 639000,
+      "ongkir": 25000,
+      "grand_total": 664000
     },
     {
       "id": 4,
-      "tanggal_penjualan": "2024-01-07",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 2,
-      "total": 498000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000004",
+      "tanggal_pesanan": "2026-01-22",
+      "user_id": "usr_17588",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Wulan Sari",
+      "alamat_pengiriman": "Jl. Dipatiukur No. 888, Bandung, Jawa Barat",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 6,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "hpp": 135000,
+          "quantity": 2,
+          "subtotal": 430000
+        },
+        {
+          "id": 7,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 2,
+          "subtotal": 378000
+        }
+      ],
+      "subtotal": 808000,
+      "ongkir": 25000,
+      "grand_total": 833000
     },
     {
       "id": 5,
-      "tanggal_penjualan": "2024-01-07",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 3,
-      "total": 585000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000005",
+      "tanggal_pesanan": "2026-01-05",
+      "user_id": "usr_40142",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Nadia Safitri",
+      "alamat_pengiriman": "Jl. Sultan Hasanuddin No. 555, Mataram, NTB",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 8,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 1,
+          "subtotal": 159000
+        },
+        {
+          "id": 9,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 1,
+          "subtotal": 349000
+        },
+        {
+          "id": 10,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "hpp": 135000,
+          "quantity": 1,
+          "subtotal": 215000
+        }
+      ],
+      "subtotal": 723000,
+      "ongkir": 25000,
+      "grand_total": 748000
     },
     {
       "id": 6,
-      "tanggal_penjualan": "2024-01-09",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 3,
-      "total": 585000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000006",
+      "tanggal_pesanan": "2026-01-29",
+      "user_id": "usr_77514",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Budi Santoso",
+      "alamat_pengiriman": "Jl. Cyber No. 111, BSD City, Tangerang Selatan",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "diproses",
+      "items": [
+        {
+          "id": 11,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 1,
+          "subtotal": 159000
+        },
+        {
+          "id": 12,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 2,
+          "subtotal": 378000
+        },
+        {
+          "id": 13,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 2,
+          "subtotal": 138000
+        }
+      ],
+      "subtotal": 675000,
+      "ongkir": 25000,
+      "grand_total": 700000
     },
     {
       "id": 7,
-      "tanggal_penjualan": "2024-01-10",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 4,
-      "total": 996000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000007",
+      "tanggal_pesanan": "2026-01-30",
+      "user_id": "usr_17202",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Reza Pahlevi",
+      "alamat_pengiriman": "Jl. Pemuda No. 444, Semarang, Jawa Tengah",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 14,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "hpp": 155000,
+          "quantity": 2,
+          "subtotal": 498000
+        }
+      ],
+      "subtotal": 498000,
+      "ongkir": 19920,
+      "grand_total": 517920
     },
     {
       "id": 8,
-      "tanggal_penjualan": "2024-01-11",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 2,
-      "total": 350000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000008",
+      "tanggal_pesanan": "2026-01-01",
+      "user_id": "usr_54525",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Ratna Sari",
+      "alamat_pengiriman": "Jl. Dipatiukur No. 888, Bandung, Jawa Barat",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 15,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "hpp": 85000,
+          "quantity": 2,
+          "subtotal": 278000
+        },
+        {
+          "id": 16,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 1,
+          "subtotal": 159000
+        }
+      ],
+      "subtotal": 437000,
+      "ongkir": 17480,
+      "grand_total": 454480
     },
     {
       "id": 9,
-      "tanggal_penjualan": "2024-01-12",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 2,
-      "total": 498000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000009",
+      "tanggal_pesanan": "2026-01-26",
+      "user_id": "usr_46831",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Ratna Sari",
+      "alamat_pengiriman": "Jl. Gajah Mada No. 555, Denpasar, Bali",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 17,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "hpp": 135000,
+          "quantity": 2,
+          "subtotal": 430000
+        },
+        {
+          "id": 18,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 2,
+          "subtotal": 698000
+        }
+      ],
+      "subtotal": 1128000,
+      "ongkir": 25000,
+      "grand_total": 1153000
     },
     {
       "id": 10,
-      "tanggal_penjualan": "2024-01-14",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 5,
-      "total": 875000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "SPX-000010",
+      "tanggal_pesanan": "2026-01-01",
+      "user_id": "usr_36967",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Nadia Safitri",
+      "alamat_pengiriman": "Jl. Imam Bonjol No. 111, Palembang, Sumatera Selatan",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 19,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "hpp": 135000,
+          "quantity": 1,
+          "subtotal": 215000
+        },
+        {
+          "id": 20,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 1,
+          "subtotal": 79000
+        },
+        {
+          "id": 21,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 2,
+          "subtotal": 318000
+        }
+      ],
+      "subtotal": 612000,
+      "ongkir": 24480,
+      "grand_total": 636480
     },
     {
       "id": 11,
-      "tanggal_penjualan": "2024-01-15",
-      "nama_produk": "Sepatu Sneakers Classic",
-      "sku": "SKU-004",
-      "harga": 399000,
-      "quantity": 2,
-      "total": 798000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000011",
+      "tanggal_pesanan": "2026-02-02",
+      "user_id": "usr_42641",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Nadia Safitri",
+      "alamat_pengiriman": "Jl. Antasari No. 444, Banjarmasin, Kalimantan Selatan",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 22,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 1,
+          "subtotal": 79000
+        },
+        {
+          "id": 23,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 2,
+          "subtotal": 378000
+        }
+      ],
+      "subtotal": 457000,
+      "ongkir": 18280,
+      "grand_total": 475280
     },
     {
       "id": 12,
-      "tanggal_penjualan": "2024-01-16",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 1,
-      "total": 249000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000012",
+      "tanggal_pesanan": "2026-02-18",
+      "user_id": "usr_56014",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Ahmad Fauzi",
+      "alamat_pengiriman": "Jl. Sultan Hasanuddin No. 555, Mataram, NTB",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 24,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 1,
+          "subtotal": 69000
+        }
+      ],
+      "subtotal": 69000,
+      "ongkir": 10000,
+      "grand_total": 79000
     },
     {
       "id": 13,
-      "tanggal_penjualan": "2024-01-16",
-      "nama_produk": "Topi Baseball Cap",
-      "sku": "SKU-006",
-      "harga": 55000,
-      "quantity": 3,
-      "total": 165000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000013",
+      "tanggal_pesanan": "2026-02-27",
+      "user_id": "usr_70307",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Tari Lestari",
+      "alamat_pengiriman": "Jl. Asia Afrika No. 222, Bandung, Jawa Barat",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "diproses",
+      "items": [
+        {
+          "id": 25,
+          "sku": "SKU-041",
+          "nama_produk": "Jaket Parka Anti Air",
+          "harga": 379000,
+          "hpp": 230000,
+          "quantity": 1,
+          "subtotal": 379000
+        },
+        {
+          "id": 26,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 2,
+          "subtotal": 698000
+        },
+        {
+          "id": 27,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 2,
+          "subtotal": 378000
+        }
+      ],
+      "subtotal": 1455000,
+      "ongkir": 25000,
+      "grand_total": 1480000
     },
     {
       "id": 14,
-      "tanggal_penjualan": "2024-01-17",
-      "nama_produk": "Topi Baseball Cap",
-      "sku": "SKU-006",
-      "harga": 55000,
-      "quantity": 2,
-      "total": 110000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "SPX-000014",
+      "tanggal_pesanan": "2026-02-03",
+      "user_id": "usr_34409",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Irfan Hakim",
+      "alamat_pengiriman": "Jl. Sudirman No. 456, Jakarta Selatan",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "dibatalkan",
+      "items": [
+        {
+          "id": 28,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 2,
+          "subtotal": 698000
+        }
+      ],
+      "subtotal": 698000,
+      "ongkir": 25000,
+      "grand_total": 723000
     },
     {
       "id": 15,
-      "tanggal_penjualan": "2024-01-17",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 5,
-      "total": 875000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000015",
+      "tanggal_pesanan": "2026-02-12",
+      "user_id": "usr_43073",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Budi Santoso",
+      "alamat_pengiriman": "Jl. Siliwangi No. 666, Malang, Jawa Timur",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 29,
+          "sku": "SKU-041",
+          "nama_produk": "Jaket Parka Anti Air",
+          "harga": 379000,
+          "hpp": 230000,
+          "quantity": 2,
+          "subtotal": 758000
+        }
+      ],
+      "subtotal": 758000,
+      "ongkir": 25000,
+      "grand_total": 783000
     },
     {
       "id": 16,
-      "tanggal_penjualan": "2024-01-17",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 1,
-      "total": 249000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "SPX-000016",
+      "tanggal_pesanan": "2026-02-09",
+      "user_id": "usr_69508",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Tari Lestari",
+      "alamat_pengiriman": "Jl. Diponegoro No. 789, Surabaya, Jawa Timur",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "diproses",
+      "items": [
+        {
+          "id": 30,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "hpp": 135000,
+          "quantity": 1,
+          "subtotal": 215000
+        },
+        {
+          "id": 31,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 1,
+          "subtotal": 189000
+        }
+      ],
+      "subtotal": 404000,
+      "ongkir": 16160,
+      "grand_total": 420160
     },
     {
       "id": 17,
-      "tanggal_penjualan": "2024-01-19",
-      "nama_produk": "Kemeja Flannel Kotak",
-      "sku": "SKU-008",
-      "harga": 135000,
-      "quantity": 4,
-      "total": 540000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000017",
+      "tanggal_pesanan": "2026-02-26",
+      "user_id": "usr_93076",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Ratna Sari",
+      "alamat_pengiriman": "Jl. Cyber No. 111, BSD City, Tangerang Selatan",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 32,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 2,
+          "subtotal": 698000
+        },
+        {
+          "id": 33,
+          "sku": "SKU-041",
+          "nama_produk": "Jaket Parka Anti Air",
+          "harga": 379000,
+          "hpp": 230000,
+          "quantity": 2,
+          "subtotal": 758000
+        }
+      ],
+      "subtotal": 1456000,
+      "ongkir": 25000,
+      "grand_total": 1481000
     },
     {
       "id": 18,
-      "tanggal_penjualan": "2024-01-20",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 1,
-      "total": 249000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000018",
+      "tanggal_pesanan": "2026-02-05",
+      "user_id": "usr_25017",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Intan Permata",
+      "alamat_pengiriman": "Jl. Pemuda No. 444, Semarang, Jawa Tengah",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "dibatalkan",
+      "items": [
+        {
+          "id": 34,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 1,
+          "subtotal": 159000
+        },
+        {
+          "id": 35,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 2,
+          "subtotal": 158000
+        },
+        {
+          "id": 36,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 1,
+          "subtotal": 349000
+        }
+      ],
+      "subtotal": 666000,
+      "ongkir": 25000,
+      "grand_total": 691000
     },
     {
       "id": 19,
-      "tanggal_penjualan": "2024-01-20",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 4,
-      "total": 700000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000019",
+      "tanggal_pesanan": "2026-03-13",
+      "user_id": "usr_32273",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Wulan Sari",
+      "alamat_pengiriman": "Jl. Cyber No. 111, BSD City, Tangerang Selatan",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "dikirim",
+      "items": [
+        {
+          "id": 37,
+          "sku": "SKU-041",
+          "nama_produk": "Jaket Parka Anti Air",
+          "harga": 379000,
+          "hpp": 230000,
+          "quantity": 1,
+          "subtotal": 379000
+        }
+      ],
+      "subtotal": 379000,
+      "ongkir": 15160,
+      "grand_total": 394160
     },
     {
       "id": 20,
-      "tanggal_penjualan": "2024-01-21",
-      "nama_produk": "Kemeja Flannel Kotak",
-      "sku": "SKU-008",
-      "harga": 135000,
-      "quantity": 2,
-      "total": 270000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000020",
+      "tanggal_pesanan": "2026-03-15",
+      "user_id": "usr_42475",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Maya Sari",
+      "alamat_pengiriman": "Jl. Teuku Umar No. 222, Padang, Sumatera Barat",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 38,
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "harga": 285000,
+          "hpp": 175000,
+          "quantity": 2,
+          "subtotal": 570000
+        },
+        {
+          "id": 39,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 2,
+          "subtotal": 378000
+        },
+        {
+          "id": 40,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "hpp": 85000,
+          "quantity": 2,
+          "subtotal": 278000
+        }
+      ],
+      "subtotal": 1226000,
+      "ongkir": 25000,
+      "grand_total": 1251000
     },
     {
       "id": 21,
-      "tanggal_penjualan": "2024-01-23",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 1,
-      "total": 249000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "SPX-000021",
+      "tanggal_pesanan": "2026-03-20",
+      "user_id": "usr_24152",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Rendy Kurniawan",
+      "alamat_pengiriman": "Jl. Ahmad Yani No. 654, Makassar, Sulawesi Selatan",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "dikirim",
+      "items": [
+        {
+          "id": 41,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 2,
+          "subtotal": 138000
+        },
+        {
+          "id": 42,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 2,
+          "subtotal": 318000
+        },
+        {
+          "id": 43,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "hpp": 135000,
+          "quantity": 1,
+          "subtotal": 215000
+        }
+      ],
+      "subtotal": 671000,
+      "ongkir": 25000,
+      "grand_total": 696000
     },
     {
       "id": 22,
-      "tanggal_penjualan": "2024-01-23",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 3,
-      "total": 585000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000022",
+      "tanggal_pesanan": "2026-03-25",
+      "user_id": "usr_61200",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Budi Santoso",
+      "alamat_pengiriman": "Jl. Dipatiukur No. 888, Bandung, Jawa Barat",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 44,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 2,
+          "subtotal": 378000
+        },
+        {
+          "id": 45,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 2,
+          "subtotal": 158000
+        }
+      ],
+      "subtotal": 536000,
+      "ongkir": 21440,
+      "grand_total": 557440
     },
     {
       "id": 23,
-      "tanggal_penjualan": "2024-01-25",
-      "nama_produk": "Tas Ransel Waterproof",
-      "sku": "SKU-005",
-      "harga": 285000,
-      "quantity": 3,
-      "total": 855000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000023",
+      "tanggal_pesanan": "2026-03-10",
+      "user_id": "usr_74529",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Tari Lestari",
+      "alamat_pengiriman": "Jl. Veteran No. 777, Solo, Jawa Tengah",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 46,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "hpp": 135000,
+          "quantity": 2,
+          "subtotal": 430000
+        },
+        {
+          "id": 47,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 1,
+          "subtotal": 189000
+        }
+      ],
+      "subtotal": 619000,
+      "ongkir": 24760,
+      "grand_total": 643760
     },
     {
       "id": 24,
-      "tanggal_penjualan": "2024-01-27",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 4,
-      "total": 780000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000024",
+      "tanggal_pesanan": "2026-03-14",
+      "user_id": "usr_89996",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Ahmad Fauzi",
+      "alamat_pengiriman": "Jl. Rasuna Said No. 999, Jakarta Selatan",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "diproses",
+      "items": [
+        {
+          "id": 48,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "hpp": 135000,
+          "quantity": 2,
+          "subtotal": 430000
+        }
+      ],
+      "subtotal": 430000,
+      "ongkir": 17200,
+      "grand_total": 447200
     },
     {
       "id": 25,
-      "tanggal_penjualan": "2024-01-29",
-      "nama_produk": "Kemeja Flannel Kotak",
-      "sku": "SKU-008",
-      "harga": 135000,
-      "quantity": 1,
-      "total": 135000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000025",
+      "tanggal_pesanan": "2026-03-29",
+      "user_id": "usr_80750",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Andi Wijaya",
+      "alamat_pengiriman": "Jl. Gajah Mada No. 555, Denpasar, Bali",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "dikirim",
+      "items": [
+        {
+          "id": 49,
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "harga": 285000,
+          "hpp": 175000,
+          "quantity": 1,
+          "subtotal": 285000
+        }
+      ],
+      "subtotal": 285000,
+      "ongkir": 11400,
+      "grand_total": 296400
     },
     {
       "id": 26,
-      "tanggal_penjualan": "2024-01-29",
-      "nama_produk": "Kemeja Flannel Kotak",
-      "sku": "SKU-008",
-      "harga": 135000,
-      "quantity": 2,
-      "total": 270000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000026",
+      "tanggal_pesanan": "2026-03-10",
+      "user_id": "usr_78051",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Putri Ayu",
+      "alamat_pengiriman": "Jl. Merdeka No. 123, Bandung, Jawa Barat",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 50,
+          "sku": "SKU-041",
+          "nama_produk": "Jaket Parka Anti Air",
+          "harga": 379000,
+          "hpp": 230000,
+          "quantity": 2,
+          "subtotal": 758000
+        },
+        {
+          "id": 51,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "hpp": 155000,
+          "quantity": 2,
+          "subtotal": 498000
+        }
+      ],
+      "subtotal": 1256000,
+      "ongkir": 25000,
+      "grand_total": 1281000
     },
     {
       "id": 27,
-      "tanggal_penjualan": "2024-01-31",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 1,
-      "total": 89000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "SPX-000027",
+      "tanggal_pesanan": "2026-03-09",
+      "user_id": "usr_24120",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Vania Putri",
+      "alamat_pengiriman": "Jl. Pahlawan No. 987, Yogyakarta, DI Yogyakarta",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 52,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "hpp": 135000,
+          "quantity": 2,
+          "subtotal": 430000
+        }
+      ],
+      "subtotal": 430000,
+      "ongkir": 17200,
+      "grand_total": 447200
     },
     {
       "id": 28,
-      "tanggal_penjualan": "2024-02-02",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 4,
-      "total": 780000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000028",
+      "tanggal_pesanan": "2026-03-01",
+      "user_id": "usr_10011",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Irfan Hakim",
+      "alamat_pengiriman": "Jl. Sultan Hasanuddin No. 555, Mataram, NTB",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 53,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 1,
+          "subtotal": 79000
+        },
+        {
+          "id": 54,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 2,
+          "subtotal": 698000
+        }
+      ],
+      "subtotal": 777000,
+      "ongkir": 25000,
+      "grand_total": 802000
     },
     {
       "id": 29,
-      "tanggal_penjualan": "2024-02-02",
-      "nama_produk": "Tas Ransel Waterproof",
-      "sku": "SKU-005",
-      "harga": 285000,
-      "quantity": 2,
-      "total": 570000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "SPX-000029",
+      "tanggal_pesanan": "2026-03-07",
+      "user_id": "usr_51032",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Irfan Hakim",
+      "alamat_pengiriman": "Jl. Rasuna Said No. 999, Jakarta Selatan",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 55,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "hpp": 85000,
+          "quantity": 2,
+          "subtotal": 278000
+        },
+        {
+          "id": 56,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 2,
+          "subtotal": 158000
+        }
+      ],
+      "subtotal": 436000,
+      "ongkir": 17440,
+      "grand_total": 453440
     },
     {
       "id": 30,
-      "tanggal_penjualan": "2024-02-03",
-      "nama_produk": "Kemeja Flannel Kotak",
-      "sku": "SKU-008",
-      "harga": 135000,
-      "quantity": 4,
-      "total": 540000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000030",
+      "tanggal_pesanan": "2026-03-15",
+      "user_id": "usr_13948",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Wulan Sari",
+      "alamat_pengiriman": "Jl. Thamrin No. 333, Jakarta Pusat",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 57,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 1,
+          "subtotal": 79000
+        },
+        {
+          "id": 58,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 1,
+          "subtotal": 159000
+        }
+      ],
+      "subtotal": 238000,
+      "ongkir": 10000,
+      "grand_total": 248000
     },
     {
       "id": 31,
-      "tanggal_penjualan": "2024-02-04",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 5,
-      "total": 445000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000031",
+      "tanggal_pesanan": "2026-04-11",
+      "user_id": "usr_78792",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Wulan Sari",
+      "alamat_pengiriman": "Jl. Pemuda No. 444, Semarang, Jawa Tengah",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 59,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 2,
+          "subtotal": 698000
+        }
+      ],
+      "subtotal": 698000,
+      "ongkir": 25000,
+      "grand_total": 723000
     },
     {
       "id": 32,
-      "tanggal_penjualan": "2024-02-06",
-      "nama_produk": "Sepatu Sneakers Classic",
-      "sku": "SKU-004",
-      "harga": 399000,
-      "quantity": 5,
-      "total": 1995000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "SPX-000032",
+      "tanggal_pesanan": "2026-04-19",
+      "user_id": "usr_87955",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Ahmad Fauzi",
+      "alamat_pengiriman": "Jl. Thamrin No. 333, Jakarta Pusat",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 60,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 2,
+          "subtotal": 138000
+        }
+      ],
+      "subtotal": 138000,
+      "ongkir": 10000,
+      "grand_total": 148000
     },
     {
       "id": 33,
-      "tanggal_penjualan": "2024-02-08",
-      "nama_produk": "Sepatu Sneakers Classic",
-      "sku": "SKU-004",
-      "harga": 399000,
-      "quantity": 4,
-      "total": 1596000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "SPX-000033",
+      "tanggal_pesanan": "2026-04-21",
+      "user_id": "usr_29592",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Siti Nurhaliza",
+      "alamat_pengiriman": "Jl. Merdeka No. 123, Bandung, Jawa Barat",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "dikirim",
+      "items": [
+        {
+          "id": 61,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 1,
+          "subtotal": 349000
+        },
+        {
+          "id": 62,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "hpp": 155000,
+          "quantity": 2,
+          "subtotal": 498000
+        }
+      ],
+      "subtotal": 847000,
+      "ongkir": 25000,
+      "grand_total": 872000
     },
     {
       "id": 34,
-      "tanggal_penjualan": "2024-02-10",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 2,
-      "total": 498000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000034",
+      "tanggal_pesanan": "2026-04-25",
+      "user_id": "usr_85315",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Fajar Nugroho",
+      "alamat_pengiriman": "Jl. Sudirman No. 456, Jakarta Selatan",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 63,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "hpp": 85000,
+          "quantity": 1,
+          "subtotal": 139000
+        },
+        {
+          "id": 64,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 1,
+          "subtotal": 189000
+        },
+        {
+          "id": 65,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 1,
+          "subtotal": 69000
+        }
+      ],
+      "subtotal": 397000,
+      "ongkir": 15880,
+      "grand_total": 412880
     },
     {
       "id": 35,
-      "tanggal_penjualan": "2024-02-11",
-      "nama_produk": "Kemeja Flannel Kotak",
-      "sku": "SKU-008",
-      "harga": 135000,
-      "quantity": 5,
-      "total": 675000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000035",
+      "tanggal_pesanan": "2026-04-20",
+      "user_id": "usr_73396",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Fajar Nugroho",
+      "alamat_pengiriman": "Jl. Teuku Umar No. 222, Padang, Sumatera Barat",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 66,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 1,
+          "subtotal": 159000
+        }
+      ],
+      "subtotal": 159000,
+      "ongkir": 10000,
+      "grand_total": 169000
     },
     {
       "id": 36,
-      "tanggal_penjualan": "2024-02-11",
-      "nama_produk": "Sepatu Sneakers Classic",
-      "sku": "SKU-004",
-      "harga": 399000,
-      "quantity": 2,
-      "total": 798000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000036",
+      "tanggal_pesanan": "2026-04-27",
+      "user_id": "usr_14333",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Ratna Sari",
+      "alamat_pengiriman": "Jl. Sultan Hasanuddin No. 555, Mataram, NTB",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 67,
+          "sku": "SKU-041",
+          "nama_produk": "Jaket Parka Anti Air",
+          "harga": 379000,
+          "hpp": 230000,
+          "quantity": 2,
+          "subtotal": 758000
+        },
+        {
+          "id": 68,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 2,
+          "subtotal": 318000
+        }
+      ],
+      "subtotal": 1076000,
+      "ongkir": 25000,
+      "grand_total": 1101000
     },
     {
       "id": 37,
-      "tanggal_penjualan": "2024-02-13",
-      "nama_produk": "Topi Baseball Cap",
-      "sku": "SKU-006",
-      "harga": 55000,
-      "quantity": 3,
-      "total": 165000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000037",
+      "tanggal_pesanan": "2026-04-11",
+      "user_id": "usr_61925",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Wulan Sari",
+      "alamat_pengiriman": "Jl. Teuku Umar No. 222, Padang, Sumatera Barat",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "diproses",
+      "items": [
+        {
+          "id": 69,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 2,
+          "subtotal": 158000
+        },
+        {
+          "id": 70,
+          "sku": "SKU-041",
+          "nama_produk": "Jaket Parka Anti Air",
+          "harga": 379000,
+          "hpp": 230000,
+          "quantity": 2,
+          "subtotal": 758000
+        },
+        {
+          "id": 71,
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "harga": 285000,
+          "hpp": 175000,
+          "quantity": 2,
+          "subtotal": 570000
+        }
+      ],
+      "subtotal": 1486000,
+      "ongkir": 25000,
+      "grand_total": 1511000
     },
     {
       "id": 38,
-      "tanggal_penjualan": "2024-02-13",
-      "nama_produk": "Sepatu Sneakers Classic",
-      "sku": "SKU-004",
-      "harga": 399000,
-      "quantity": 1,
-      "total": 399000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "SPX-000038",
+      "tanggal_pesanan": "2026-04-22",
+      "user_id": "usr_98199",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Maya Sari",
+      "alamat_pengiriman": "Jl. Sam Ratulangi No. 333, Manado, Sulawesi Utara",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "diproses",
+      "items": [
+        {
+          "id": 72,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 1,
+          "subtotal": 69000
+        },
+        {
+          "id": 73,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 1,
+          "subtotal": 349000
+        }
+      ],
+      "subtotal": 418000,
+      "ongkir": 16720,
+      "grand_total": 434720
     },
     {
       "id": 39,
-      "tanggal_penjualan": "2024-02-13",
-      "nama_produk": "Tas Ransel Waterproof",
-      "sku": "SKU-005",
-      "harga": 285000,
-      "quantity": 1,
-      "total": 285000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000039",
+      "tanggal_pesanan": "2026-04-24",
+      "user_id": "usr_58734",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Intan Permata",
+      "alamat_pengiriman": "Jl. Gajah Mada No. 555, Denpasar, Bali",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 74,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "hpp": 85000,
+          "quantity": 2,
+          "subtotal": 278000
+        }
+      ],
+      "subtotal": 278000,
+      "ongkir": 11120,
+      "grand_total": 289120
     },
     {
       "id": 40,
-      "tanggal_penjualan": "2024-02-13",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 5,
-      "total": 445000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000040",
+      "tanggal_pesanan": "2026-04-25",
+      "user_id": "usr_65333",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Nadia Safitri",
+      "alamat_pengiriman": "Jl. Gajah Mada No. 555, Denpasar, Bali",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 75,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 2,
+          "subtotal": 698000
+        },
+        {
+          "id": 76,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 1,
+          "subtotal": 189000
+        }
+      ],
+      "subtotal": 887000,
+      "ongkir": 25000,
+      "grand_total": 912000
     },
     {
       "id": 41,
-      "tanggal_penjualan": "2024-02-13",
-      "nama_produk": "Topi Baseball Cap",
-      "sku": "SKU-006",
-      "harga": 55000,
-      "quantity": 1,
-      "total": 55000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000041",
+      "tanggal_pesanan": "2026-05-09",
+      "user_id": "usr_99202",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Rina Marlina",
+      "alamat_pengiriman": "Jl. Sam Ratulangi No. 333, Manado, Sulawesi Utara",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 77,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 2,
+          "subtotal": 158000
+        },
+        {
+          "id": 78,
+          "sku": "SKU-041",
+          "nama_produk": "Jaket Parka Anti Air",
+          "harga": 379000,
+          "hpp": 230000,
+          "quantity": 2,
+          "subtotal": 758000
+        },
+        {
+          "id": 79,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "hpp": 135000,
+          "quantity": 2,
+          "subtotal": 430000
+        }
+      ],
+      "subtotal": 1346000,
+      "ongkir": 25000,
+      "grand_total": 1371000
     },
     {
       "id": 42,
-      "tanggal_penjualan": "2024-02-13",
-      "nama_produk": "Topi Baseball Cap",
-      "sku": "SKU-006",
-      "harga": 55000,
-      "quantity": 2,
-      "total": 110000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000042",
+      "tanggal_pesanan": "2026-05-02",
+      "user_id": "usr_48027",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Ratna Sari",
+      "alamat_pengiriman": "Jl. Sam Ratulangi No. 333, Manado, Sulawesi Utara",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 80,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 2,
+          "subtotal": 158000
+        },
+        {
+          "id": 81,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 2,
+          "subtotal": 378000
+        }
+      ],
+      "subtotal": 536000,
+      "ongkir": 21440,
+      "grand_total": 557440
     },
     {
       "id": 43,
-      "tanggal_penjualan": "2024-02-14",
-      "nama_produk": "Sepatu Sneakers Classic",
-      "sku": "SKU-004",
-      "harga": 399000,
-      "quantity": 5,
-      "total": 1995000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "SPX-000043",
+      "tanggal_pesanan": "2026-05-11",
+      "user_id": "usr_67931",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Siska Dewi",
+      "alamat_pengiriman": "Jl. Asia Afrika No. 222, Bandung, Jawa Barat",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 82,
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "harga": 285000,
+          "hpp": 175000,
+          "quantity": 1,
+          "subtotal": 285000
+        }
+      ],
+      "subtotal": 285000,
+      "ongkir": 11400,
+      "grand_total": 296400
     },
     {
       "id": 44,
-      "tanggal_penjualan": "2024-02-16",
-      "nama_produk": "Tas Ransel Waterproof",
-      "sku": "SKU-005",
-      "harga": 285000,
-      "quantity": 5,
-      "total": 1425000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000044",
+      "tanggal_pesanan": "2026-05-15",
+      "user_id": "usr_77873",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Reza Pahlevi",
+      "alamat_pengiriman": "Jl. Diponegoro No. 789, Surabaya, Jawa Timur",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "diproses",
+      "items": [
+        {
+          "id": 83,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 2,
+          "subtotal": 318000
+        },
+        {
+          "id": 84,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "hpp": 85000,
+          "quantity": 1,
+          "subtotal": 139000
+        }
+      ],
+      "subtotal": 457000,
+      "ongkir": 18280,
+      "grand_total": 475280
     },
     {
       "id": 45,
-      "tanggal_penjualan": "2024-02-17",
-      "nama_produk": "Sepatu Sneakers Classic",
-      "sku": "SKU-004",
-      "harga": 399000,
-      "quantity": 4,
-      "total": 1596000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000045",
+      "tanggal_pesanan": "2026-05-28",
+      "user_id": "usr_24815",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Agus Wijaya",
+      "alamat_pengiriman": "Jl. Diponegoro No. 789, Surabaya, Jawa Timur",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 85,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 1,
+          "subtotal": 69000
+        }
+      ],
+      "subtotal": 69000,
+      "ongkir": 10000,
+      "grand_total": 79000
     },
     {
       "id": 46,
-      "tanggal_penjualan": "2024-02-19",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 2,
-      "total": 178000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000046",
+      "tanggal_pesanan": "2026-05-20",
+      "user_id": "usr_24139",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Reza Pahlevi",
+      "alamat_pengiriman": "Jl. Sudirman No. 456, Jakarta Selatan",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 86,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "hpp": 85000,
+          "quantity": 1,
+          "subtotal": 139000
+        }
+      ],
+      "subtotal": 139000,
+      "ongkir": 10000,
+      "grand_total": 149000
     },
     {
       "id": 47,
-      "tanggal_penjualan": "2024-02-20",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 2,
-      "total": 498000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000047",
+      "tanggal_pesanan": "2026-05-15",
+      "user_id": "usr_80260",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Hendra Gunawan",
+      "alamat_pengiriman": "Jl. Diponegoro No. 789, Surabaya, Jawa Timur",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 87,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 1,
+          "subtotal": 159000
+        },
+        {
+          "id": 88,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "hpp": 135000,
+          "quantity": 1,
+          "subtotal": 215000
+        },
+        {
+          "id": 89,
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "harga": 285000,
+          "hpp": 175000,
+          "quantity": 2,
+          "subtotal": 570000
+        }
+      ],
+      "subtotal": 944000,
+      "ongkir": 25000,
+      "grand_total": 969000
     },
     {
       "id": 48,
-      "tanggal_penjualan": "2024-02-20",
-      "nama_produk": "Topi Baseball Cap",
-      "sku": "SKU-006",
-      "harga": 55000,
-      "quantity": 4,
-      "total": 220000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000048",
+      "tanggal_pesanan": "2026-05-22",
+      "user_id": "usr_54813",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Maya Sari",
+      "alamat_pengiriman": "Jl. Gatot Subroto No. 321, Medan, Sumatera Utara",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 90,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "hpp": 85000,
+          "quantity": 1,
+          "subtotal": 139000
+        }
+      ],
+      "subtotal": 139000,
+      "ongkir": 10000,
+      "grand_total": 149000
     },
     {
       "id": 49,
-      "tanggal_penjualan": "2024-02-22",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 4,
-      "total": 700000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000049",
+      "tanggal_pesanan": "2026-05-18",
+      "user_id": "usr_26415",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Putri Ayu",
+      "alamat_pengiriman": "Jl. Sultan Hasanuddin No. 555, Mataram, NTB",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "dikirim",
+      "items": [
+        {
+          "id": 91,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 2,
+          "subtotal": 138000
+        },
+        {
+          "id": 92,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 2,
+          "subtotal": 158000
+        },
+        {
+          "id": 93,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 2,
+          "subtotal": 378000
+        }
+      ],
+      "subtotal": 674000,
+      "ongkir": 25000,
+      "grand_total": 699000
     },
     {
       "id": 50,
-      "tanggal_penjualan": "2024-02-22",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 5,
-      "total": 875000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000050",
+      "tanggal_pesanan": "2026-05-16",
+      "user_id": "usr_19845",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Doni Prasetyo",
+      "alamat_pengiriman": "Jl. Sam Ratulangi No. 333, Manado, Sulawesi Utara",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 94,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "hpp": 155000,
+          "quantity": 2,
+          "subtotal": 498000
+        }
+      ],
+      "subtotal": 498000,
+      "ongkir": 19920,
+      "grand_total": 517920
     },
     {
       "id": 51,
-      "tanggal_penjualan": "2024-02-23",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 5,
-      "total": 975000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000051",
+      "tanggal_pesanan": "2026-05-20",
+      "user_id": "usr_37679",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Reza Pahlevi",
+      "alamat_pengiriman": "Jl. Rasuna Said No. 999, Jakarta Selatan",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "diproses",
+      "items": [
+        {
+          "id": 95,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 2,
+          "subtotal": 698000
+        },
+        {
+          "id": 96,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 1,
+          "subtotal": 159000
+        },
+        {
+          "id": 97,
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "harga": 285000,
+          "hpp": 175000,
+          "quantity": 1,
+          "subtotal": 285000
+        }
+      ],
+      "subtotal": 1142000,
+      "ongkir": 25000,
+      "grand_total": 1167000
     },
     {
       "id": 52,
-      "tanggal_penjualan": "2024-02-23",
-      "nama_produk": "Tas Ransel Waterproof",
-      "sku": "SKU-005",
-      "harga": 285000,
-      "quantity": 3,
-      "total": 855000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000052",
+      "tanggal_pesanan": "2026-06-28",
+      "user_id": "usr_69233",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Aditya Pratama",
+      "alamat_pengiriman": "Jl. Thamrin No. 333, Jakarta Pusat",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 98,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 1,
+          "subtotal": 189000
+        },
+        {
+          "id": 99,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "hpp": 85000,
+          "quantity": 1,
+          "subtotal": 139000
+        },
+        {
+          "id": 100,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 2,
+          "subtotal": 318000
+        }
+      ],
+      "subtotal": 646000,
+      "ongkir": 25000,
+      "grand_total": 671000
     },
     {
       "id": 53,
-      "tanggal_penjualan": "2024-02-24",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 3,
-      "total": 267000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "SPX-000053",
+      "tanggal_pesanan": "2026-06-17",
+      "user_id": "usr_43395",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Fajar Nugroho",
+      "alamat_pengiriman": "Jl. Gajah Mada No. 555, Denpasar, Bali",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 101,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 1,
+          "subtotal": 79000
+        }
+      ],
+      "subtotal": 79000,
+      "ongkir": 10000,
+      "grand_total": 89000
     },
     {
       "id": 54,
-      "tanggal_penjualan": "2024-02-24",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 4,
-      "total": 996000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000054",
+      "tanggal_pesanan": "2026-06-11",
+      "user_id": "usr_27955",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Putri Ayu",
+      "alamat_pengiriman": "Jl. Ahmad Yani No. 654, Makassar, Sulawesi Selatan",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 102,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 2,
+          "subtotal": 158000
+        }
+      ],
+      "subtotal": 158000,
+      "ongkir": 10000,
+      "grand_total": 168000
     },
     {
       "id": 55,
-      "tanggal_penjualan": "2024-02-26",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 4,
-      "total": 700000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000055",
+      "tanggal_pesanan": "2026-06-01",
+      "user_id": "usr_65897",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Siti Nurhaliza",
+      "alamat_pengiriman": "Jl. Pemuda No. 444, Semarang, Jawa Tengah",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 103,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 2,
+          "subtotal": 138000
+        },
+        {
+          "id": 104,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "hpp": 95000,
+          "quantity": 2,
+          "subtotal": 318000
+        }
+      ],
+      "subtotal": 456000,
+      "ongkir": 18240,
+      "grand_total": 474240
     },
     {
       "id": 56,
-      "tanggal_penjualan": "2024-02-26",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 4,
-      "total": 780000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000056",
+      "tanggal_pesanan": "2026-06-15",
+      "user_id": "usr_45717",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Rizki Pratama",
+      "alamat_pengiriman": "Jl. Cyber No. 111, BSD City, Tangerang Selatan",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "dikirim",
+      "items": [
+        {
+          "id": 105,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 1,
+          "subtotal": 349000
+        }
+      ],
+      "subtotal": 349000,
+      "ongkir": 13960,
+      "grand_total": 362960
     },
     {
       "id": 57,
-      "tanggal_penjualan": "2024-02-28",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 2,
-      "total": 390000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000057",
+      "tanggal_pesanan": "2026-06-04",
+      "user_id": "usr_55844",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Rendy Kurniawan",
+      "alamat_pengiriman": "Jl. Veteran No. 777, Solo, Jawa Tengah",
+      "nama_toko_shopee": "Toko Fairuz",
+      "status_pesanan": "diproses",
+      "items": [
+        {
+          "id": 106,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 2,
+          "subtotal": 698000
+        },
+        {
+          "id": 107,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 2,
+          "subtotal": 138000
+        }
+      ],
+      "subtotal": 836000,
+      "ongkir": 25000,
+      "grand_total": 861000
     },
     {
       "id": 58,
-      "tanggal_penjualan": "2024-02-29",
-      "nama_produk": "Topi Baseball Cap",
-      "sku": "SKU-006",
-      "harga": 55000,
-      "quantity": 4,
-      "total": 220000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000058",
+      "tanggal_pesanan": "2026-06-08",
+      "user_id": "usr_87307",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Siti Nurhaliza",
+      "alamat_pengiriman": "Jl. Dipatiukur No. 888, Bandung, Jawa Barat",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 108,
+          "sku": "SKU-041",
+          "nama_produk": "Jaket Parka Anti Air",
+          "harga": 379000,
+          "hpp": 230000,
+          "quantity": 1,
+          "subtotal": 379000
+        },
+        {
+          "id": 109,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "hpp": 135000,
+          "quantity": 1,
+          "subtotal": 215000
+        },
+        {
+          "id": 110,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "hpp": 210000,
+          "quantity": 2,
+          "subtotal": 698000
+        }
+      ],
+      "subtotal": 1292000,
+      "ongkir": 25000,
+      "grand_total": 1317000
     },
     {
       "id": 59,
-      "tanggal_penjualan": "2024-02-29",
-      "nama_produk": "Topi Baseball Cap",
-      "sku": "SKU-006",
-      "harga": 55000,
-      "quantity": 3,
-      "total": 165000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000059",
+      "tanggal_pesanan": "2026-06-23",
+      "user_id": "usr_54458",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Vania Putri",
+      "alamat_pengiriman": "Jl. Siliwangi No. 666, Malang, Jawa Timur",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 111,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "hpp": 47000,
+          "quantity": 1,
+          "subtotal": 79000
+        },
+        {
+          "id": 112,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 2,
+          "subtotal": 138000
+        }
+      ],
+      "subtotal": 217000,
+      "ongkir": 10000,
+      "grand_total": 227000
     },
     {
       "id": 60,
-      "tanggal_penjualan": "2024-02-29",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 1,
-      "total": 175000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000060",
+      "tanggal_pesanan": "2026-06-13",
+      "user_id": "usr_31087",
+      "seller_name": "Faiz Fairuz",
+      "nama_pembeli": "Reza Pahlevi",
+      "alamat_pengiriman": "Jl. Imam Bonjol No. 111, Palembang, Sumatera Selatan",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "dibatalkan",
+      "items": [
+        {
+          "id": 113,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "hpp": 115000,
+          "quantity": 2,
+          "subtotal": 378000
+        },
+        {
+          "id": 114,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "hpp": 85000,
+          "quantity": 1,
+          "subtotal": 139000
+        },
+        {
+          "id": 115,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "hpp": 40000,
+          "quantity": 2,
+          "subtotal": 138000
+        }
+      ],
+      "subtotal": 655000,
+      "ongkir": 25000,
+      "grand_total": 680000
     },
     {
+      "tanggal_pesanan": "2026-05-18",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "lutfi",
+      "alamat_pengiriman": "bandung",
+      "nama_toko_shopee": "Toko Faiz",
+      "status_pesanan": "diproses",
+      "items": [
+        {
+          "id": 1779072953088,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "quantity": 3,
+          "subtotal": 417000
+        }
+      ],
+      "subtotal": 417000,
+      "ongkir": 15000,
+      "grand_total": 432000,
       "id": 61,
-      "tanggal_penjualan": "2024-02-29",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 1,
-      "total": 89000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "SPX-000061"
     },
     {
       "id": 62,
-      "tanggal_penjualan": "2024-03-01",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 2,
-      "total": 350000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "POS-000062",
+      "tanggal_pesanan": "2026-05-18T03:36:24.391Z",
+      "user_id": "",
+      "seller_name": "Kasir",
+      "nama_pembeli": "Ahmad Fauzi",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "quantity": 2,
+          "subtotal": 498000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "quantity": 1,
+          "subtotal": 349000
+        },
+        {
+          "id": 3,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "quantity": 4,
+          "subtotal": 756000
+        },
+        {
+          "id": 4,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "quantity": 1,
+          "subtotal": 159000
+        }
+      ],
+      "subtotal": 1762000,
+      "ongkir": 0,
+      "grand_total": 1762000
     },
     {
       "id": 63,
-      "tanggal_penjualan": "2024-03-02",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 4,
-      "total": 780000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "POS-000063",
+      "tanggal_pesanan": "2026-05-18T03:55:35.866Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "quantity": 1,
+          "subtotal": 249000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "harga": 285000,
+          "quantity": 1,
+          "subtotal": 285000
+        },
+        {
+          "id": 3,
+          "sku": "SKU-007",
+          "nama_produk": "Sweater Rajut Winter",
+          "harga": 215000,
+          "quantity": 1,
+          "subtotal": 215000
+        },
+        {
+          "id": 4,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "quantity": 2,
+          "subtotal": 158000
+        },
+        {
+          "id": 5,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "quantity": 1,
+          "subtotal": 69000
+        },
+        {
+          "id": 6,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "quantity": 1,
+          "subtotal": 159000
+        },
+        {
+          "id": 7,
+          "sku": "SKU-041",
+          "nama_produk": "Jaket Parka Anti Air",
+          "harga": 379000,
+          "quantity": 1,
+          "subtotal": 379000
+        }
+      ],
+      "subtotal": 1514000,
+      "ongkir": 0,
+      "grand_total": 1514000
     },
     {
       "id": 64,
-      "tanggal_penjualan": "2024-03-04",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 4,
-      "total": 780000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "POS-000064",
+      "tanggal_pesanan": "2026-05-18T03:59:20.932Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "Budi Santoso",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "Online",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "quantity": 3,
+          "subtotal": 747000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "quantity": 2,
+          "subtotal": 278000
+        },
+        {
+          "id": 3,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "quantity": 1,
+          "subtotal": 79000
+        },
+        {
+          "id": 4,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "quantity": 3,
+          "subtotal": 1047000
+        },
+        {
+          "id": 5,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "quantity": 4,
+          "subtotal": 756000
+        }
+      ],
+      "subtotal": 2907000,
+      "ongkir": 0,
+      "grand_total": 2907000
     },
     {
       "id": 65,
-      "tanggal_penjualan": "2024-03-04",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 5,
-      "total": 445000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "POS-000065",
+      "tanggal_pesanan": "2026-05-18T04:18:05.554Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "quantity": 1,
+          "subtotal": 249000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "quantity": 1,
+          "subtotal": 139000
+        },
+        {
+          "id": 3,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "quantity": 8,
+          "subtotal": 552000
+        }
+      ],
+      "subtotal": 940000,
+      "ongkir": 0,
+      "grand_total": 1043400
     },
     {
       "id": 66,
-      "tanggal_penjualan": "2024-03-05",
-      "nama_produk": "Sepatu Sneakers Classic",
-      "sku": "SKU-004",
-      "harga": 399000,
-      "quantity": 4,
-      "total": 1596000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "POS-000066",
+      "tanggal_pesanan": "2026-05-18T04:19:40.241Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "quantity": 1,
+          "subtotal": 249000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "harga": 139000,
+          "quantity": 1,
+          "subtotal": 139000
+        },
+        {
+          "id": 3,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "quantity": 1,
+          "subtotal": 69000
+        }
+      ],
+      "subtotal": 457000,
+      "ongkir": 0,
+      "grand_total": 507270
     },
     {
       "id": 67,
-      "tanggal_penjualan": "2024-03-07",
-      "nama_produk": "Sepatu Sneakers Classic",
-      "sku": "SKU-004",
-      "harga": 399000,
-      "quantity": 4,
-      "total": 1596000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "POS-000067",
+      "tanggal_pesanan": "2026-05-18T04:22:12.062Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "quantity": 1,
+          "subtotal": 79000
+        }
+      ],
+      "subtotal": 79000,
+      "ongkir": 0,
+      "grand_total": 87690
     },
     {
       "id": 68,
-      "tanggal_penjualan": "2024-03-07",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 2,
-      "total": 390000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
+      "nomor_order": "POS-000068",
+      "tanggal_pesanan": "2026-05-18T05:32:18.815Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "quantity": 1,
+          "subtotal": 249000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "harga": 285000,
+          "quantity": 1,
+          "subtotal": 285000
+        },
+        {
+          "id": 3,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "quantity": 5,
+          "subtotal": 395000
+        },
+        {
+          "id": 4,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "quantity": 2,
+          "subtotal": 698000
+        }
+      ],
+      "subtotal": 1627000,
+      "ongkir": 0,
+      "grand_total": 1805970
     },
     {
       "id": 69,
-      "tanggal_penjualan": "2024-03-07",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 2,
-      "total": 178000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
+      "nomor_order": "POS-000069",
+      "tanggal_pesanan": "2026-05-18T05:40:04.100Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "quantity": 10,
+          "subtotal": 790000
+        }
+      ],
+      "subtotal": 790000,
+      "ongkir": 0,
+      "grand_total": 876900
     },
     {
       "id": 70,
-      "tanggal_penjualan": "2024-03-09",
-      "nama_produk": "Sepatu Sneakers Classic",
-      "sku": "SKU-004",
-      "harga": 399000,
-      "quantity": 3,
-      "total": 1197000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 71,
-      "tanggal_penjualan": "2024-03-11",
-      "nama_produk": "Tas Ransel Waterproof",
-      "sku": "SKU-005",
-      "harga": 285000,
-      "quantity": 1,
-      "total": 285000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 72,
-      "tanggal_penjualan": "2024-03-13",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 3,
-      "total": 525000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 73,
-      "tanggal_penjualan": "2024-03-14",
-      "nama_produk": "Topi Baseball Cap",
-      "sku": "SKU-006",
-      "harga": 55000,
-      "quantity": 2,
-      "total": 110000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 74,
-      "tanggal_penjualan": "2024-03-14",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 4,
-      "total": 700000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 75,
-      "tanggal_penjualan": "2024-03-15",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 1,
-      "total": 175000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 76,
-      "tanggal_penjualan": "2024-03-16",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 4,
-      "total": 996000,
-      "seller": "Fairuz",
-      "email": "fairuz@gmail.com"
-    },
-    {
-      "id": 77,
-      "tanggal_penjualan": "2024-03-16",
-      "nama_produk": "Tas Ransel Waterproof",
-      "sku": "SKU-005",
-      "harga": 285000,
-      "quantity": 4,
-      "total": 1140000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 78,
-      "tanggal_penjualan": "2024-03-18",
-      "nama_produk": "Jaket Hoodie Unisex",
-      "sku": "SKU-003",
-      "harga": 175000,
-      "quantity": 5,
-      "total": 875000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 79,
-      "tanggal_penjualan": "2024-03-18",
-      "nama_produk": "Tas Ransel Waterproof",
-      "sku": "SKU-005",
-      "harga": 285000,
-      "quantity": 2,
-      "total": 570000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 80,
-      "tanggal_penjualan": "2024-03-18",
-      "nama_produk": "Topi Baseball Cap",
-      "sku": "SKU-006",
-      "harga": 55000,
-      "quantity": 3,
-      "total": 165000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 81,
-      "tanggal_penjualan": "2024-03-19",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 1,
-      "total": 249000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 82,
-      "tanggal_penjualan": "2024-03-20",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 2,
-      "total": 390000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 83,
-      "tanggal_penjualan": "2024-03-22",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 5,
-      "total": 1245000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 84,
-      "tanggal_penjualan": "2024-03-23",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 1,
-      "total": 195000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 85,
-      "tanggal_penjualan": "2024-03-24",
-      "nama_produk": "Sepatu Sneakers Classic",
-      "sku": "SKU-004",
-      "harga": 399000,
-      "quantity": 4,
-      "total": 1596000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 86,
-      "tanggal_penjualan": "2024-03-25",
-      "nama_produk": "Sepatu Sneakers Classic",
-      "sku": "SKU-004",
-      "harga": 399000,
-      "quantity": 4,
-      "total": 1596000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 87,
-      "tanggal_penjualan": "2024-03-27",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 2,
-      "total": 178000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 88,
-      "tanggal_penjualan": "2024-03-29",
-      "nama_produk": "Kemeja Flannel Kotak",
-      "sku": "SKU-008",
-      "harga": 135000,
-      "quantity": 2,
-      "total": 270000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 89,
-      "tanggal_penjualan": "2024-03-29",
-      "nama_produk": "Topi Baseball Cap",
-      "sku": "SKU-006",
-      "harga": 55000,
-      "quantity": 5,
-      "total": 275000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 90,
-      "tanggal_penjualan": "2024-03-29",
-      "nama_produk": "Tas Ransel Waterproof",
-      "sku": "SKU-005",
-      "harga": 285000,
-      "quantity": 3,
-      "total": 855000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 91,
-      "tanggal_penjualan": "2024-03-29",
-      "nama_produk": "Kemeja Flannel Kotak",
-      "sku": "SKU-008",
-      "harga": 135000,
-      "quantity": 4,
-      "total": 540000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 92,
-      "tanggal_penjualan": "2024-03-29",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 5,
-      "total": 975000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 93,
-      "tanggal_penjualan": "2024-03-31",
-      "nama_produk": "Tas Ransel Waterproof",
-      "sku": "SKU-005",
-      "harga": 285000,
-      "quantity": 4,
-      "total": 1140000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 94,
-      "tanggal_penjualan": "2024-04-01",
-      "nama_produk": "Tas Ransel Waterproof",
-      "sku": "SKU-005",
-      "harga": 285000,
-      "quantity": 2,
-      "total": 570000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 95,
-      "tanggal_penjualan": "2024-04-01",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 5,
-      "total": 445000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 96,
-      "tanggal_penjualan": "2024-04-01",
-      "nama_produk": "Sweater Rajut Winter",
-      "sku": "SKU-007",
-      "harga": 195000,
-      "quantity": 2,
-      "total": 390000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 97,
-      "tanggal_penjualan": "2024-04-02",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 3,
-      "total": 267000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 98,
-      "tanggal_penjualan": "2024-04-02",
-      "nama_produk": "Topi Baseball Cap",
-      "sku": "SKU-006",
-      "harga": 55000,
-      "quantity": 4,
-      "total": 220000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 99,
-      "tanggal_penjualan": "2024-04-04",
-      "nama_produk": "Tas Ransel Waterproof",
-      "sku": "SKU-005",
-      "harga": 285000,
-      "quantity": 5,
-      "total": 1425000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "id": 100,
-      "tanggal_penjualan": "2024-04-06",
-      "nama_produk": "Kemeja Flannel Kotak",
-      "sku": "SKU-008",
-      "harga": 135000,
-      "quantity": 2,
-      "total": 270000,
-      "seller": "Faiz",
-      "email": "faiz@gmail.com"
-    },
-    {
-      "tanggal_penjualan": "2026-04-24",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 1,
-      "total": 89000,
-      "seller": "faiz",
-      "email": "manual@entry.com",
-      "id": 101
-    },
-    {
-      "tanggal_penjualan": "2026-04-24",
-      "nama_produk": "Kaos Polos Premium Cotton",
-      "sku": "SKU-001",
-      "harga": 89000,
-      "quantity": 3,
-      "total": 267000,
-      "seller": "faiz",
-      "email": "manual@entry.com",
-      "id": 102
-    },
-    {
-      "tanggal_penjualan": "2026-04-27",
-      "nama_produk": "Celana Jeans Slim Fit",
-      "sku": "SKU-002",
-      "harga": 249000,
-      "quantity": 5,
-      "total": 1245000,
-      "seller": "fairuz",
-      "email": "manual@entry.com",
-      "id": 103
+      "nomor_order": "POS-000070",
+      "tanggal_pesanan": "2026-05-18T06:29:14.720Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "aziz",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "Online",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "quantity": 5,
+          "subtotal": 945000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "quantity": 3,
+          "subtotal": 477000
+        },
+        {
+          "id": 3,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "quantity": 2,
+          "subtotal": 138000
+        }
+      ],
+      "subtotal": 1560000,
+      "ongkir": 0,
+      "grand_total": 1731600
     }
   ],
-  "sampleStoreCount": 3
+  "sampleStoreCount": 2,
+  "goodsReceipts": [
+    {
+      "id": 1,
+      "tanggal": "2026-05-15",
+      "supplier": "arifin",
+      "nomor_faktur": "2430",
+      "items": [
+        {
+          "sku": "1",
+          "nama_produk": "",
+          "quantity": 7,
+          "harga_beli": 100000,
+          "catatan": ""
+        }
+      ],
+      "total_item": 7,
+      "total_biaya": 700000,
+      "created_at": "2026-05-15T09:09:21.568Z"
+    },
+    {
+      "id": 2,
+      "tanggal": "2026-05-18",
+      "supplier": "fauzan",
+      "nomor_faktur": "1012",
+      "items": [
+        {
+          "sku": "SKU-029",
+          "nama_produk": "Kemeja Flannel",
+          "quantity": 15,
+          "harga_beli": 85000,
+          "catatan": ""
+        }
+      ],
+      "total_item": 15,
+      "total_biaya": 1275000,
+      "created_at": "2026-05-18T02:35:51.771Z"
+    },
+    {
+      "id": 3,
+      "tanggal": "2026-05-18",
+      "supplier": "fauzan",
+      "nomor_faktur": "1110",
+      "items": [
+        {
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "quantity": 25,
+          "harga_beli": 155000,
+          "catatan": ""
+        }
+      ],
+      "total_item": 25,
+      "total_biaya": 3875000,
+      "created_at": "2026-05-18T03:01:24.000Z"
+    },
+    {
+      "id": 4,
+      "tanggal": "2026-05-18",
+      "supplier": "fauzan",
+      "nomor_faktur": "1112",
+      "items": [
+        {
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "quantity": 50,
+          "harga_beli": 47000,
+          "catatan": ""
+        }
+      ],
+      "total_item": 50,
+      "total_biaya": 2350000,
+      "created_at": "2026-05-18T03:54:11.538Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "user_name": "fairuz"
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Pakaian Atas",
+      "color": "#3B82F6"
+    },
+    {
+      "id": "2",
+      "name": "Pakaian Bawah",
+      "color": "#10B981"
+    },
+    {
+      "id": "3",
+      "name": "Aksesoris",
+      "color": "#F59E0B"
+    },
+    {
+      "id": "4",
+      "name": "Alas Kaki",
+      "color": "#8B5CF6"
+    },
+    {
+      "id": "5",
+      "name": "Tas & Ransel",
+      "color": "#EF4444"
+    },
+    {
+      "id": "6",
+      "name": "Perlengkapan",
+      "color": "#EC4899"
+    }
+  ]
 }

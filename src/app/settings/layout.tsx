@@ -1,19 +1,13 @@
 import { DashboardShell } from "@/components/dashboard-shell";
-import { createClient } from "@/lib/supabase/server";
+import { getUserProfile } from "@/lib/get-profile";
 
 export default async function SettingsLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Note: Auth protection is now handled by middleware
-  const fullName = (user?.user_metadata?.full_name as string | undefined) ?? "";
+  const { email, fullName, role } = await getUserProfile();
 
   return (
-    <DashboardShell userEmail={user?.email ?? ""} userName={fullName}>
+    <DashboardShell userEmail={email} userName={fullName} userRole={role}>
       {children}
     </DashboardShell>
   );

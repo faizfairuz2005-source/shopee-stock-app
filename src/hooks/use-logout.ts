@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/components/toast";
+import { toast } from "@/components/toast";
 
 interface UseLogoutReturn {
   logout: () => Promise<void>;
@@ -12,13 +12,12 @@ interface UseLogoutReturn {
 export function useLogout(): UseLogoutReturn {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { showToast } = useToast();
 
   const logout = async () => {
     if (isLoading) return;
-
+    
     setIsLoading(true);
-
+    
     try {
       const response = await fetch('/api/auth/logout', {
         method: 'POST',
@@ -26,29 +25,29 @@ export function useLogout(): UseLogoutReturn {
           'Content-Type': 'application/json',
         },
       });
-
+      
       if (!response.ok) {
         throw new Error('Logout failed');
       }
-
+      
       // Show success toast
-      showToast('Berhasil logout', 'success');
-
+      toast.success('Berhasil logout');
+      
       // Small delay to show the toast before redirect
       setTimeout(() => {
         router.replace('/login');
         router.refresh();
       }, 500);
-
+      
     } catch (error) {
       console.error('Logout error:', error);
-
+      
       // Show error toast
-      showToast('Gagal logout. Silakan coba lagi.', 'error');
+      toast.error('Gagal logout. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   return { logout, isLoading };
 }

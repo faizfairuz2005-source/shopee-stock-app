@@ -3,6 +3,12 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { ToastProvider } from "@/components/toast";
+import { initializeApp } from "@/lib/config/startup";
+
+// Initialize app on startup (client-side)
+if (typeof window !== "undefined") {
+  initializeApp();
+}
 
 const inter = Inter({
   variable: "--font-inter",

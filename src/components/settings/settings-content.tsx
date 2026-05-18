@@ -11,6 +11,7 @@ import {
   Shield,
   Store,
   User,
+  Users,
   Loader2,
 } from "lucide-react"
 
@@ -23,8 +24,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { RoleBadge } from "@/components/role-badge"
+import { type Role, hasPermission } from "@/lib/permissions"
 import { updateProfileAction } from "@/app/settings/actions"
 import { useLogout } from "@/hooks/use-logout"
+import Link from "next/link"
 
 type NotificationState = {
   lowStockAlert: boolean
@@ -50,10 +54,12 @@ export function SettingsContent({
   initialFullName,
   initialEmail,
   initialPhone,
+  userRole,
 }: {
   initialFullName: string
   initialEmail: string
   initialPhone: string
+  userRole?: Role | null
 }) {
   const { setDisplayName } = useDashboardProfile()
   const { logout, isLoading } = useLogout()
@@ -102,13 +108,15 @@ export function SettingsContent({
     })
   }
 
+  const showUserManagement = hasPermission(userRole, "settings.users")
+
   return (
     <div className="space-y-6 page-enter">
       {toastMessage ? (
         <div
           className={`fixed right-6 top-5 z-[70] rounded-lg border px-4 py-2 text-sm shadow-lg transition-all duration-200 ease-out ${
             toastType === "success"
-              ? "border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-300"
+              ? "border-success/30 bg-success/10 text-success"
               : "border-destructive/30 bg-destructive/10 text-destructive"
           }`}
         >
@@ -123,13 +131,27 @@ export function SettingsContent({
         </p>
       </div>
 
+      {userRole && (
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">Role Anda:</span>
+          <RoleBadge role={userRole} />
+        </div>
+      )}
+
       <Tabs defaultValue="profile">
-        <TabsList className="grid gap-1 md:grid-cols-5">
+        <TabsList className="grid gap-1" style={{ gridTemplateColumns: showUserManagement ? "repeat(6, 1fr)" : "repeat(5, 1fr)" }}>
           <TabsTrigger value="profile"><User className="mr-2 h-4 w-4" />Profile</TabsTrigger>
           <TabsTrigger value="shops"><Store className="mr-2 h-4 w-4" />Toko Shopee</TabsTrigger>
           <TabsTrigger value="notifications"><Bell className="mr-2 h-4 w-4" />Notifikasi</TabsTrigger>
           <TabsTrigger value="general"><MonitorCog className="mr-2 h-4 w-4" />General</TabsTrigger>
           <TabsTrigger value="security"><Shield className="mr-2 h-4 w-4" />Security</TabsTrigger>
+          {showUserManagement && (
+            <Link href="/settings/users">
+              <TabsTrigger value="users" onClick={(e) => { e.preventDefault(); window.location.href = "/settings/users"; }}>
+                <Users className="mr-2 h-4 w-4" />Users
+              </TabsTrigger>
+            </Link>
+          )}
         </TabsList>
 
         <TabsContent value="profile" className="space-y-4">

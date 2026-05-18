@@ -1,21 +1,26 @@
 import { SettingsContent } from "@/components/settings/settings-content"
-import { createClient } from "@/lib/supabase/server"
+import { Breadcrumb } from "@/components/ui/breadcrumb"
+import { getUserProfile } from "@/lib/get-profile"
 
 export default async function SettingsPage() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  // Note: Auth protection is now handled by middleware
-  const fullName = (user?.user_metadata?.full_name as string | undefined) ?? ""
-  const phone = (user?.user_metadata?.phone as string | undefined) ?? ""
+  const { email, fullName, role } = await getUserProfile()
+  const phone = ""
 
   return (
-    <SettingsContent
-      initialFullName={fullName}
-      initialEmail={user?.email ?? ""}
-      initialPhone={phone}
-    />
+    <div className="space-y-6 page-enter">
+      <Breadcrumb
+        segments={[
+          { name: "Dashboard", href: "/dashboard" },
+          { name: "Settings", href: "/settings" },
+        ]}
+        className="mb-2"
+      />
+      <SettingsContent
+        initialFullName={fullName}
+        initialEmail={email}
+        initialPhone={phone}
+        userRole={role}
+      />
+    </div>
   )
 }
