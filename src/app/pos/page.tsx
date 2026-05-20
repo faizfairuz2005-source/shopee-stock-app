@@ -11,6 +11,7 @@ import {
   Percent,
   Package,
   ScanLine,
+  Camera,
   CreditCard,
   Banknote,
   CheckCircle2,
@@ -36,8 +37,9 @@ import type { InvoiceData } from "@/lib/types/invoice";
 import { formatCurrency, formatDate, formatTime, generateInvoiceNumber } from "@/lib/utils/invoice-utils";
 import { InvoiceModal } from "@/components/invoice/invoice-modal";
 import { PaymentModal } from "./payment-modal";
+import { ThermalReceiptModal, type ThermalReceiptData } from "@/components/pos/thermal-receipt";
 import { savePosTransaction } from "@/app/actions";
-import type { ProductCategory } from "@/app/actions";
+import type { ProductCategory, ItemKit } from "@/app/actions";
 import { getCustomersForPos } from "@/app/pelanggan/actions";
 
 // ─── Types ────────────────────────────────────────────────────────────────
@@ -45,6 +47,7 @@ import { getCustomersForPos } from "@/app/pelanggan/actions";
 interface Product {
   sku: string;
   name: string;
+  barcode?: string;
   price: number;
   hpp: number;
   totalStock: number;
@@ -52,6 +55,9 @@ interface Product {
   connectedStores: number;
   sales: number;
   kategori?: string;
+  minStok?: number;
+  isKit?: boolean;
+  kitComponents?: { sku: string; name: string; quantity: number }[];
 }
 
 interface CartItem {
@@ -60,6 +66,8 @@ interface CartItem {
   price: number;
   quantity: number;
   discountPercent?: number;
+  discountNominal?: number;
+  kitComponents?: { sku: string; quantity: number }[];
 }
 
 interface HeldBill {
@@ -82,26 +90,47 @@ const inventoryProducts: Product[] = (
 const rawCategories: ProductCategory[] = (
   dataJson as { categories?: ProductCategory[] }
 ).categories ?? [];
+const posKits: ItemKit[] = (dataJson as { kits?: ItemKit[] }).kits ?? [];
 
 // ─── Constants ────────────────────────────────────────────────────────────
 
 const PPN_RATE = 11; // Pajak Pertambahan Nilai 11%
+
+function getKitStock(kit: ItemKit, products: Product[]): number {
+  if (!kit.components || kit.components.length === 0) return 0;
+  let minStock = Infinity;
+  for (const comp of kit.components) {
+    const product = products.find(p => p.sku === comp.sku);
+    if (!product) return 0;
+    const available = Math.floor(product.totalStock / comp.quantity);
+    minStock = Math.min(minStock, available);
+    if (minStock <= 0) return 0;
+  }
+  return minStock === Infinity ? 0 : minStock;
+}
 
 interface PosCustomer {
   id: string;
   nama_lengkap: string;
   nomor_hp: string;
   total_transaksi: number;
+  total_poin: number;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
 
 function itemSubtotal(item: CartItem): number {
+  if (item.discountNominal && item.discountNominal > 0) {
+    return Math.max(0, item.price * item.quantity - item.discountNominal);
+  }
   const disc = (item.discountPercent ?? 0) / 100;
   return Math.round(item.price * item.quantity * (1 - disc));
 }
 
 function itemDiscountAmount(item: CartItem): number {
+  if (item.discountNominal && item.discountNominal > 0) {
+    return Math.min(item.discountNominal, item.price * item.quantity);
+  }
   return Math.round(item.price * item.quantity * ((item.discountPercent ?? 0) / 100));
 }
 
@@ -121,7 +150,8 @@ function ProductCard({
   onAdd: (p: Product) => void;
 }) {
   const isOutOfStock = product.totalStock === 0;
-  const isLowStock = product.totalStock > 0 && product.totalStock <= 5;
+  const minStokThreshold = product.minStok ?? 10;
+  const isLowStock = product.totalStock > 0 && product.totalStock <= minStokThreshold;
 
   return (
     <button
@@ -170,7 +200,13 @@ function ProductCard({
           />
         </div>
         <div className="flex items-center gap-1">
-          {isOutOfStock ? (
+          {product.isKit ? (
+            <Badge
+              className="px-2 py-0.5 text-[9px] font-semibold rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 border-violet-200 dark:border-violet-800/50"
+            >
+              Paket
+            </Badge>
+          ) : isOutOfStock ? (
             <Badge
               variant="destructive"
               className="px-2 py-0.5 text-[9px] font-semibold rounded-full"
@@ -233,13 +269,18 @@ export default function PosPage() {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showHeldBills, setShowHeldBills] = useState(false);
+  const [discountNote, setDiscountNote] = useState("");
   const [heldBills, setHeldBills] = useState<HeldBill[]>([]);
   const [lastTransaction, setLastTransaction] = useState<InvoiceData | null>(null);
   const [showInvoice, setShowInvoice] = useState(false);
-  const [addedToast, setAddedToast] = useState<{ sku: string; name: string }[]>([]);
+  const [addedToast, setAddedToast] = useState<{ id: string; sku: string; name: string }[]>([]);
   const [showBarcodeInput, setShowBarcodeInput] = useState(false);
   const [barcodeValue, setBarcodeValue] = useState("");
   const [usePPN, setUsePPN] = useState(true);
+  const [showThermalReceipt, setShowThermalReceipt] = useState(false);
+  const [thermalReceiptData, setThermalReceiptData] = useState<ThermalReceiptData | null>(null);
+  const [poinRedeem, setPoinRedeem] = useState(0);
+  const [selectedCustomerPoin, setSelectedCustomerPoin] = useState(0);
 
   const searchRef = useRef<HTMLInputElement>(null);
   const barcodeRef = useRef<HTMLInputElement>(null);
@@ -255,6 +296,14 @@ export default function PosPage() {
       }
     });
   }, []);
+
+  // ─── Track selected customer poin ──────────────────────────────
+  useEffect(() => {
+    const found = dbCustomers.find((c) => c.nama_lengkap === selectedCustomer);
+    setSelectedCustomerPoin(found?.total_poin ?? 0);
+    // Reset poin redeem when customer changes
+    setPoinRedeem(0);
+  }, [selectedCustomer, dbCustomers]);
 
   // ─── Load held bills from localStorage ─────────────────────────
   useEffect(() => {
@@ -281,19 +330,35 @@ export default function PosPage() {
 
   // ─── Filtered Products ──────────────────────────────────────────
   const filteredProducts = useMemo(() => {
-    let result = inventoryProducts;
+    // Create product-like items for kits
+    const kitItems: Product[] = posKits.map(kit => ({
+      sku: `KIT-${kit.id}`,
+      name: kit.name,
+      price: kit.price,
+      hpp: 0,
+      totalStock: getKitStock(kit, inventoryProducts),
+      description: kit.description,
+      connectedStores: 0,
+      sales: 0,
+      isKit: true,
+      kitComponents: kit.components.map(c => ({ sku: c.sku, name: c.name, quantity: c.quantity })),
+    }));
+
+    let result = [...inventoryProducts, ...kitItems];
     const q = search.trim().toLowerCase();
     if (q) {
       result = result.filter(
         (p) =>
-          p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q),
+          p.name.toLowerCase().includes(q) ||
+          p.sku.toLowerCase().includes(q) ||
+          (p.barcode && p.barcode.toLowerCase().includes(q)),
       );
     }
     if (kategoriFilter) {
       result = result.filter(p => p.kategori === kategoriFilter);
     }
     return result;
-  }, [search, kategoriFilter]);
+  }, [search, kategoriFilter, posKits]);
 
   // ─── Cart Totals ────────────────────────────────────────────────
   const totalItems = useMemo(
@@ -320,12 +385,17 @@ export default function PosPage() {
 
   const dpp = subtotalAfterItemDiscount - transactionDiscountAmount;
 
+  // Poin discount: 1 poin = Rp1.000
+  const poinDiscountAmount = poinRedeem * 1000;
+  const maxPoinRedeem = selectedCustomerPoin;
+  const maxPoinDiscount = maxPoinRedeem * 1000;
+
   const ppnAmount = useMemo(
     () => (usePPN ? Math.round(dpp * (PPN_RATE / 100)) : 0),
     [dpp, usePPN],
   );
 
-  const grandTotal = dpp + ppnAmount;
+  const grandTotal = Math.max(0, dpp + ppnAmount - poinDiscountAmount);
 
   // ─── Cart Actions ───────────────────────────────────────────────
   const addToCart = useCallback((product: Product) => {
@@ -334,23 +404,26 @@ export default function PosPage() {
       return existing
         ? prev.map((i) =>
             i.sku === product.sku ? { ...i, quantity: i.quantity + 1 } : i,
-          )
-        : [
-            ...prev,
-            {
-              sku: product.sku,
-              name: product.name,
-              price: product.price,
-              quantity: 1,
-            },
-          ];
+          )          : [
+              ...prev,
+              {
+                sku: product.sku,
+                name: product.name,
+                price: product.price,
+                quantity: 1,
+                kitComponents: product.isKit
+                  ? product.kitComponents?.map(c => ({ sku: c.sku, quantity: c.quantity }))
+                  : undefined,
+              },
+            ];
     });
 
+    const toastId = `${product.sku}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     setAddedToast((prev) =>
-      [{ sku: product.sku, name: product.name }, ...prev].slice(0, 3),
+      [{ id: toastId, sku: product.sku, name: product.name }, ...prev].slice(0, 3),
     );
     setTimeout(() => {
-      setAddedToast((prev) => prev.filter((i) => i.sku !== product.sku));
+      setAddedToast((prev) => prev.filter((i) => i.id !== toastId));
     }, 2400);
   }, []);
 
@@ -371,11 +444,15 @@ export default function PosPage() {
   }, []);
 
   const handleItemDiscount = useCallback(
-    (sku: string, percent: number) => {
+    (sku: string, value: number, type: "percent" | "nominal") => {
       setCart((prev) =>
         prev.map((i) =>
           i.sku === sku
-            ? { ...i, discountPercent: percent > 0 ? percent : undefined }
+            ? {
+                ...i,
+                discountPercent: type === "percent" ? (value > 0 ? value : undefined) : i.discountPercent,
+                discountNominal: type === "nominal" ? (value > 0 ? value : undefined) : i.discountNominal,
+              }
             : i,
         ),
       );
@@ -387,6 +464,7 @@ export default function PosPage() {
     setCart([]);
     setTransactionDiscount(0);
     setUsePPN(true);
+    setDiscountNote("");
   }, []);
 
   // ─── Hold Bill ──────────────────────────────────────────────────
@@ -432,6 +510,7 @@ export default function PosPage() {
       paymentMethod: "cash" | "qris" | "transfer" | "split";
       cashAmount: number;
       changeAmount: number;
+      transferAmount?: number;
     }) => {
       setIsProcessingPayment(true);
       try {
@@ -445,6 +524,7 @@ export default function PosPage() {
             quantity: item.quantity,
             discount_percent: item.discountPercent ?? 0,
             subtotal: itemSubtotal(item),
+            ...(item.kitComponents ? { kitComponents: item.kitComponents } : {}),
           })),
           subtotal,
           per_item_discount_total: perItemDiscountTotal,
@@ -454,7 +534,10 @@ export default function PosPage() {
           ppn_rate: usePPN ? PPN_RATE : 0,
           grand_total: grandTotal,
           cash_amount: data.cashAmount,
+          transfer_amount: data.transferAmount,
           change_amount: data.changeAmount,
+          poin_used: poinRedeem,
+          discount_note: discountNote || undefined,
         });
 
         if (result.success) {
@@ -465,7 +548,7 @@ export default function PosPage() {
             time: formatTime(new Date()),
             orderNumber: txn.nomor_order,
             sellerName: txn.seller_name,
-            storeName: txn.nama_toko_shopee,
+            storeName: txn.nama_toko,
             customer: {
               name: selectedCustomer,
             },
@@ -484,15 +567,55 @@ export default function PosPage() {
               total: grandTotal,
             },
             storeInfo: {
-              name: "MultiStock",
+              name: "MultiStore",
               address: "Jl. Raya Utama No. 123",
               phone: "021-12345678",
-              email: "info@multistock.com",
+              email: "info@multistore.id",
             },
           };
           setLastTransaction(invoice);
           setShowPayment(false);
           setShowSuccess(true);
+
+          // Prepare thermal receipt data
+          setThermalReceiptData({
+            storeName: "MultiStore",
+            storeAddress: "Jl. Raya Utama No. 123",
+            storePhone: "021-12345678",
+            storeEmail: "info@multistore.id",
+            invoiceNumber: invoice.invoiceNumber,
+            orderNumber: txn.nomor_order,
+            date: new Date().toISOString(),
+            time: formatTime(new Date()),
+            cashierName: txn.seller_name,
+            customerName: selectedCustomer,
+            items: cart.map((item) => ({
+              name: item.name,
+              sku: item.sku,
+              quantity: item.quantity,
+              price: item.price,
+              subtotal: itemSubtotal(item),
+              discountPercent: item.discountPercent,
+            })),
+            subtotal,
+            perItemDiscountTotal,
+            transactionDiscountPercent: transactionDiscount,
+            transactionDiscountAmount,
+            dpp: subtotal - perItemDiscountTotal - transactionDiscountAmount,
+            ppnRate: usePPN ? PPN_RATE : 0,
+            ppnAmount,
+            grandTotal,
+            paymentMethod: data.paymentMethod,
+            cashAmount: data.cashAmount,
+            transferAmount: data.transferAmount,
+            changeAmount: data.changeAmount,
+            discountNote: discountNote || undefined,
+          });
+
+          // Auto-show thermal receipt
+          setTimeout(() => {
+            setShowThermalReceipt(true);
+          }, 800);
         } else {
           alert(result.error || "Gagal menyimpan transaksi");
         }
@@ -502,7 +625,7 @@ export default function PosPage() {
         setIsProcessingPayment(false);
       }
     },
-    [cart, selectedCustomer, subtotal, perItemDiscountTotal, transactionDiscount, transactionDiscountAmount, grandTotal],
+    [cart, selectedCustomer, subtotal, perItemDiscountTotal, transactionDiscount, transactionDiscountAmount, ppnAmount, usePPN, grandTotal, poinRedeem],
   );
 
   const handleNewTransaction = useCallback(() => {
@@ -518,31 +641,99 @@ export default function PosPage() {
   // ─── Barcode handler ────────────────────────────────────────────
   const handleBarcodeSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    const code = barcodeValue.trim().toUpperCase();
+    const code = barcodeValue.trim();
     if (!code) return;
 
+    const codeUpper = code.toUpperCase();
     const product = inventoryProducts.find(
-      (p) => p.sku.toUpperCase() === code || p.name.toUpperCase() === code,
+      (p) =>
+        (p.barcode && p.barcode === code) ||
+        p.sku.toUpperCase() === codeUpper ||
+        p.name.toUpperCase() === codeUpper,
     );
     if (product && product.totalStock > 0) {
       addToCart(product);
       setBarcodeValue("");
+      const toastId = `${product.sku}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
       setAddedToast((prev) =>
-        [{ sku: product.sku, name: `📦 ${product.name}` }, ...prev].slice(0, 3),
+        [{ id: toastId, sku: product.sku, name: `📦 ${product.name}` }, ...prev].slice(0, 3),
       );
       setTimeout(() => {
-        setAddedToast((prev) => prev.filter((i) => i.sku !== product.sku));
+        setAddedToast((prev) => prev.filter((i) => i.id !== toastId));
       }, 2400);
     } else {
+      const toastId = `not-found-${Date.now()}`;
       setAddedToast((prev) =>
-        [{ sku: "not-found", name: `"${code}" tidak ditemukan` }, ...prev].slice(0, 3),
+        [{ id: toastId, sku: "not-found", name: `"${code}" tidak ditemukan` }, ...prev].slice(0, 3),
       );
       setTimeout(() => {
-        setAddedToast((prev) => prev.filter((i) => i.sku !== "not-found"));
+        setAddedToast((prev) => prev.filter((i) => i.id !== toastId));
       }, 2400);
       setBarcodeValue("");
     }
   }, [barcodeValue, addToCart]);
+
+  // ─── Camera barcode scanner (BarcodeDetector API) ────────────────
+  const [cameraScanning, setCameraScanning] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  const stopCamera = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => t.stop());
+      streamRef.current = null;
+    }
+    setCameraScanning(false);
+  }, []);
+
+  const startCameraScan = useCallback(async () => {
+    if (!("BarcodeDetector" in window)) {
+      setAddedToast(prev => [{ id: `no-barcode-${Date.now()}`, sku: "error", name: "BarcodeDetector tidak didukung browser ini" }, ...prev].slice(0, 3));
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+      streamRef.current = stream;
+      setCameraScanning(true);
+    } catch {
+      setAddedToast(prev => [{ id: `cam-err-${Date.now()}`, sku: "error", name: "Gagal mengakses kamera" }, ...prev].slice(0, 3));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!cameraScanning || !videoRef.current) return;
+    videoRef.current.srcObject = streamRef.current;
+    videoRef.current.play();
+
+    const detector = new (window as unknown as { BarcodeDetector: new (x: { formats: string[] }) => { detect: (v: HTMLVideoElement) => Promise<{ rawValue: string }[]> } })["BarcodeDetector"]({ formats: ["ean_13", "ean_8", "code_128", "code_39", "qr_code", "upc_a", "upc_e"] });
+    let active = true;
+
+    const scan = async () => {
+      if (!active || !videoRef.current) return;
+      try {
+        const barcodes = await detector.detect(videoRef.current);
+        if (barcodes.length > 0) {
+          const code = barcodes[0].rawValue;
+          stopCamera();
+          const product = inventoryProducts.find(
+            (p) => p.barcode === code || p.sku.toUpperCase() === code.toUpperCase(),
+          );
+          if (product && product.totalStock > 0) {
+            addToCart(product);
+          } else {
+            setBarcodeValue(code);
+            setShowBarcodeInput(true);
+            setTimeout(() => barcodeRef.current?.focus(), 100);
+          }
+          return;
+        }
+      } catch { /* frame skipped */ }
+      if (active) setTimeout(scan, 500);
+    };
+    scan();
+
+    return () => { active = false; stopCamera(); };
+  }, [cameraScanning, addToCart, stopCamera]);
 
   // ─── Keyboard shortcuts ─────────────────────────────────────────
   useEffect(() => {
@@ -606,6 +797,45 @@ export default function PosPage() {
             </p>
           </div>
 
+          {/* Poin Reward Summary */}
+          {selectedCustomer !== "Umum" && (() => {
+            const totalSebelumPoin = dpp + ppnAmount;
+            const poinEarned = Math.max(0, Math.floor(totalSebelumPoin / 10000));
+            const poinBalance = Math.max(0, selectedCustomerPoin - poinRedeem + poinEarned);
+            return (
+              <div className="mb-6 p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-50/30 dark:from-amber-950/20 dark:to-amber-950/10 border border-amber-200/60 dark:border-amber-800/30">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500/20">
+                    <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                  </div>
+                  <span className="text-sm font-semibold text-foreground">Poin Reward</span>
+                </div>
+                <div className={`grid gap-3 ${poinRedeem > 0 ? "grid-cols-3" : "grid-cols-2"}`}>
+                  <div className="rounded-xl bg-white/60 dark:bg-amber-950/30 px-3 py-2">
+                    <p className="text-[10px] text-muted-foreground/70">Didapat</p>
+                    <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                      +{poinEarned}
+                    </p>
+                  </div>
+                  {poinRedeem > 0 && (
+                    <div className="rounded-xl bg-white/60 dark:bg-amber-950/30 px-3 py-2">
+                      <p className="text-[10px] text-muted-foreground/70">Digunakan</p>
+                      <p className="text-sm font-bold text-red-500">
+                        -{poinRedeem}
+                      </p>
+                    </div>
+                  )}
+                  <div className="rounded-xl bg-white/60 dark:bg-amber-950/30 px-3 py-2">
+                    <p className="text-[10px] text-muted-foreground/70">Sisa Poin</p>
+                    <p className="text-sm font-bold text-amber-600 dark:text-amber-400">
+                      {poinBalance}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
           <div className="flex flex-wrap justify-center gap-3">
             <Button
               size="lg"
@@ -628,7 +858,7 @@ export default function PosPage() {
               variant="secondary"
               size="lg"
               className="gap-2 h-12 px-6 rounded-xl"
-              onClick={() => setShowInvoice(true)}
+              onClick={() => setShowThermalReceipt(true)}
             >
               <Printer className="h-5 w-5" />
               Cetak Struk
@@ -661,7 +891,7 @@ export default function PosPage() {
       <div className="pointer-events-none fixed top-20 right-6 z-50 flex flex-col items-end gap-2">
         {addedToast.map((item) => (
           <div
-            key={item.sku + item.name}
+            key={item.id}
             className={cn(
               "flex items-center gap-2.5 rounded-2xl border px-4 py-3 text-sm font-medium shadow-lg backdrop-blur-md",
               "animate-in slide-in-from-right fade-in zoom-in-95 duration-200",
@@ -696,7 +926,7 @@ export default function PosPage() {
               POS
             </span>
             <span className="text-[10px] text-muted-foreground/60 ml-1.5 font-medium">
-              MultiStock
+              MultiStore
             </span>
           </div>
         </div>
@@ -861,6 +1091,11 @@ export default function PosPage() {
                           <p className="truncate">{c.nama_lengkap}</p>
                           <p className="text-[10px] text-left opacity-60 truncate">{c.nomor_hp}</p>
                         </div>
+                        {c.total_poin > 0 && (
+                          <span className="shrink-0 rounded-full bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-[9px] font-bold text-amber-700 dark:text-amber-300">
+                            {c.total_poin} poin
+                          </span>
+                        )}
                       </button>
                     ))}
                   </div>
@@ -1008,9 +1243,20 @@ export default function PosPage() {
             <Search className="h-3.5 w-3.5" />
             Cari
           </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-8 px-2.5 rounded-lg text-xs gap-1.5 text-muted-foreground hover:text-foreground"
+            onClick={cameraScanning ? stopCamera : startCameraScan}
+            title={cameraScanning ? "Stop kamera" : "Scan via kamera"}
+          >
+            <Camera className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">{cameraScanning ? "Stop" : "Kamera"}</span>
+          </Button>
           <button
             type="button"
-            onClick={() => setShowBarcodeInput(false)}
+            onClick={() => { setShowBarcodeInput(false); stopCamera(); }}
             className="text-[11px] text-muted-foreground/50 hover:text-foreground transition-colors"
           >
             Tutup
@@ -1019,6 +1265,19 @@ export default function PosPage() {
             </kbd>
           </button>
         </form>
+      )}
+      {cameraScanning && (
+        <div className="relative border-b border-border/40 bg-black/5 px-4 py-2 animate-in slide-in-from-top-1 duration-150">
+          <video
+            ref={videoRef}
+            className="w-full max-w-xs mx-auto rounded-lg border border-border/60 shadow-sm"
+            style={{ maxHeight: 160 }}
+            playsInline
+          />
+          <p className="text-[10px] text-center text-muted-foreground/60 mt-1">
+            Arahkan kamera ke barcode produk
+          </p>
+        </div>
       )}
 
       {/* ═══════════════════════════════════════════════════════════ */}
@@ -1069,7 +1328,7 @@ export default function PosPage() {
                 {search && (
                   <>
                     {" "}
-                    untuk "<span className="text-foreground font-medium">{search}</span>"
+                    untuk &quot;<span className="text-foreground font-medium">{search}</span>&quot;
                   </>
                 )}
               </span>
@@ -1078,7 +1337,7 @@ export default function PosPage() {
               {/* Stock summary */}
               {!search && (
                 <span className="text-[10px] text-muted-foreground/40">
-                  {inventoryProducts.filter((p) => p.totalStock <= 5 && p.totalStock > 0).length} stok menipis
+                  {inventoryProducts.filter((p) => p.totalStock > 0 && p.totalStock <= (p.minStok ?? 10)).length} stok menipis
                 </span>
               )}
               {search && (
@@ -1197,32 +1456,101 @@ export default function PosPage() {
                             @ {formatCurrency(item.price)}
                           </p>
 
-                          {/* Per-item Discount */}
-                          <div className="mt-2 flex items-center gap-2">
-                            <div className="relative">
-                              <input
-                                type="number"
-                                min={0}
-                                max={100}
-                                placeholder="Diskon %"
-                                className="h-7 w-16 rounded-lg border border-border/50 bg-background/80 px-2 text-[10px] text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary/50"
-                                value={item.discountPercent ?? ""}
-                                onChange={(e) => {
-                                  const val = Math.min(100, Math.max(0, Number(e.target.value) || 0));
-                                  handleItemDiscount(item.sku, val);
-                                }}
-                              />
-                              {item.discountPercent ? (
-                                <span className="absolute -top-1.5 -right-1.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-emerald-500 text-[7px] font-bold text-white">
+                          {/* Per-item Discount — toggle % / Rp */}
+                          <div className="mt-2 space-y-1.5">
+                            <div className="flex items-center gap-1">
+                              {/* Type toggle */}
+                              <div className="flex items-center rounded-lg border border-border/50 bg-muted/40 p-0.5 shrink-0">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const val = item.discountPercent ?? 0;
+                                    handleItemDiscount(item.sku, val, "percent");
+                                  }}
+                                  className={cn(
+                                    "px-1.5 py-0.5 text-[9px] font-bold rounded-md transition-all",
+                                    item.discountNominal && item.discountNominal > 0
+                                      ? "text-muted-foreground/50"
+                                      : "bg-primary text-primary-foreground shadow-sm",
+                                  )}
+                                >
                                   %
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const val = item.discountNominal ?? 0;
+                                    handleItemDiscount(item.sku, val, "nominal");
+                                  }}
+                                  className={cn(
+                                    "px-1.5 py-0.5 text-[9px] font-bold rounded-md transition-all",
+                                    item.discountNominal && item.discountNominal > 0
+                                      ? "bg-primary text-primary-foreground shadow-sm"
+                                      : "text-muted-foreground/50",
+                                  )}
+                                >
+                                  Rp
+                                </button>
+                              </div>
+                              {/* Input */}
+                              <div className="relative flex-1">
+                                <input
+                                  type="number"
+                                  min={0}
+                                  max={item.discountNominal ? undefined : 100}
+                                  placeholder={item.discountNominal ? "Diskon Rp" : "Diskon %"}
+                                  className="h-7 w-full rounded-lg border border-border/50 bg-background/80 px-2 pr-6 text-[10px] text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary/50"
+                                  value={item.discountNominal ? (item.discountNominal ?? "") : (item.discountPercent ?? "")}
+                                  onChange={(e) => {
+                                    if (item.discountNominal) {
+                                      const val = Math.max(0, Number(e.target.value) || 0);
+                                      handleItemDiscount(item.sku, val, "nominal");
+                                    } else {
+                                      const val = Math.min(100, Math.max(0, Number(e.target.value) || 0));
+                                      handleItemDiscount(item.sku, val, "percent");
+                                    }
+                                  }}
+                                />
+                                <span className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] font-medium text-muted-foreground/40">
+                                  {item.discountNominal ? "Rp" : "%"}
                                 </span>
-                              ) : null}
+                              </div>
                             </div>
-                            {item.discountPercent ? (
-                              <span className="text-[10px] font-medium text-emerald-500">
+
+                            {/* Quick presets */}
+                            <div className="flex gap-1">
+                              {(item.discountNominal
+                                ? [5000, 10000, 20000, 50000]
+                                : [5, 10, 15, 20]
+                              ).map((preset) => {
+                                const isActive = item.discountNominal
+                                  ? item.discountNominal === preset
+                                  : item.discountPercent === preset;
+                                return (
+                                  <button
+                                    key={preset}
+                                    type="button"
+                                    onClick={() => handleItemDiscount(item.sku, preset, item.discountNominal ? "nominal" : "percent")}
+                                    className={cn(
+                                      "flex-1 rounded-md border py-0.5 text-[9px] font-medium transition-all",
+                                      isActive
+                                        ? "border-primary/50 bg-primary/5 text-primary"
+                                        : "border-border/40 text-muted-foreground/60 hover:border-primary/30 hover:text-foreground/70",
+                                    )}
+                                  >
+                                    {item.discountNominal ? formatCurrency(preset) : `${preset}%`}
+                                  </button>
+                                );
+                              })}
+                            </div>
+
+                            {/* Discount amount display */}
+                            {discAmt > 0 && (
+                              <p className="text-[10px] font-medium text-emerald-500 text-right">
                                 -{formatCurrency(discAmt)}
-                              </span>
-                            ) : null}
+                                {item.discountPercent ? ` (${item.discountPercent}%)` : ""}
+                              </p>
+                            )}
                           </div>
                         </div>
 
@@ -1294,7 +1622,7 @@ export default function PosPage() {
                     type="number"
                     min={0}
                     max={100}
-                    placeholder="Diskon"
+                    placeholder="Diskon Transaksi %"
                     className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none"
                     value={transactionDiscount || ""}
                     onChange={(e) =>
@@ -1307,6 +1635,24 @@ export default function PosPage() {
                     <span className="text-[10px] text-muted-foreground">%</span>
                   )}
                 </div>
+                {/* Quick preset buttons */}
+                <div className="flex gap-1.5">
+                  {[5, 10, 15, 20].map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => setTransactionDiscount(transactionDiscount === preset ? 0 : preset)}
+                      className={cn(
+                        "flex-1 rounded-lg border py-1 text-[10px] font-medium transition-all",
+                        transactionDiscount === preset
+                          ? "border-primary/50 bg-primary/5 text-primary"
+                          : "border-border/40 text-muted-foreground/60 hover:border-primary/30 hover:text-foreground/70",
+                      )}
+                    >
+                      {preset}%
+                    </button>
+                  ))}
+                </div>
                 {transactionDiscount > 0 && (
                   <div className="flex items-center justify-between px-1">
                     <span className="text-[11px] text-muted-foreground">
@@ -1317,6 +1663,31 @@ export default function PosPage() {
                     </span>
                   </div>
                 )}
+                {/* Discount Note */}
+                <div className="flex items-center gap-1.5 bg-muted/20 rounded-lg px-2.5 py-1.5 border border-border/20">
+                  <svg className="h-3 w-3 shrink-0 text-muted-foreground/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Catatan diskon (opsional)"
+                    className="flex-1 bg-transparent text-[10px] text-foreground placeholder:text-muted-foreground/30 focus:outline-none"
+                    value={discountNote}
+                    onChange={(e) => setDiscountNote(e.target.value)}
+                  />
+                  {discountNote && (
+                    <button
+                      type="button"
+                      onClick={() => setDiscountNote("")}
+                      className="text-muted-foreground/30 hover:text-foreground/60 transition-colors"
+                    >
+                      <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M18 6L6 18" /><path d="M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
               </div>
 
               <Separator className="bg-border/30" />
@@ -1351,6 +1722,62 @@ export default function PosPage() {
                   </span>
                 )}
               </div>
+
+              {/* Poin Reward — hanya untuk pelanggan terdaftar */}
+              {selectedCustomer !== "Umum" && selectedCustomerPoin > 0 && (
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <div className="rounded-full bg-amber-100 dark:bg-amber-900/30 p-1">
+                        <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                      </div>
+                      <span className="text-xs font-medium text-foreground">Poin Reward</span>
+                      <span className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold">
+                        {selectedCustomerPoin} tersedia
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 bg-amber-50/50 dark:bg-amber-950/20 rounded-xl px-3 py-2 border border-amber-200/50 dark:border-amber-800/30">
+                    <div className="h-3.5 w-3.5 shrink-0 rounded-full bg-amber-500" />
+                    <input
+                      type="number"
+                      min={0}
+                      max={maxPoinRedeem}
+                      placeholder="Gunakan poin"
+                      className="flex-1 bg-transparent text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none"
+                      value={poinRedeem || ""}
+                      onChange={(e) => {
+                        const val = Math.min(maxPoinRedeem, Math.max(0, Number(e.target.value) || 0));
+                        setPoinRedeem(val);
+                      }}
+                    />
+                    <span className="text-[10px] text-muted-foreground">poin</span>
+                  </div>
+                  {poinRedeem > 0 && (
+                    <div className="flex items-center justify-between px-1">
+                      <span className="text-[11px] text-muted-foreground">
+                        Diskon poin ({poinRedeem} poin)
+                      </span>
+                      <span className="text-xs font-semibold text-amber-600 dark:text-amber-400">
+                        -{formatCurrency(poinDiscountAmount)}
+                      </span>
+                    </div>
+                  )}
+                  <p className="text-[9px] text-muted-foreground/50 px-1">
+                    1 poin = Rp1.000 &bull; 1 poin per Rp10.000 belanja
+                  </p>
+                </div>
+              )}
+
+              {/* Info poin jika pelanggan terdaftar tapi belum punya poin */}
+              {selectedCustomer !== "Umum" && selectedCustomerPoin === 0 && (
+                <div className="flex items-center gap-1.5 rounded-lg bg-muted/30 px-3 py-2">
+                  <div className="h-2 w-2 rounded-full bg-muted-foreground/30" />
+                  <span className="text-[10px] text-muted-foreground/60">
+                    Pelanggan ini belum memiliki poin reward. 1 poin per Rp10.000 belanja.
+                  </span>
+                </div>
+              )}
 
               <Separator className="bg-border/30" />
 
@@ -1438,6 +1865,16 @@ export default function PosPage() {
         onConfirm={handlePaymentConfirm}
         isProcessing={isProcessingPayment}
       />
+
+      {/* ═══ THERMAL RECEIPT MODAL ═══ */}
+      {thermalReceiptData && (
+        <ThermalReceiptModal
+          data={thermalReceiptData}
+          isOpen={showThermalReceipt}
+          onClose={() => setShowThermalReceipt(false)}
+          onNewTransaction={handleNewTransaction}
+        />
+      )}
     </div>
   );
 }

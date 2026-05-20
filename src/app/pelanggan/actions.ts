@@ -2,6 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
+import fs from "fs";
+import path from "path";
+import { getAppData, type PoinHistoryEntry } from "@/app/actions";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -64,7 +67,7 @@ export async function getCustomers(): Promise<{
 
 export async function getCustomersForPos(): Promise<{
   success: boolean;
-  customers: Pick<Customer, "id" | "nama_lengkap" | "nomor_hp" | "total_transaksi" | "total_orders">[];
+  customers: Pick<Customer, "id" | "nama_lengkap" | "nomor_hp" | "total_transaksi" | "total_orders" | "total_poin">[];
   error?: string;
 }> {
   try {
@@ -72,7 +75,7 @@ export async function getCustomersForPos(): Promise<{
 
     const { data, error } = await supabase
       .from("customers")
-      .select("id, nama_lengkap, nomor_hp, total_transaksi, total_orders")
+      .select("id, nama_lengkap, nomor_hp, total_transaksi, total_orders, total_poin")
       .order("nama_lengkap", { ascending: true });
 
     if (error) {
@@ -196,6 +199,94 @@ export async function updateCustomer(
 
 // ─── Delete customer ──────────────────────────────────────────────────────
 
+// ─── Adjust customer poin (manual) ────────────────────────────────────
+
+export async function adjustPoin(
+  customerName: string,
+  jumlah: number,
+  alasan: string
+): Promise<{
+  success: boolean;
+  customer?: Customer;
+  error?: string;
+}> {
+  try {
+    if (!jumlah || jumlah === 0) {
+      return { success: false, error: "Jumlah poin harus lebih dari 0" };
+    }
+    if (!alasan.trim()) {
+      return { success: false, error: "Alasan penyesuaian wajib diisi" };
+    }
+
+    const supabase = createAdminClient();
+    const dataApp = await getAppData();
+
+    // Find customer
+    const { data: existing, error: findError } = await supabase
+      .from("customers")
+      .select("id, nama_lengkap, total_poin")
+      .eq("nama_lengkap", customerName.trim())
+      .maybeSingle();
+
+    if (findError || !existing) {
+      return { success: false, error: "Pelanggan tidak ditemukan" };
+    }
+
+    const oldPoin = existing.total_poin || 0;
+    const newPoin = Math.max(0, oldPoin + jumlah);
+
+    // Update Supabase
+    const { data: updated, error: updateError } = await supabase
+      .from("customers")
+      .update({
+        total_poin: newPoin,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", existing.id)
+      .select()
+      .single();
+
+    if (updateError) {
+      console.error("Supabase error adjusting poin:", updateError);
+      return { success: false, error: updateError.message };
+    }
+
+    // Record poin history to data.json
+    if (!dataApp.poinHistory) {
+      dataApp.poinHistory = [];
+    }
+
+    const now = new Date().toISOString();
+    const historyEntry: PoinHistoryEntry = {
+      id: `poin-adjust-${Date.now()}`,
+      tanggal: now,
+      customer_name: customerName.trim(),
+      tipe: "adjusted",
+      jumlah: jumlah,
+      saldo_setelah: newPoin,
+      referensi: "Manual",
+      detail: `${alasan.trim()}${jumlah > 0 ? ` (${jumlah} poin ditambahkan)` : ` (${Math.abs(jumlah)} poin dikurangi)`}. Saldo sebelumnya: ${oldPoin}`,
+      created_at: now,
+    };
+
+    dataApp.poinHistory.push(historyEntry);
+
+    const dataFilePath = path.join(process.cwd(), "data.json");
+    fs.writeFileSync(dataFilePath, JSON.stringify(dataApp, null, 2), "utf8");
+
+    revalidatePath("/pelanggan");
+    revalidatePath("/pos");
+
+    return { success: true, customer: updated };
+  } catch (error) {
+    console.error("Error in adjustPoin:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Gagal menyesuaikan poin",
+    };
+  }
+}
+
 export async function deleteCustomer(
   id: string
 ): Promise<{
@@ -228,10 +319,41 @@ export async function deleteCustomer(
   }
 }
 
+// ─── Get customer poin history ─────────────────────────────────────────
+// Fetches poin mutation history from data.json
+
+export async function getPoinHistory(
+  customerName: string
+): Promise<{
+  success: boolean;
+  entries: PoinHistoryEntry[];
+  error?: string;
+}> {
+  try {
+    const data = await getAppData();
+    const history = (data.poinHistory || [])
+      .filter(
+        (entry) =>
+          entry.customer_name.toLowerCase() === customerName.toLowerCase()
+      )
+      .sort(
+        (a, b) =>
+          new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime()
+      );
+
+    return { success: true, entries: history };
+  } catch (error) {
+    console.error("Error in getPoinHistory:", error);
+    return {
+      success: false,
+      entries: [],
+      error: error instanceof Error ? error.message : "Gagal mengambil riwayat poin",
+    };
+  }
+}
+
 // ─── Get customer transaction history from orders ─────────────────────────
 // Fetches orders from data.json that match the customer name
-
-import { getAppData } from "@/app/actions";
 
 export interface CustomerOrder {
   nomor_order: string;

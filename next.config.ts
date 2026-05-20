@@ -13,14 +13,6 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/storage/v1/object/public/**",
       },
-      {
-        protocol: "https",
-        hostname: "**.shopee.co.id",
-      },
-      {
-        protocol: "https",
-        hostname: "**.shopee.com",
-      },
     ],
   },
 

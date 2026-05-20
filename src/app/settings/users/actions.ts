@@ -1,7 +1,9 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { ALL_ROLES, type Role } from "@/lib/permissions";
+import { auditLog } from "@/lib/audit";
 
 export interface UserManagementItem {
   id: string;
@@ -26,53 +28,97 @@ interface AuthUserRecord {
   email?: string;
 }
 
-export async function getUsers(): Promise<UserManagementItem[]> {
+/**
+ * Helper: cek role user saat ini dengan fallback ke app_metadata
+ * (karena tabel profiles mungkin belum ada)
+ */
+async function getCurrentUserRole(): Promise<Role | null> {
   const supabase = await createClient();
-  const { data: { user: currentUser } } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!currentUser) return [];
+  if (!user) return null;
 
-  const { data: currentProfile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", currentUser.id)
-    .single();
-
-  if (currentProfile?.role !== "Admin") return [];
-
-  const { data: profiles } = await supabase
-    .from("profiles")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (!profiles) return [];
-
-  const users: UserManagementItem[] = (profiles as ProfileRecord[]).map((p) => ({
-    id: p.id,
-    email: "",
-    full_name: p.full_name || "",
-    role: p.role as Role,
-    avatar_url: p.avatar_url || "",
-    created_at: p.created_at,
-    is_active: true,
-  }));
-
-  // Try to get emails from auth admin API
+  // Coba dari tabel profiles dulu
   try {
-    const { data: authUsers } = await supabase.auth.admin.listUsers();
-    if (authUsers?.users) {
-      for (const user of users) {
-        const match = (authUsers.users as AuthUserRecord[]).find((au) => au.id === user.id);
-        if (match) {
-          user.email = match.email ?? "";
-        }
-      }
-    }
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.role) return profile.role as Role;
   } catch {
-    // Admin API might not be available, emails will be empty
+    // Tabel profiles belum ada — fall through ke metadata
   }
 
-  return users;
+  // Fallback ke app_metadata / user_metadata
+  return (user.app_metadata?.role as Role) ?? (user.user_metadata?.role as Role) ?? null;
+}
+
+export async function getUsers(): Promise<UserManagementItem[]> {
+  const supabase = await createClient();
+
+  const role = await getCurrentUserRole();
+  if (role !== "Admin") return [];
+
+  // Coba ambil user dari tabel profiles dulu
+  try {
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (profiles && profiles.length > 0) {
+      const users: UserManagementItem[] = (profiles as ProfileRecord[]).map((p) => ({
+        id: p.id,
+        email: "",
+        full_name: p.full_name || "",
+        role: p.role as Role,
+        avatar_url: p.avatar_url || "",
+        created_at: p.created_at,
+        is_active: true,
+      }));
+
+      // Enrich emails from auth admin API
+      try {
+        const admin = createAdminClient();
+        const { data: authUsers } = await admin.auth.admin.listUsers();
+        if (authUsers?.users) {
+          for (const user of users) {
+            const match = (authUsers.users as AuthUserRecord[]).find((au) => au.id === user.id);
+            if (match) {
+              user.email = match.email ?? "";
+            }
+          }
+        }
+      } catch {
+        // Admin API mungkin tidak tersedia (service key belum dikonfigurasi)
+      }
+
+      return users;
+    }
+  } catch {
+    // Tabel profiles belum ada — fall through ke auth API
+  }
+
+  // Fallback: ambil user dari Auth Admin API (termasuk metadata)
+  try {
+    const admin = createAdminClient();
+    const { data: authUsers } = await admin.auth.admin.listUsers();
+    if (!authUsers?.users) return [];
+
+    return authUsers.users.map((au: any) => ({
+      id: au.id,
+      email: au.email ?? "",
+      full_name: au.user_metadata?.full_name ?? "",
+      role: (au.app_metadata?.role as Role) ?? (au.user_metadata?.role as Role) ?? "Viewer",
+      avatar_url: "",
+      created_at: au.created_at,
+      is_active: !au.banned_until,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export async function updateUserRole(userId: string, newRole: Role): Promise<{ success: boolean; error?: string }> {
@@ -81,22 +127,40 @@ export async function updateUserRole(userId: string, newRole: Role): Promise<{ s
 
   if (!currentUser) return { success: false, error: "Not authenticated" };
 
-  const { data: currentProfile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", currentUser.id)
-    .single();
-
-  if (currentProfile?.role !== "Admin") return { success: false, error: "Only admins can change roles" };
+  const role = await getCurrentUserRole();
+  if (role !== "Admin") return { success: false, error: "Only admins can change roles" };
 
   if (!ALL_ROLES.includes(newRole)) return { success: false, error: "Invalid role" };
 
-  const { error } = await supabase
-    .from("profiles")
-    .update({ role: newRole, updated_at: new Date().toISOString() })
-    .eq("id", userId);
+  // Update role via profiles table (if exists) or fallback to admin API
+  try {
+    const { error } = await supabase
+      .from("profiles")
+      .update({ role: newRole, updated_at: new Date().toISOString() })
+      .eq("id", userId);
 
-  if (error) return { success: false, error: error.message };
+    if (error) throw error;
+  } catch {
+    // Fallback: update via admin API (app_metadata)
+    try {
+      const admin = createAdminClient();
+      await admin.auth.admin.updateUserById(userId, {
+        app_metadata: { role: newRole },
+        user_metadata: { role: newRole },
+      });
+    } catch (adminErr: unknown) {
+      const message = adminErr instanceof Error ? adminErr.message : "Failed to update role";
+      return { success: false, error: message };
+    }
+  }
+
+  // Audit log
+  auditLog({
+    action: "user.role_change",
+    entity_type: "user",
+    entity_id: userId,
+    details: { new_role: newRole, changed_by: currentUser.id },
+  });
 
   return { success: true };
 }
@@ -107,20 +171,25 @@ export async function updateUserActiveStatus(userId: string, isActive: boolean):
 
   if (!currentUser) return { success: false, error: "Not authenticated" };
 
-  const { data: currentProfile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", currentUser.id)
-    .single();
-
-  if (currentProfile?.role !== "Admin") return { success: false, error: "Only admins can manage users" };
+  const role = await getCurrentUserRole();
+  if (role !== "Admin") return { success: false, error: "Only admins can manage users" };
 
   try {
+    const admin = createAdminClient();
     if (isActive) {
-      await supabase.auth.admin.updateUserById(userId, { ban_duration: "none" });
+      await admin.auth.admin.updateUserById(userId, { ban_duration: "none" });
     } else {
-      await supabase.auth.admin.updateUserById(userId, { ban_duration: "999999" });
+      await admin.auth.admin.updateUserById(userId, { ban_duration: "999999" });
     }
+
+    // Audit log
+    auditLog({
+      action: isActive ? "user.activate" : "user.deactivate",
+      entity_type: "user",
+      entity_id: userId,
+      details: { is_active: isActive, changed_by: currentUser.id },
+    });
+
     return { success: true };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to update user status";
@@ -128,24 +197,20 @@ export async function updateUserActiveStatus(userId: string, isActive: boolean):
   }
 }
 
-export async function inviteUser(email: string, fullName: string, role: Role): Promise<{ success: boolean; error?: string }> {
+export async function inviteUser(email: string, fullName: string, newRole: Role): Promise<{ success: boolean; error?: string }> {
   const supabase = await createClient();
   const { data: { user: currentUser } } = await supabase.auth.getUser();
 
   if (!currentUser) return { success: false, error: "Not authenticated" };
 
-  const { data: currentProfile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", currentUser.id)
-    .single();
+  const currentUserRole = await getCurrentUserRole();
+  if (currentUserRole !== "Admin") return { success: false, error: "Only admins can invite users" };
 
-  if (currentProfile?.role !== "Admin") return { success: false, error: "Only admins can invite users" };
-
-  if (!ALL_ROLES.includes(role)) return { success: false, error: "Invalid role" };
+  if (!ALL_ROLES.includes(newRole)) return { success: false, error: "Invalid role" };
 
   try {
-    const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
+    const admin = createAdminClient();
+    const { data, error } = await admin.auth.admin.inviteUserByEmail(email, {
       data: { full_name: fullName },
     });
 
@@ -154,9 +219,18 @@ export async function inviteUser(email: string, fullName: string, role: Role): P
     if (data?.user) {
       await supabase
         .from("profiles")
-        .update({ role, full_name: fullName })
+        .update({ role: newRole, full_name: fullName })
         .eq("id", data.user.id);
     }
+
+    // Audit log
+    auditLog({
+      action: "user.invite",
+      entity_type: "user",
+      entity_id: data?.user?.id,
+      entity_name: email,
+      details: { role: newRole, full_name: fullName, invited_by: currentUser.id },
+    });
 
     return { success: true };
   } catch (err: unknown) {

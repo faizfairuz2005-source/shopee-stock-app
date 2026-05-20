@@ -9,6 +9,9 @@ export async function getUserProfile() {
     return { email: "", fullName: "", role: null as Role | null }
   }
 
+  let fullName = (user.user_metadata?.full_name as string) || ""
+  let role: Role | null = null
+
   try {
     const { data: profile } = await supabase
       .from("profiles")
@@ -16,22 +19,21 @@ export async function getUserProfile() {
       .eq("id", user.id)
       .single()
 
-    const fullName = profile?.full_name || (user.user_metadata?.full_name as string) || ""
-    // Jika role null/belum diset, fallback ke null = unrestricted
-    const role: Role | null = profile?.role as Role | null | undefined ?? null
-
-    return {
-      email: user.email ?? "",
-      fullName,
-      role,
+    if (profile) {
+      fullName = profile.full_name || fullName
+      role = (profile.role as Role) ?? (user.app_metadata?.role as Role) ?? null
+    } else {
+      // Fallback: baca role dari metadata jika tabel profiles belum ada
+      role = (user.app_metadata?.role as Role) ?? (user.user_metadata?.role as Role) ?? null
     }
   } catch {
-    // Profiles table mungkin belum ada — fallback: role null = unrestricted
-    const fullName = (user.user_metadata?.full_name as string) || ""
-    return {
-      email: user.email ?? "",
-      fullName,
-      role: null as Role | null,
-    }
+    // Profiles table mungkin belum ada — fallback ke metadata
+    role = (user.app_metadata?.role as Role) ?? (user.user_metadata?.role as Role) ?? null
+  }
+
+  return {
+    email: user.email ?? "",
+    fullName,
+    role,
   }
 }

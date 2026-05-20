@@ -1,7 +1,6 @@
 import { getAppData } from "@/app/actions";
 import { createClient } from "@/lib/supabase/server";
 import { getUserProfile } from "@/lib/get-profile";
-import { getShopeeShops } from "@/lib/shopee/database";
 import { OrdersClient } from "./orders-client";
 
 export default async function OrdersPage() {
@@ -16,23 +15,10 @@ export default async function OrdersPage() {
   const { fullName, email } = await getUserProfile();
   const defaultSellerName = fullName || email?.split("@")[0] || userId.slice(0, 8) || "Penjual";
 
-  // Get connected store names from Shopee integration (graceful fallback)
-  let shopNames: string[] = [];
-  try {
-    const connectedShops = await getShopeeShops();
-    shopNames = connectedShops.map((s) => s.shop_name).filter(Boolean);
-  } catch {
-    // shopee_shops table may not exist yet
-    shopNames = [];
-  }
-
   // Extract unique store names from existing orders
-  const orderStoreNames = [
-    ...new Set(orders.map((o) => o.nama_toko_shopee).filter(Boolean)),
+  const storeSuggestions = [
+    ...new Set(orders.map((o) => o.nama_toko).filter(Boolean)),
   ];
-
-  // Combine and deduplicate
-  const storeSuggestions = [...new Set([...shopNames, ...orderStoreNames])];
 
   return (
     <OrdersClient

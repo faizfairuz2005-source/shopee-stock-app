@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { validateEnv } from "@/lib/config/env";
+import { auditLog } from "@/lib/audit";
 
 /**
  * POST /api/auth/logout
@@ -35,6 +36,14 @@ export async function POST() {
       console.error("Supabase signOut error:", signOutError.message);
       // Continue with cookie cleanup even if signOut fails
     }
+
+    // Audit log for logout
+    auditLog({
+      action: "logout",
+      entity_type: "auth",
+      entity_id: user?.id || undefined,
+      entity_name: user?.email || undefined,
+    });
 
     // Create response that clears all Supabase-related cookies
     const response = NextResponse.json(

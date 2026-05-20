@@ -484,10 +484,10 @@ export default function ReturPage() {
                     <div className="flex items-center gap-4 text-xs text-muted-foreground">
                       <span>{selectedOrder.items.length} jenis produk</span>
                       <span>Total: {formatRupiah(selectedOrder.grand_total)}</span>
-                      {selectedOrder.nama_toko_shopee && selectedOrder.nama_toko_shopee !== "POS Direct" && (
+                      {selectedOrder.nama_toko && selectedOrder.nama_toko !== "POS Direct" && (
                         <span className="flex items-center gap-1">
                           <Store className="h-3 w-3" />
-                          {selectedOrder.nama_toko_shopee}
+                          {selectedOrder.nama_toko}
                         </span>
                       )}
                     </div>

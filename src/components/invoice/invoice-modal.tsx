@@ -473,7 +473,7 @@ function generatePrintHtml(invoice: InvoiceData): string {
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="4"/><path d="M6 6h4v4H6z"/><path d="M14 6h4v4h-4z"/><path d="M6 14h4v4H6z"/><path d="M14 14h4v4h-4z"/></svg>
             </div>
             <div class="invoice-brand-text">
-              <h1>MultiStock</h1>
+              <h1>MultiStore</h1>
               <p>Solusi Manajemen Stok &amp; Penjualan</p>
             </div>
           </div>
@@ -585,10 +585,10 @@ function generatePrintHtml(invoice: InvoiceData): string {
 
       <!-- Footer -->
       <div class="invoice-footer">
-        <div class="brand">MultiStock</div>
+        <div class="brand">MultiStore</div>
         <p class="thanks">Terima kasih telah berbelanja!</p>
         <p class="policy">Barang yang sudah dibeli tidak dapat dikembalikan kecuali ada cacat produksi</p>
-        <p class="ref">Invoice ini dibuat secara otomatis oleh sistem MultiStock &bull; ${invoice.invoiceNumber}</p>
+        <p class="ref">Invoice ini dibuat secara otomatis oleh sistem MultiStore &bull; ${invoice.invoiceNumber}</p>
       </div>
     </div>
   </div>
@@ -752,7 +752,7 @@ export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
                       <Store className="h-7 w-7" />
                     </div>
                     <div>
-                      <h1 className="text-2xl font-bold tracking-tight">MultiStock</h1>
+                      <h1 className="text-2xl font-bold tracking-tight">MultiStore</h1>
                       <p className="text-sm text-blue-100">Solusi Manajemen Stok & Penjualan</p>
                     </div>
                   </div>
@@ -974,7 +974,7 @@ export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
 
               {/* ─── Footer ─── */}
               <div className="border-t border-border pt-6 text-center print:border-gray-300">
-                <span className="text-sm font-semibold text-foreground print:text-gray-900">MultiStock</span>
+                <span className="text-sm font-semibold text-foreground print:text-gray-900">MultiStore</span>
                 <p className="mt-2 text-sm font-medium text-foreground print:text-gray-800">
                   Terima kasih telah berbelanja!
                 </p>
@@ -982,7 +982,7 @@ export function InvoiceModal({ isOpen, onClose, invoice }: InvoiceModalProps) {
                   Barang yang sudah dibeli tidak dapat dikembalikan kecuali ada cacat produksi
                 </p>
                 <p className="mt-3 text-xs text-muted-foreground/70 print:text-gray-400">
-                  Invoice ini dibuat secara otomatis oleh sistem MultiStock &bull; {invoice.invoiceNumber}
+                  Invoice ini dibuat secara otomatis oleh sistem MultiStore &bull; {invoice.invoiceNumber}
                 </p>
               </div>
             </div>

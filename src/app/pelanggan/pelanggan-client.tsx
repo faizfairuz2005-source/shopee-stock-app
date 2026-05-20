@@ -58,11 +58,14 @@ import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import type { Customer, CustomerOrder } from "./actions";
+import type { PoinHistoryEntry } from "@/app/actions";
 import {
   addCustomer,
   updateCustomer,
   deleteCustomer,
   getCustomerOrders,
+  getPoinHistory,
+  adjustPoin,
 } from "./actions";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
@@ -123,10 +126,18 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
   const [showDelete, setShowDelete] = useState(false);
   const [deletingCustomer, setDeletingCustomer] = useState<Customer | null>(null);
 
+  // Adjust Poin modal
+  const [showAdjustPoin, setShowAdjustPoin] = useState(false);
+  const [adjustingPoinCustomer, setAdjustingPoinCustomer] = useState<Customer | null>(null);
+  const [adjustPoinJumlah, setAdjustPoinJumlah] = useState("");
+  const [adjustPoinAlasan, setAdjustPoinAlasan] = useState("");
+
   // Detail / History modal
   const [showHistory, setShowHistory] = useState(false);
   const [historyCustomer, setHistoryCustomer] = useState<Customer | null>(null);
   const [historyOrders, setHistoryOrders] = useState<CustomerOrder[]>([]);
+  const [historyPoin, setHistoryPoin] = useState<PoinHistoryEntry[]>([]);
+  const [historyTab, setHistoryTab] = useState<"transactions" | "poin">("transactions");
 
   // ─── Computed ──────────────────────────────────────────────────
 
@@ -231,11 +242,27 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
   const openHistory = (customer: Customer) => {
     setHistoryCustomer(customer);
     setShowHistory(true);
+    setHistoryTab("transactions");
     setIsLoadingOrders(true);
+    setHistoryPoin([]);
 
     startTransition(async () => {
       const result = await getCustomerOrders(customer.nama_lengkap);
       setHistoryOrders(result.orders);
+      setIsLoadingOrders(false);
+    });
+  };
+
+  const openPoinHistory = async (customer: Customer) => {
+    setHistoryCustomer(customer);
+    setShowHistory(true);
+    setHistoryTab("poin");
+    setHistoryOrders([]);
+    setIsLoadingOrders(true);
+
+    startTransition(async () => {
+      const result = await getPoinHistory(customer.nama_lengkap);
+      setHistoryPoin(result.entries);
       setIsLoadingOrders(false);
     });
   };
@@ -369,6 +396,7 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                     <TableHead>No. HP</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Total Transaksi</TableHead>
+                    <TableHead className="text-center">Poin</TableHead>
                     <TableHead className="text-center">Pesanan</TableHead>
                     <TableHead>Terakhir Transaksi</TableHead>
                     <TableHead className="text-right">Aksi</TableHead>
@@ -422,6 +450,21 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                         </span>
                       </TableCell>
                       <TableCell className="text-center">
+                        {customer.total_poin > 0 ? (
+                          <Badge
+                            className="cursor-pointer bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:hover:bg-amber-800/50 border-0 text-xs font-semibold transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openPoinHistory(customer);
+                            }}
+                          >
+                            {customer.total_poin}
+                          </Badge>
+                        ) : (
+                          <span className="text-xs text-muted-foreground/40">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-center">
                         <Badge variant="outline" className="text-xs font-mono tabular-nums">
                           {customer.total_orders ?? 0}x
                         </Badge>
@@ -442,8 +485,7 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                             title="Lihat Riwayat Transaksi"
                           >
                             <Eye className="h-4 w-4" />
-                          </Button>
-                          <DropdownMenu>
+                          </Button>                            <DropdownMenu>
                             <DropdownMenuTrigger
                               render={
                                 <Button
@@ -455,13 +497,25 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                                 </Button>
                               }
                             />
-                            <DropdownMenuContent align="end" className="w-44">
+                            <DropdownMenuContent align="end" className="w-48">
                               <DropdownMenuItem
                                 className="cursor-pointer"
                                 onClick={() => openEditForm(customer)}
                               >
                                 <Pencil className="mr-2 h-4 w-4" />
                                 Edit Pelanggan
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="cursor-pointer"
+                                onClick={() => {
+                                  setAdjustingPoinCustomer(customer);
+                                  setAdjustPoinJumlah("");
+                                  setAdjustPoinAlasan("");
+                                  setShowAdjustPoin(true);
+                                }}
+                              >
+                                <BadgePercent className="mr-2 h-4 w-4" />
+                                Atur Poin
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
@@ -628,6 +682,130 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
       </Dialog>
 
       {/* ════════════════════════════════════════════════════════════ */}
+      {/*  ADJUST POIN MODAL                                        */}
+      {/* ════════════════════════════════════════════════════════════ */}
+      <Dialog open={showAdjustPoin} onOpenChange={setShowAdjustPoin}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <BadgePercent className="h-5 w-5 text-amber-500" />
+              Atur Poin — {adjustingPoinCustomer?.nama_lengkap}
+            </DialogTitle>
+            <DialogDescription>
+              Tambah atau kurangi poin reward pelanggan.
+              Saldo saat ini:{" "}
+              <span className="font-semibold text-amber-600 dark:text-amber-400">
+                {adjustingPoinCustomer?.total_poin ?? 0} poin
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="adjust-jumlah">
+                Jumlah Poin
+              </Label>
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium">
+                    +
+                  </span>
+                  <Input
+                    id="adjust-jumlah"
+                    type="number"
+                    min="1"
+                    placeholder="Masukkan jumlah poin"
+                    value={adjustPoinJumlah}
+                    onChange={(e) => setAdjustPoinJumlah(e.target.value)}
+                    className="pl-7 border-border/60"
+                  />
+                </div>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-10 w-10 shrink-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+                  onClick={() => setAdjustPoinJumlah(prev => prev.startsWith("-") ? prev.slice(1) : `-${prev}`)}
+                  title="Toggle kurangi/tambah"
+                >
+                  <span className="text-sm font-bold">
+                    {adjustPoinJumlah.startsWith("-") ? "+" : "−"}
+                  </span>
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Gunakan tombol <strong>±</strong> untuk toggle tambah/kurangi.
+                Poin tidak bisa menjadi negatif.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="adjust-alasan" className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                Alasan
+              </Label>
+              <textarea
+                id="adjust-alasan"
+                rows={2}
+                placeholder="Contoh: Bonus poin ulang tahun, koreksi transaksi, dll."
+                className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                value={adjustPoinAlasan}
+                onChange={(e) => setAdjustPoinAlasan(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowAdjustPoin(false)}
+            >
+              Batal
+            </Button>
+            <Button
+              onClick={() => {
+                if (!adjustingPoinCustomer) return;
+                const jumlah = Number(adjustPoinJumlah);
+                if (!jumlah || jumlah === 0) {
+                  toast.error("Jumlah poin harus diisi");
+                  return;
+                }
+                if (!adjustPoinAlasan.trim()) {
+                  toast.error("Alasan penyesuaian wajib diisi");
+                  return;
+                }
+
+                startTransition(async () => {
+                  const result = await adjustPoin(
+                    adjustingPoinCustomer.nama_lengkap,
+                    jumlah,
+                    adjustPoinAlasan.trim()
+                  );
+                  if (result.success && result.customer) {
+                    setCustomers((prev) =>
+                      prev.map((c) =>
+                        c.id === adjustingPoinCustomer.id ? { ...c, total_poin: result.customer!.total_poin } : c
+                      )
+                    );
+                    toast.success(
+                      jumlah > 0
+                        ? `${jumlah} poin berhasil ditambahkan`
+                        : `${Math.abs(jumlah)} poin berhasil dikurangi`
+                    );
+                    setShowAdjustPoin(false);
+                  } else {
+                    toast.error(result.error || "Gagal menyesuaikan poin");
+                  }
+                });
+              }}
+              disabled={isPending || !adjustPoinJumlah || Number(adjustPoinJumlah) === 0}
+            >
+              {isPending
+                ? "Menyimpan..."
+                : adjustPoinJumlah.startsWith("-")
+                  ? "Kurangi Poin"
+                  : "Tambah Poin"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ════════════════════════════════════════════════════════════ */}
       {/*  TRANSACTION HISTORY MODAL                                  */}
       {/* ════════════════════════════════════════════════════════════ */}
       <Dialog open={showHistory} onOpenChange={setShowHistory}>
@@ -635,7 +813,7 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <History className="h-5 w-5 text-primary" />
-              Riwayat Transaksi — {historyCustomer?.nama_lengkap}
+              {historyCustomer?.nama_lengkap}
             </DialogTitle>
             <DialogDescription>
               <div className="flex flex-wrap gap-4 mt-1">
@@ -657,9 +835,53 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                   <Receipt className="h-3 w-3" />
                   {historyCustomer?.total_orders ?? 0} transaksi
                 </span>
+                <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400">
+                  <BadgePercent className="h-3 w-3" />
+                  {(historyCustomer?.total_poin ?? 0) > 0 ? `${historyCustomer?.total_poin} poin` : "0 poin"}
+                </span>
               </div>
             </DialogDescription>
           </DialogHeader>
+
+          {/* Tabs */}
+          <div className="flex gap-1 rounded-lg bg-muted/60 p-1 -mx-6 px-6 border-y border-border/40">
+            <button
+              onClick={() => setHistoryTab("transactions")}
+              className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
+                historyTab === "transactions"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <div className="flex items-center justify-center gap-1.5">
+                <Receipt className="h-4 w-4" />
+                Transaksi
+              </div>
+            </button>
+            <button
+              onClick={() => {
+                setHistoryTab("poin");
+                if (historyPoin.length === 0 && historyCustomer) {
+                  setIsLoadingOrders(true);
+                  startTransition(async () => {
+                    const result = await getPoinHistory(historyCustomer.nama_lengkap);
+                    setHistoryPoin(result.entries);
+                    setIsLoadingOrders(false);
+                  });
+                }
+              }}
+              className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
+                historyTab === "poin"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <div className="flex items-center justify-center gap-1.5">
+                <BadgePercent className="h-4 w-4" />
+                Riwayat Poin
+              </div>
+            </button>
+          </div>
 
           <div className="flex-1 overflow-y-auto -mx-6 px-6">
             {isLoadingOrders ? (
@@ -668,74 +890,157 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                   <Skeleton key={i} className="h-24 w-full rounded-lg" />
                 ))}
               </div>
-            ) : historyOrders.length === 0 ? (
-              <div className="py-12 text-center">
-                <Receipt className="mx-auto h-12 w-12 text-muted-foreground/20 mb-3" />
-                <p className="text-sm font-medium text-muted-foreground">
-                  Belum ada transaksi
-                </p>
-                <p className="text-xs text-muted-foreground/50 mt-1">
-                  Pelanggan ini belum melakukan transaksi di sistem
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-3 py-4">
-                {historyOrders.map((order) => (
-                  <div
-                    key={order.nomor_order}
-                    className="rounded-xl border border-border/60 bg-card p-4 transition-all hover:border-primary/20 hover:shadow-sm"
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <p className="text-sm font-medium text-foreground">
-                          {order.nomor_order}
+            ) : historyTab === "transactions" ? (
+              /* ─── TRANSACTIONS TAB ─── */
+              historyOrders.length === 0 ? (
+                <div className="py-12 text-center">
+                  <Receipt className="mx-auto h-12 w-12 text-muted-foreground/20 mb-3" />
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Belum ada transaksi
+                  </p>
+                  <p className="text-xs text-muted-foreground/50 mt-1">
+                    Pelanggan ini belum melakukan transaksi di sistem
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3 py-4">
+                  {historyOrders.map((order) => (
+                    <div
+                      key={order.nomor_order}
+                      className="rounded-xl border border-border/60 bg-card p-4 transition-all hover:border-primary/20 hover:shadow-sm"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <p className="text-sm font-medium text-foreground">
+                            {order.nomor_order}
+                          </p>
+                          <div className="flex items-center gap-3 mt-0.5">
+                            <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                              <Calendar className="h-3 w-3" />
+                              {formatDateTime(order.tanggal_pesanan)}
+                            </span>
+                            <Badge
+                              variant="secondary"
+                              className="text-[10px] px-1.5 py-0"
+                            >
+                              {order.seller_name}
+                            </Badge>
+                          </div>
+                        </div>
+                        <p className="text-sm font-bold text-primary tabular-nums">
+                          {formatCurrency(order.grand_total)}
                         </p>
-                        <div className="flex items-center gap-3 mt-0.5">
-                          <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                            <Calendar className="h-3 w-3" />
-                            {formatDateTime(order.tanggal_pesanan)}
-                          </span>
-                          <Badge
-                            variant="secondary"
-                            className="text-[10px] px-1.5 py-0"
+                      </div>
+
+                      {/* Order Items */}
+                      <div className="rounded-lg bg-muted/30 p-2.5 space-y-1.5">
+                        {order.items.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between text-xs"
                           >
-                            {order.seller_name}
-                          </Badge>
+                            <span className="text-muted-foreground truncate flex-1">
+                              {item.nama_produk}
+                              <span className="text-muted-foreground/50 ml-1">
+                                x{item.quantity}
+                              </span>
+                            </span>
+                            <span className="font-medium tabular-nums ml-2">
+                              {formatCurrency(item.subtotal)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            ) : (
+              /* ─── POIN HISTORY TAB ─── */
+              historyPoin.length === 0 ? (
+                <div className="py-12 text-center">
+                  <BadgePercent className="mx-auto h-12 w-12 text-muted-foreground/20 mb-3" />
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Belum ada riwayat poin
+                  </p>
+                  <p className="text-xs text-muted-foreground/50 mt-1">
+                    Riwayat poin akan muncul setiap kali pelanggan melakukan transaksi atau meredeem poin
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2 py-4">
+                  {historyPoin.map((entry) => (
+                    <div
+                      key={entry.id}
+                      className="rounded-xl border border-border/60 bg-card p-3.5 transition-all hover:border-primary/20 hover:shadow-sm"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start gap-3">
+                          <div
+                            className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+                              entry.tipe === "earned"
+                                ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400"
+                                : entry.tipe === "redeemed"
+                                  ? "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400"
+                                  : "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400"
+                            }`}
+                          >
+                            {entry.tipe === "earned" ? (
+                              <TrendingUp className="h-4 w-4" />
+                            ) : entry.tipe === "redeemed" ? (
+                              <BadgePercent className="h-4 w-4" />
+                            ) : (
+                              <RefreshCw className="h-4 w-4" />
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">
+                              {entry.tipe === "earned"
+                                ? "Poin Didapatkan"
+                                : entry.tipe === "redeemed"
+                                  ? "Poin Digunakan"
+                                  : "Penyesuaian Poin"}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              {entry.detail}
+                            </p>
+                            <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground/60 mt-1">
+                              <Calendar className="h-3 w-3" />
+                              {formatDateTime(entry.tanggal)}
+                              <span className="mx-1">·</span>
+                              Ref: {entry.referensi}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0 ml-3">
+                          <p
+                            className={`text-sm font-bold tabular-nums ${
+                              entry.jumlah > 0
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : entry.jumlah < 0
+                                  ? "text-amber-600 dark:text-amber-400"
+                                  : ""
+                            }`}
+                          >
+                            {entry.jumlah > 0 ? "+" : ""}{entry.jumlah}
+                          </p>
+                          <p className="text-[11px] text-muted-foreground/60">
+                            Saldo: {entry.saldo_setelah}
+                          </p>
                         </div>
                       </div>
-                      <p className="text-sm font-bold text-primary tabular-nums">
-                        {formatCurrency(order.grand_total)}
-                      </p>
                     </div>
-
-                    {/* Order Items */}
-                    <div className="rounded-lg bg-muted/30 p-2.5 space-y-1.5">
-                      {order.items.map((item, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-center justify-between text-xs"
-                        >
-                          <span className="text-muted-foreground truncate flex-1">
-                            {item.nama_produk}
-                            <span className="text-muted-foreground/50 ml-1">
-                              x{item.quantity}
-                            </span>
-                          </span>
-                          <span className="font-medium tabular-nums ml-2">
-                            {formatCurrency(item.subtotal)}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )
             )}
           </div>
 
           <div className="flex items-center justify-between pt-4 border-t border-border/40 mt-2">
             <p className="text-xs text-muted-foreground">
-              {historyOrders.length} transaksi ditemukan
+              {historyTab === "transactions"
+                ? `${historyOrders.length} transaksi ditemukan`
+                : `${historyPoin.length} entri poin`}
             </p>
             <Button
               variant="outline"

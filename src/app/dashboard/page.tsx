@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { AlertCircle, ArrowRight, Package, ShoppingCart, Store, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import DashboardCharts from "./dashboard-charts";
 
 const quickActions = [
   { href: "/inventory", icon: Package, title: "Kelola Stok", desc: "Update inventory", color: "text-primary" },
@@ -21,7 +22,7 @@ export default async function DashboardPage() {
   const totalProducts = inventoryProducts.length;
   const totalStock = inventoryProducts.reduce((sum, product) => sum + product.totalStock, 0);
   const totalSold = orders.reduce((sum, order) => sum + order.items.reduce((itemSum, item) => itemSum + item.quantity, 0), 0);
-  const lowStockCount = inventoryProducts.filter((product) => product.totalStock > 0 && product.totalStock <= 10).length;
+  const lowStockCount = inventoryProducts.filter((product) => product.totalStock > 0 && product.totalStock <= (product.minStok ?? 10)).length;
 
   const outOfStockProducts = inventoryProducts.filter((p) => p.totalStock === 0);
   const outOfStockCount = outOfStockProducts.length;
@@ -38,6 +39,12 @@ export default async function DashboardPage() {
           Ringkasan stok dan aktivitas toko Anda
         </p>
       </div>
+
+      {/* ── Charts Section ── */}
+      <DashboardCharts
+        inventoryProducts={inventoryProducts}
+        orders={orders}
+      />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="card-hover">
@@ -101,7 +108,7 @@ export default async function DashboardPage() {
                 </span>
               )}
             </div>
-            <p className="text-xs text-muted-foreground">≤ 10 unit tersisa</p>
+            <p className="text-xs text-muted-foreground">Di bawah minimum stok</p>
           </CardContent>
         </Card>
       </div>
@@ -166,7 +173,7 @@ export default async function DashboardPage() {
               ) : (
                 <div className="divide-y divide-border rounded-lg border border-amber-200 dark:border-amber-800/30">
                   {inventoryProducts
-                    .filter(p => p.totalStock > 0 && p.totalStock <= 10)
+                    .filter(p => p.totalStock > 0 && p.totalStock <= (p.minStok ?? 10))
                     .slice(0, 5)
                     .map(product => (
                       <div key={product.sku} className="flex items-center justify-between px-3 py-2.5 hover:bg-amber-50/50 dark:hover:bg-amber-950/20 transition-colors">

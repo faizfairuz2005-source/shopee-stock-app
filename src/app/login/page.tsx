@@ -4,6 +4,7 @@ import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Package, Loader2 } from "lucide-react";
 import { loginSchema } from "@/lib/validations/auth";
+import { auditLog } from "@/lib/audit";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -52,10 +53,23 @@ export default function LoginPage() {
     setIsLoading(false);
 
     if (error) {
+      // Audit log for failed login
+      auditLog({
+        action: "login.failed",
+        entity_type: "auth",
+        entity_name: email,
+      });
       // Don't expose detailed error messages for security
       setErrorMessage("Invalid email or password");
       return;
     }
+
+    // Audit log for successful login
+    auditLog({
+      action: "login",
+      entity_type: "auth",
+      entity_name: email,
+    });
 
     // Redirect to the intended page or dashboard
     router.push(redirectTo);

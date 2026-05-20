@@ -35,7 +35,6 @@ export type Permission =
   | 'pos.access'
   | 'settings.access'
   | 'settings.users'
-  | 'connect-shopee'
   | 'user.activate'
   | 'user.deactivate'
   | 'user.change-role'
@@ -46,6 +45,10 @@ export type Permission =
   | 'expenses.view'
   | 'expenses.create'
   | 'inventory.transfer-rak'
+  | 'suppliers.view'
+  | 'suppliers.create'
+  | 'settings.backup-export'
+  | 'activity.logs.view'
 
 export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
   Admin: [
@@ -65,7 +68,6 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'pos.access',
     'settings.access',
     'settings.users',
-    'connect-shopee',
     'user.activate',
     'user.deactivate',
     'user.change-role',
@@ -76,6 +78,10 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'expenses.view',
     'expenses.create',
     'inventory.transfer-rak',
+    'suppliers.view',
+    'suppliers.create',
+    'settings.backup-export',
+    'activity.logs.view',
   ],
   Manager: [
     'dashboard.view',
@@ -92,12 +98,15 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'customers.view',
     'customers.create',
     'settings.access',
-    'connect-shopee',
     'inventory.adjust-stok',
     'returns.create',
     'expenses.view',
     'expenses.create',
+    'suppliers.view',
+    'suppliers.create',
     'inventory.transfer-rak',
+    'settings.backup-export',
+    'activity.logs.view',
   ],
   Kasir: [
     'dashboard.view',

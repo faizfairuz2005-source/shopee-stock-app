@@ -30,21 +30,41 @@ export async function requireAuthWithProfile(): Promise<{ user: NonNullable<Awai
     redirect('/login')
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+  let role: Role = 'Viewer'
+  let fullName = (user.user_metadata?.full_name as string) ?? ''
+  let avatarUrl = ''
+  let createdAt = user.created_at
+
+  try {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single()
+
+    if (profile) {
+      role = (profile.role as Role) ?? (user.app_metadata?.role as Role) ?? 'Viewer'
+      fullName = profile.full_name ?? fullName
+      avatarUrl = profile.avatar_url ?? ''
+      createdAt = profile.created_at ?? user.created_at
+    } else {
+      // Fallback: baca role dari metadata jika tabel profiles belum ada
+      role = (user.app_metadata?.role as Role) ?? (user.user_metadata?.role as Role) ?? 'Viewer'
+    }
+  } catch {
+    // Fallback jika tabel profiles belum ada
+    role = (user.app_metadata?.role as Role) ?? (user.user_metadata?.role as Role) ?? 'Viewer'
+  }
 
   return {
     user,
     profile: {
       id: user.id,
       email: user.email ?? '',
-      full_name: profile?.full_name ?? (user.user_metadata?.full_name as string) ?? '',
-      role: profile?.role ?? 'Viewer',
-      avatar_url: profile?.avatar_url ?? '',
-      created_at: profile?.created_at ?? user.created_at,
+      full_name: fullName,
+      role,
+      avatar_url: avatarUrl,
+      created_at: createdAt,
     },
   }
 }
@@ -76,19 +96,37 @@ export async function getCurrentUserProfile(): Promise<UserProfile | null> {
 
     if (!user) return null
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single()
+    let role: Role = 'Viewer'
+    let fullName = (user.user_metadata?.full_name as string) ?? ''
+    let avatarUrl = ''
+    let createdAt = user.created_at
+
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+
+      if (profile) {
+        role = (profile.role as Role) ?? (user.app_metadata?.role as Role) ?? 'Viewer'
+        fullName = profile.full_name ?? fullName
+        avatarUrl = profile.avatar_url ?? ''
+        createdAt = profile.created_at ?? user.created_at
+      } else {
+        role = (user.app_metadata?.role as Role) ?? (user.user_metadata?.role as Role) ?? 'Viewer'
+      }
+    } catch {
+      role = (user.app_metadata?.role as Role) ?? (user.user_metadata?.role as Role) ?? 'Viewer'
+    }
 
     return {
       id: user.id,
       email: user.email ?? '',
-      full_name: profile?.full_name ?? (user.user_metadata?.full_name as string) ?? '',
-      role: profile?.role ?? 'Viewer',
-      avatar_url: profile?.avatar_url ?? '',
-      created_at: profile?.created_at ?? user.created_at,
+      full_name: fullName,
+      role,
+      avatar_url: avatarUrl,
+      created_at: createdAt,
     }
   } catch {
     return null

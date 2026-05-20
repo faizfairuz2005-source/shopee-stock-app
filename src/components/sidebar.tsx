@@ -5,10 +5,11 @@ import Link from "next/link";
 import {
   BarChart3,
   Boxes,
+  Building2,
   ChevronLeft,
   ChevronRight,
+  History,
   LayoutDashboard,
-  Link2,
   LogOut,
   Menu,
   Package,
@@ -43,13 +44,14 @@ const navItems: NavItem[] = [
   { href: "/inventory", icon: Boxes, label: "Inventory", permission: "inventory.view" },
   { href: "/orders", icon: ShoppingCart, label: "Orders", permission: "orders.view" },
   { href: "/pelanggan", icon: Users, label: "Pelanggan", permission: "customers.view" },
+  { href: "/supplier", icon: Building2, label: "Supplier", permission: "suppliers.view" },
   { href: "/barang-masuk", icon: PackageOpen, label: "Barang Masuk", permission: "barang-masuk.view" },
   { href: "/adjust-stok", icon: ArrowUpDown, label: "Adjust Stok", permission: "inventory.adjust-stok" },
   { href: "/retur", icon: RotateCcw, label: "Retur Barang", permission: "returns.create" },
   { href: "/transfer-rak", icon: ArrowRightLeft, label: "Transfer Rak", permission: "inventory.transfer-rak" },
   { href: "/pengeluaran", icon: Wallet, label: "Pengeluaran", permission: "expenses.view" },
   { href: "/laporan", icon: BarChart3, label: "Laporan", permission: "laporan.view" },
-  { href: "/connect-shopee", icon: Link2, label: "Hubungkan Shopee", permission: "connect-shopee" },
+  { href: "/riwayat-activity", icon: History, label: "Riwayat Activity", permission: "activity.logs.view" },
 ];
 
 interface SidebarProps {
@@ -77,10 +79,10 @@ export function Sidebar({ activePath, userEmail, userName, collapsed, onToggle }
         {!collapsed && (
           <div className="flex-1 overflow-hidden">
             <p className="text-sm font-semibold tracking-tight text-foreground">
-              MultiStock
+              MultiStore
             </p>
             <p className="text-[0.65rem] font-normal text-muted-foreground">
-              Inventory Manager
+              Manajemen Toko
             </p>
           </div>
         )}

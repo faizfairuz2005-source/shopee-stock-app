@@ -25,9 +25,12 @@ import {
   saveGoodsReceipt,
   updateInventory,
   getCategories,
+  getSuppliers,
+  addSupplier,
   type InventoryProduct,
   type GoodsReceipt,
   type ProductCategory,
+  type Supplier,
 } from "@/app/actions";
 
 import { Badge } from "@/components/ui/badge";
@@ -129,6 +132,9 @@ export default function BarangMasukPage() {
 
   const [categories, setCategories] = useState<ProductCategory[]>([]);
 
+  // Suppliers
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+
   // Load data using getAppData() — same data source as Inventory page
   useEffect(() => {
     setIsLoading(true);
@@ -139,6 +145,9 @@ export default function BarangMasukPage() {
     });
     getCategories().then((cats) => {
       setCategories(cats);
+    });
+    getSuppliers().then((suppliersData) => {
+      setSuppliers(suppliersData);
     });
   }, []);
 
@@ -595,16 +604,21 @@ export default function BarangMasukPage() {
                   <Label htmlFor="receipt-supplier" className="text-sm font-medium">
                     Supplier <span className="text-destructive">*</span>
                   </Label>
-                  <div className="relative">
-                    <Building2 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      id="receipt-supplier"
-                      placeholder="Nama supplier"
-                      value={formSupplier}
-                      onChange={(e) => setFormSupplier(e.target.value)}
-                      className="pl-9 border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25"
-                    />
-                  </div>
+                  <SupplierCombobox
+                    suppliers={suppliers}
+                    selectedName={formSupplier}
+                    onSelect={(name) => setFormSupplier(name)}
+                    onAddNewSupplier={async (name) => {
+                      const result = await addSupplier({ name });
+                      if (result.success && result.supplier) {
+                        setSuppliers((prev) => [result.supplier!, ...prev]);
+                        setFormSupplier(result.supplier.name);
+                        toast.success(`Supplier "${name}" berhasil ditambahkan!`);
+                      } else {
+                        toast.error(result.error || "Gagal menambahkan supplier");
+                      }
+                    }}
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="receipt-faktur" className="text-sm font-medium">
@@ -1210,6 +1224,177 @@ function ProductCombobox({
                       </p>
                       <p className="text-xs text-muted-foreground">
                         Buat produk baru di inventory
+                      </p>
+                    </div>
+                  </CommandItem>
+                </>
+              )}
+            </CommandList>
+          </Command>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Generate SKU hint from product name ──────────────────────────────────
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Supplier Combobox — searchable dropdown using shadcn/ui Command component
+// ═══════════════════════════════════════════════════════════════════════════
+
+function SupplierCombobox({
+  suppliers,
+  selectedName,
+  onSelect,
+  onAddNewSupplier,
+}: {
+  suppliers: Supplier[];
+  selectedName: string;
+  onSelect: (name: string) => void;
+  onAddNewSupplier: (name: string) => Promise<void>;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const selected = suppliers.find((s) => s.name === selectedName);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Filter suppliers by name
+  const filtered = suppliers.filter((s) => {
+    if (!search.trim()) return true;
+    const q = search.toLowerCase();
+    return s.name.toLowerCase().includes(q);
+  });
+
+  const hasSearchText = search.trim().length > 0;
+
+  return (
+    <div ref={containerRef} className="relative">
+      <div className="relative">
+        <Building2 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          value={selected ? selected.name : search}
+          onChange={(e) => {
+            const val = e.target.value;
+            if (selectedName && val !== selected?.name) {
+              onSelect("");
+            }
+            setSearch(val);
+            setIsOpen(true);
+          }}
+          onFocus={() => setIsOpen(true)}
+          placeholder="Cari atau ketik nama supplier..."
+          className={`h-10 pl-9 text-sm border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25 ${
+            selected ? "bg-primary/5 border-primary/30" : ""
+          }`}
+          autoComplete="off"
+        />
+      </div>
+
+      {isOpen && (
+        <div className="absolute z-20 mt-1 w-full rounded-xl border border-border bg-popover shadow-lg animate-in fade-in slide-in-from-top-1 duration-150">
+          <Command shouldFilter={false}>
+            <CommandInput
+              placeholder="Cari supplier..."
+              value={selected ? selected.name : search}
+              onValueChange={(val) => {
+                if (selectedName) {
+                  onSelect("");
+                }
+                setSearch(val);
+              }}
+              className="h-9"
+            />
+            <CommandList>
+              {filtered.length === 0 && !hasSearchText && (
+                <div className="py-6 text-center">
+                  <p className="text-sm text-muted-foreground mb-2">Belum ada supplier</p>
+                  <button
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                    onClick={() => {
+                      onAddNewSupplier("");
+                      setIsOpen(false);
+                    }}
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    Tambah Supplier Baru
+                  </button>
+                </div>
+              )}
+              {filtered.length === 0 && hasSearchText && (
+                <CommandEmpty>
+                  <div className="flex flex-col items-center gap-1">
+                    <p className="text-muted-foreground">Tidak ditemukan</p>
+                    <button
+                      className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                      onClick={() => {
+                        onAddNewSupplier(search);
+                        setIsOpen(false);
+                      }}
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      Tambah &ldquo;{search}&rdquo; sebagai supplier baru
+                    </button>
+                  </div>
+                </CommandEmpty>
+              )}
+              {filtered.length > 0 && (
+                <CommandGroup heading={`${filtered.length} supplier ditemukan`}>
+                  {filtered.slice(0, 50).map((s) => (
+                    <CommandItem
+                      key={s.id}
+                      value={s.name}
+                      onSelect={(value) => {
+                        onSelect(value);
+                        setSearch(s.name);
+                        setIsOpen(false);
+                      }}
+                      className="flex items-center gap-3 px-2 py-2"
+                    >
+                      <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 shrink-0">
+                        <Building2 className="h-3.5 w-3.5 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium truncate text-sm">{s.name}</p>
+                        {s.contact_person && (
+                          <p className="text-xs text-muted-foreground">{s.contact_person}</p>
+                        )}
+                      </div>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
+              {hasSearchText && filtered.length > 0 && (
+                <>
+                  <CommandSeparator />
+                  <CommandItem
+                    onSelect={() => {
+                      onAddNewSupplier(search);
+                      setIsOpen(false);
+                    }}
+                    className="flex items-center gap-2.5 px-2 py-2 text-primary"
+                  >
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full border border-primary/30 bg-primary/5 shrink-0">
+                      <Plus className="h-3.5 w-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm">
+                        Tambah &ldquo;{search}&rdquo; sebagai supplier baru
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Buat supplier baru di sistem
                       </p>
                     </div>
                   </CommandItem>

@@ -16,25 +16,6 @@ const envSchema = z.object({
     .min(1, "Supabase anon key is required")
     .startsWith("ey", "Invalid Supabase anon key format"),
 
-  // Shopee API Configuration
-  SHOPEE_PARTNER_ID: z
-    .string()
-    .min(1, "Shopee Partner ID is required")
-    .regex(/^\d+$/, "Shopee Partner ID must be numeric"),
-
-  SHOPEE_PARTNER_KEY: z
-    .string()
-    .min(1, "Shopee Partner Key is required"),
-
-  SHOPEE_BASE_URL: z
-    .string()
-    .url("Invalid Shopee base URL")
-    .refine(
-      (url) =>
-        url.includes("shopee") || url.includes("localhost"),
-      "Shopee base URL must be a Shopee API endpoint"
-    ),
-
   // Optional: Node environment
   NODE_ENV: z
     .enum(["development", "production", "test"])

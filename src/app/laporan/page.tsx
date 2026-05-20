@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { getAppData, getReturns, type Order, type StockAdjustment, type GoodsReturn, type Expense } from "@/app/actions";
 import ProfitLossSection from "@/components/profit-loss-section";
+import LaporanPenjualan from "@/components/laporan-penjualan";
 import { LaporanExportActions } from "@/components/laporan-export-actions";
 import {
   Table,
@@ -82,7 +83,7 @@ export default async function LaporanPage() {
 
   const totalRevenue = orders.reduce((sum, order) => sum + order.grand_total, 0);
   const totalTransactions = orders.length;
-  const lowStockItems = inventoryProducts.filter((product) => product.totalStock > 0 && product.totalStock <= 10);
+  const lowStockItems = inventoryProducts.filter((product) => product.totalStock > 0 && product.totalStock <= (product.minStok ?? 10));
   const outOfStockItems = inventoryProducts.filter((product) => product.totalStock === 0);
   const topSelling = getTopSellingProducts(orders);
   const sellerPerformance = getSellerPerformance(orders);
@@ -132,7 +133,7 @@ export default async function LaporanPage() {
             sku: p.sku,
             name: p.name,
             totalStock: p.totalStock,
-            status: p.totalStock === 0 ? "Habis" : p.totalStock <= 10 ? "Rendah" : "Aman",
+            status: p.totalStock === 0 ? "Habis" : p.totalStock <= (p.minStok ?? 10) ? "Rendah" : "Aman",
           }))}
           lowStockItems={lowStockItems.map((p) => ({
             sku: p.sku,
@@ -608,6 +609,20 @@ export default async function LaporanPage() {
           </CardContent>
         </Card>
       )}
+
+      {/* ── Laporan Penjualan Harian/Bulanan ── */}
+      <div className="border-t border-border pt-6">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold tracking-tight flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-primary" />
+            Laporan Penjualan
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Analisis penjualan harian dan bulanan dengan filter tanggal
+          </p>
+        </div>
+        <LaporanPenjualan orders={orders} />
+      </div>
 
       <div className="border-t border-border pt-6">
         <ProfitLossSection orders={orders} stockAdjustments={adjustments} goodsReturns={goodsReturns} expenses={allExpenses} />

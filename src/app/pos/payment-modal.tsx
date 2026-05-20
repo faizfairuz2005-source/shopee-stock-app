@@ -46,6 +46,7 @@ interface PaymentModalProps {
     paymentMethod: PaymentTab;
     cashAmount: number;
     changeAmount: number;
+    transferAmount?: number;
   }) => void;
   isProcessing: boolean;
 }
@@ -114,6 +115,7 @@ export function PaymentModal({
         paymentMethod: "split",
         cashAmount: splitCashVal,
         changeAmount: splitTotal - grandTotal,
+        transferAmount: splitTransferVal,
       });
     }
   };
@@ -341,7 +343,7 @@ export function PaymentModal({
                   BCA — 1234567890
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  a.n. MultiStock Indonesia
+                  a.n. MultiStore Indonesia
                 </p>
               </div>
             </div>

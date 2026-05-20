@@ -48,7 +48,7 @@ export function Header({ userEmail, userName }: HeaderProps) {
         .filter((p) => p.totalStock === 0)
         .map((p) => ({ sku: p.sku, name: p.name, stock: p.totalStock, type: "habis" as const }));
       const lowStock: StockAlert[] = data.inventoryProducts
-        .filter((p) => p.totalStock > 0 && p.totalStock <= 10)
+        .filter((p) => p.totalStock > 0 && p.totalStock <= (p.minStok ?? 10))
         .map((p) => ({ sku: p.sku, name: p.name, stock: p.totalStock, type: "rendah" as const }));
       setAlerts([...low, ...lowStock]);
     } catch (e) {

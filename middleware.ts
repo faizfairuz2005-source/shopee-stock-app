@@ -13,7 +13,6 @@ const SECURITY_CONFIG = {
   sessionTimeoutMs: 24 * 60 * 60 * 1000,
   protectedRoutes: [
     "/dashboard",
-    "/connect-shopee",
     "/inventory",
     "/orders",
   ],
@@ -55,7 +54,7 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https: blob:",
-    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.shopee.com",
+    "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
     "frame-ancestors 'none'",
   ].join("; ");
 

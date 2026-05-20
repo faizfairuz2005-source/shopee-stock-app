@@ -5,24 +5,26 @@
       "name": "Celana Jeans Slim Fit",
       "price": 249000,
       "hpp": 155000,
-      "totalStock": 15,
+      "totalStock": 10,
       "description": "Celana jeans slim fit untuk gaya kasual sehari-hari.",
       "connectedStores": 2,
-      "sales": 19,
+      "sales": 24,
       "lokasiRak": "Rak-A-01",
-      "kategori": "Pakaian Bawah"
+      "kategori": "Pakaian Bawah",
+      "barcode": "8992809100002"
     },
     {
       "sku": "SKU-005",
       "name": "Tas Ransel Waterproof",
       "price": 285000,
       "hpp": 175000,
-      "totalStock": 1,
+      "totalStock": 15,
       "description": "Tas ransel anti air untuk pekerja harian.",
       "connectedStores": 2,
-      "sales": 13,
+      "sales": 15,
       "lokasiRak": "Rak-A-02",
-      "kategori": "Tas & Ransel"
+      "kategori": "Tas & Ransel",
+      "barcode": "8992809100005"
     },
     {
       "sku": "SKU-007",
@@ -34,43 +36,47 @@
       "connectedStores": 2,
       "sales": 19,
       "lokasiRak": "Rak-A-03",
-      "kategori": "Pakaian Atas"
+      "kategori": "Pakaian Atas",
+      "barcode": "8992809100007"
     },
     {
       "sku": "SKU-012",
       "name": "Kaos Polos Oversize",
       "price": 79000,
       "hpp": 47000,
-      "totalStock": 31,
+      "totalStock": 30,
       "description": "Kaos oversized dengan potongan relaxed fit yang nyaman.",
       "connectedStores": 2,
-      "sales": 41,
+      "sales": 42,
       "lokasiRak": "Rak-B-01",
-      "kategori": "Pakaian Atas"
+      "kategori": "Pakaian Atas",
+      "barcode": "8992809100012"
     },
     {
       "sku": "SKU-018",
       "name": "Sepatu Sneakers Hitam",
       "price": 349000,
       "hpp": 210000,
-      "totalStock": 36,
-      "description": "Sepatu sneakers hitam时尚 untuk gaya sehari-hari yang sporty.",
+      "totalStock": 20,
+      "description": "Sepatu sneakers hitamÃ¦â€”Â¶Ã¥Â°Å¡ untuk gaya sehari-hari yang sporty.",
       "connectedStores": 1,
-      "sales": 31,
+      "sales": 47,
       "lokasiRak": "Rak-B-02",
-      "kategori": "Alas Kaki"
+      "kategori": "Alas Kaki",
+      "barcode": "8992809100018"
     },
     {
       "sku": "SKU-023",
       "name": "Hoodie Basic",
       "price": 189000,
       "hpp": 115000,
-      "totalStock": 42,
+      "totalStock": 31,
       "description": "Hoodie basic nyaman dengan bahan cotton fleece tebal.",
       "connectedStores": 2,
-      "sales": 38,
+      "sales": 49,
       "lokasiRak": "Rak-C-01",
-      "kategori": "Pakaian Atas"
+      "kategori": "Pakaian Atas",
+      "barcode": "8992809100023"
     },
     {
       "sku": "SKU-029",
@@ -82,19 +88,21 @@
       "connectedStores": 2,
       "sales": 21,
       "lokasiRak": "Rak-C-02",
-      "kategori": "Pakaian Atas"
+      "kategori": "Pakaian Atas",
+      "barcode": "8992809100029"
     },
     {
       "sku": "SKU-035",
       "name": "Botol Minum Tumbler",
       "price": 69000,
       "hpp": 40000,
-      "totalStock": 60,
+      "totalStock": 58,
       "description": "Botol minum tumbler stainless tahan panas dan dingin.",
       "connectedStores": 2,
-      "sales": 35,
+      "sales": 37,
       "lokasiRak": "Rak-D-01",
-      "kategori": "Perlengkapan"
+      "kategori": "Perlengkapan",
+      "barcode": "8992809100035"
     },
     {
       "sku": "SKU-041",
@@ -106,19 +114,21 @@
       "connectedStores": 1,
       "sales": 16,
       "lokasiRak": "Rak-D-02",
-      "kategori": "Pakaian Atas"
+      "kategori": "Pakaian Atas",
+      "barcode": "8992809100041"
     },
     {
       "sku": "SKU-048",
       "name": "Dompet Kulit Premium",
       "price": 159000,
       "hpp": 95000,
-      "totalStock": 23,
+      "totalStock": 17,
       "description": "Dompet kulit asli premium dengan banyak kompartemen.",
       "connectedStores": 2,
-      "sales": 25,
+      "sales": 31,
       "lokasiRak": "Rak-E-01",
-      "kategori": "Aksesoris"
+      "kategori": "Aksesoris",
+      "barcode": "8992809100048"
     }
   ],
   "orders": [
@@ -2532,6 +2542,238 @@
       "subtotal": 1560000,
       "ongkir": 0,
       "grand_total": 1731600
+    },
+    {
+      "id": 71,
+      "nomor_order": "POS-000071",
+      "tanggal_pesanan": "2026-05-19T03:00:06.968Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-035",
+          "nama_produk": "Botol Minum Tumbler",
+          "harga": 69000,
+          "quantity": 2,
+          "subtotal": 138000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "quantity": 1,
+          "subtotal": 79000
+        }
+      ],
+      "subtotal": 217000,
+      "ongkir": 0,
+      "grand_total": 240870
+    },
+    {
+      "id": 72,
+      "nomor_order": "POS-000072",
+      "tanggal_pesanan": "2026-05-19T03:57:09.992Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "faizz",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "Online",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "quantity": 3,
+          "subtotal": 1047000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "quantity": 2,
+          "subtotal": 498000
+        }
+      ],
+      "subtotal": 1545000,
+      "ongkir": 0,
+      "grand_total": 1714950
+    },
+    {
+      "id": 73,
+      "nomor_order": "POS-000073",
+      "tanggal_pesanan": "2026-05-19T08:06:04.993Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "faizz",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "Online",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "quantity": 6,
+          "subtotal": 954000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "quantity": 7,
+          "subtotal": 2443000
+        },
+        {
+          "id": 3,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "quantity": 9,
+          "subtotal": 1701000
+        }
+      ],
+      "subtotal": 5098000,
+      "ongkir": 0,
+      "grand_total": 5658780
+    },
+    {
+      "id": 74,
+      "nomor_order": "POS-000074",
+      "tanggal_pesanan": "2026-05-19T09:01:26.422Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "quantity": 3,
+          "subtotal": 1047000
+        }
+      ],
+      "subtotal": 1047000,
+      "ongkir": 0,
+      "grand_total": 1162170
+    },
+    {
+      "id": 75,
+      "nomor_order": "POS-000075",
+      "tanggal_pesanan": "2026-05-19T09:40:05.481Z",
+      "user_id": "",
+      "seller_name": "Kasir",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "quantity": 1,
+          "subtotal": 249000
+        }
+      ],
+      "subtotal": 249000,
+      "ongkir": 0,
+      "grand_total": 276390
+    },
+    {
+      "id": 76,
+      "nomor_order": "POS-000076",
+      "tanggal_pesanan": "2026-05-19T09:44:27.776Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "fairuz",
+      "nama_pembeli": "aziz",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "Online",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "quantity": 2,
+          "subtotal": 498000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "quantity": 2,
+          "subtotal": 378000
+        }
+      ],
+      "subtotal": 876000,
+      "ongkir": 0,
+      "grand_total": 972360
+    },
+    {
+      "id": 77,
+      "nomor_order": "POS-000077",
+      "tanggal_pesanan": "2026-05-20T04:18:32.993Z",
+      "user_id": "3a4efdc2-b0b6-4399-b7f5-33da20ef1d6d",
+      "seller_name": "Kasir Toko",
+      "nama_pembeli": "aziz",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "Online",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "quantity": 3,
+          "subtotal": 1047000
+        }
+      ],
+      "subtotal": 1047000,
+      "ongkir": 0,
+      "grand_total": 1162170
+    },
+    {
+      "id": 78,
+      "nomor_order": "POS-000078",
+      "tanggal_pesanan": "2026-05-20T05:27:05.216Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko_shopee": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "harga": 285000,
+          "quantity": 2,
+          "subtotal": 570000
+        }
+      ],
+      "subtotal": 570000,
+      "ongkir": 0,
+      "grand_total": 632700
     }
   ],
   "sampleStoreCount": 2,
@@ -2630,6 +2872,27 @@
       "created_at": "2026-05-18T09:38:17.168Z",
       "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
       "user_name": "fairuz"
+    },
+    {
+      "id": 6,
+      "tanggal": "2026-05-20",
+      "supplier": "arifin",
+      "nomor_faktur": "",
+      "items": [
+        {
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "quantity": 16,
+          "harga_beli": 175000,
+          "lokasiRak": "Rak-A-02",
+          "catatan": ""
+        }
+      ],
+      "total_item": 16,
+      "total_biaya": 2800000,
+      "created_at": "2026-05-20T03:07:26.831Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "user_name": "fairuz"
     }
   ],
   "categories": [
@@ -2717,5 +2980,66 @@
       "created_at": "2026-05-18T09:38:56.000Z",
       "user_name": "fairuz"
     }
-  ]
+  ],
+  "rackTransfers": [],
+  "suppliers": [
+    {
+      "id": 1,
+      "name": "arifin",
+      "contact_person": "",
+      "phone": "",
+      "email": "",
+      "address": "",
+      "notes": "",
+      "created_at": "2026-05-20T03:07:23.729Z",
+      "updated_at": "2026-05-20T03:07:23.729Z"
+    }
+  ],
+  "poinHistory": [
+    {
+      "id": "poin-earn-72-1779163030759",
+      "tanggal": "2026-05-19T03:57:10.759Z",
+      "customer_name": "faizz",
+      "tipe": "earned",
+      "jumlah": 171,
+      "saldo_setelah": 171,
+      "referensi": "POS-000072",
+      "detail": "Poin dari transaksi POS-000072 Ã¢â‚¬â€ belanja Rp 1.714.950",
+      "created_at": "2026-05-19T03:57:10.759Z"
+    },
+    {
+      "id": "poin-earn-73-1779177965679",
+      "tanggal": "2026-05-19T08:06:05.679Z",
+      "customer_name": "faizz",
+      "tipe": "earned",
+      "jumlah": 565,
+      "saldo_setelah": 736,
+      "referensi": "POS-000073",
+      "detail": "Poin dari transaksi POS-000073 Ã¢â‚¬â€ belanja Rp 5.658.780",
+      "created_at": "2026-05-19T08:06:05.679Z"
+    },
+    {
+      "id": "poin-earn-76-1779183868170",
+      "tanggal": "2026-05-19T09:44:28.170Z",
+      "customer_name": "aziz",
+      "tipe": "earned",
+      "jumlah": 97,
+      "saldo_setelah": 97,
+      "referensi": "POS-000076",
+      "detail": "Poin dari transaksi POS-000076 Ã¢â‚¬â€ belanja Rp 972.360",
+      "created_at": "2026-05-19T09:44:28.170Z"
+    },
+    {
+      "id": "poin-earn-77-1779250713446",
+      "tanggal": "2026-05-20T04:18:33.446Z",
+      "customer_name": "aziz",
+      "tipe": "earned",
+      "jumlah": 116,
+      "saldo_setelah": 213,
+      "referensi": "POS-000077",
+      "detail": "Poin dari transaksi POS-000077 Ã¢â‚¬â€ belanja Rp 1.162.170",
+      "created_at": "2026-05-20T04:18:33.446Z"
+    }
+  ],
+  "kits": []
 }

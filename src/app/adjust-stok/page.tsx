@@ -367,7 +367,7 @@ export default function AdjustStokPage() {
                           {searchResults.length === 0 && searchQuery.trim() && (
                             <CommandEmpty>
                               <p className="text-muted-foreground">
-                                Tidak ada produk untuk "{searchQuery}"
+                                Tidak ada produk untuk &quot;{searchQuery}&quot;
                               </p>
                             </CommandEmpty>
                           )}

@@ -139,7 +139,7 @@ function StoreCombobox({
             </div>
           ) : filtered.length === 0 ? (
             <div className="p-4 text-center text-sm text-muted-foreground">
-              Tidak ada toko ditemukan. Nama toko "{value}" akan langsung digunakan.
+              Tidak ada toko ditemukan. Nama toko &quot;{value}&quot; akan langsung digunakan.
             </div>
           ) : (
             <div className="p-1 max-h-[200px] overflow-y-auto">
@@ -266,7 +266,7 @@ export function OrdersClient({
           o.nomor_order.toLowerCase().includes(q) ||
           o.nama_pembeli.toLowerCase().includes(q) ||
           o.seller_name.toLowerCase().includes(q) ||
-          o.nama_toko_shopee.toLowerCase().includes(q)
+          o.nama_toko.toLowerCase().includes(q)
       );
     }
 
@@ -310,11 +310,11 @@ export function OrdersClient({
   // Prepare invoice data from selected order
   const getInvoiceData = (order: Order): InvoiceData => {
     const storeInfo: StoreInfo = {
-      name: "MultiStock",
+      name: "MultiStore",
       address: "Jl. Raya Contoh No. 123, Bandung, Jawa Barat 40123",
       phone: "+62 812-3456-7890",
-      email: "hello@multistock.id",
-      website: "www.multistock.id",
+      email: "hello@multistore.id",
+      website: "www.multistore.id",
     };
 
     return {
@@ -326,7 +326,7 @@ export function OrdersClient({
       }),
       orderNumber: order.nomor_order,
       sellerName: order.seller_name,
-      storeName: order.nama_toko_shopee,
+      storeName: order.nama_toko,
       customer: {
         name: order.nama_pembeli,
         phone: "",
@@ -346,7 +346,7 @@ export function OrdersClient({
         total: order.grand_total,
       },
       storeInfo,
-      notes: `Terima kasih telah berbelanja di MultiStock.\n\nPesanan akan diproses dan dikirimkan ke alamat tujuan.`,
+      notes: `Terima kasih telah berbelanja di MultiStore.\n\nPesanan akan diproses dan dikirimkan ke alamat tujuan.`,
     };
   };
 
@@ -431,7 +431,7 @@ export function OrdersClient({
       seller_name: sellerName,
       nama_pembeli: buyerName,
       alamat_pengiriman: buyerAddress || "Alamat belum diisi",
-      nama_toko_shopee: storeName,
+      nama_toko: storeName,
       status_pesanan: "diproses",
       items,
       subtotal,
@@ -851,7 +851,7 @@ export function OrdersClient({
                                 </span>
                               </TableCell>
                               <TableCell>
-                                <StoreCell name={order.nama_toko_shopee} />
+                                <StoreCell name={order.nama_toko} />
                               </TableCell>
                               <TableCell className="text-center">
                                 <span className="inline-flex items-center gap-1">
@@ -948,7 +948,7 @@ export function OrdersClient({
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">Toko</p>
-                  <StoreCell name={selectedOrder.nama_toko_shopee} />
+                  <StoreCell name={selectedOrder.nama_toko} />
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">Status</p>

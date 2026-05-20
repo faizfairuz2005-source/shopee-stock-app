@@ -7,7 +7,7 @@ import { usePermission } from "@/lib/use-permission";
 import { ExportButton } from "@/components/export-button";
 import { INVENTORY_EXPORT_COLUMNS } from "@/lib/export-utils";
 
-import { getAppData, updateInventory, getCategories, addCategory, updateCategory, deleteCategory, getRacks, addRack, updateRack, deleteRack, getProductHistory, type ProductHistoryEntry, InventoryProduct as Product, ProductCategory, ProductRack } from "@/app/actions";
+import { getAppData, updateInventory, getCategories, addCategory, updateCategory, deleteCategory, getRacks, addRack, updateRack, deleteRack, getProductHistory, getItemKits, addItemKit, updateItemKit, deleteItemKit, type ProductHistoryEntry, type KitComponent, type ItemKit, InventoryProduct as Product, ProductCategory, ProductRack } from "@/app/actions";
 import { Badge } from "@/components/ui/badge";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
@@ -44,9 +44,9 @@ const STOCK_FILTERS: { key: StockFilter; label: string }[] = [
   { key: "habis", label: "Stok Habis" },
 ];
 
-function getStockStatus(stock: number): "aman" | "rendah" | "habis" {
+function getStockStatus(stock: number, minStok?: number): "aman" | "rendah" | "habis" {
   if (stock === 0) return "habis";
-  if (stock <= 10) return "rendah";
+  if (stock <= (minStok ?? 10)) return "rendah";
   return "aman";
 }
 
@@ -102,6 +102,13 @@ export default function InventoryPage() {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // ─── Tab state
+  const [tab, setTab] = useState<"products" | "kits">("products");
+  const [kits, setKits] = useState<ItemKit[]>([]);
+  const [isLoadingKits, setIsLoadingKits] = useState(false);
+  const [kitModalOpen, setKitModalOpen] = useState(false);
+  const [editingKit, setEditingKit] = useState<ItemKit | null>(null);
+
   // Load products from data.json on mount
   useEffect(() => {
     getAppData().then((data) => {
@@ -112,6 +119,7 @@ export default function InventoryPage() {
       setCategories(cats);
     });
     getRacks().then((r) => setRacks(r));
+    getItemKits().then((k) => setKits(k));
   }, []);
 
   // Extract unique rak locations
@@ -132,9 +140,10 @@ export default function InventoryPage() {
     const matchSearch =
       product.name.toLowerCase().includes(search.toLowerCase()) ||
       product.sku.toLowerCase().includes(search.toLowerCase()) ||
+      (product.barcode || "").toLowerCase().includes(search.toLowerCase()) ||
       (product.lokasiRak || "").toLowerCase().includes(search.toLowerCase()) ||
       (product.kategori || "").toLowerCase().includes(search.toLowerCase());
-    const status = getStockStatus(product.totalStock);
+    const status = getStockStatus(product.totalStock, product.minStok);
     const matchStock =
       stockFilter === "semua" ||
       (stockFilter === "aman" && status === "aman") ||
@@ -187,7 +196,7 @@ export default function InventoryPage() {
 
   const totalProducts = products.length;
   const totalStock = products.reduce((s, p) => s + p.totalStock, 0);
-  const lowStockCount = products.filter((p) => p.totalStock > 0 && p.totalStock <= 10).length;
+  const lowStockCount = products.filter((p) => p.totalStock > 0 && p.totalStock <= (p.minStok ?? 10)).length;
   const outOfStockCount = products.filter((p) => p.totalStock === 0).length;
   const uniqueStores = products.reduce((max, p) => Math.max(max, p.connectedStores), 0);
 
@@ -314,27 +323,94 @@ export default function InventoryPage() {
       />
 
       {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Stok Sentral</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Kelola dan pantau stok produk dari semua toko terhubung
-          </p>
+      <div className="overflow-hidden rounded-xl border border-border/60 bg-gradient-to-r from-primary/[0.04] via-background to-background shadow-sm">
+        <div className="px-6 py-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
+                  <Package className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-semibold tracking-tight">Stok Sentral</h1>
+                  <p className="text-sm text-muted-foreground">
+                    Kelola dan pantau stok produk dari semua toko terhubung
+                  </p>
+                </div>
+              </div>
+              {/* Quick stats chips */}
+              <div className="flex flex-wrap items-center gap-2 pt-1.5">
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card px-3 py-1 text-xs font-medium shadow-sm">
+                  <Package className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-muted-foreground">Produk:</span>
+                  <span>{totalProducts}</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card px-3 py-1 text-xs font-medium shadow-sm">
+                  <Package className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-muted-foreground">Stok:</span>
+                  <span>{totalStock.toLocaleString("id-ID")}</span>
+                </div>
+                {lowStockCount > 0 && (
+                  <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/20 px-3 py-1 text-xs font-medium shadow-sm">
+                    <TrendingDown className="h-3.5 w-3.5 text-amber-500" />
+                    <span className="text-amber-600 dark:text-amber-400">{lowStockCount} rendah</span>
+                  </div>
+                )}
+                {outOfStockCount > 0 && (
+                  <div className="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/20 px-3 py-1 text-xs font-medium shadow-sm">
+                    <AlertCircle className="h-3.5 w-3.5 text-red-500" />
+                    <span className="text-red-600 dark:text-red-400">{outOfStockCount} habis</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <ExportButton
+                data={products as unknown as Record<string, unknown>[]}
+                columns={INVENTORY_EXPORT_COLUMNS}
+                filenamePrefix="Inventory"
+                label="Export"
+              />
+              <Can permission="inventory.edit" fallback={null}>
+                <Button className="gap-2 shadow-sm">
+                  <Plus className="h-4 w-4" />
+                  Tambah Produk
+                </Button>
+              </Can>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <ExportButton
-            data={products as unknown as Record<string, unknown>[]}
-            columns={INVENTORY_EXPORT_COLUMNS}
-            filenamePrefix="Inventory"
-            label="Export Semua Produk"
-          />
-          <Can permission="inventory.edit" fallback={null}>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              Tambah Produk
-            </Button>
-          </Can>
-        </div>
+      </div>
+      {/* Tab Navigation */}
+      <div className="flex gap-1 rounded-lg bg-muted p-1 w-fit">
+        <button
+          onClick={() => setTab("products")}
+          className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all ${
+            tab === "products"
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Package className="mr-1.5 h-4 w-4 inline-block" />
+          Produk
+          {tab === "products" && (
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
+          )}
+        </button>
+        <button
+          onClick={() => setTab("kits")}
+          className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all ${
+            tab === "kits"
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Layers className="mr-1.5 h-4 w-4 inline-block" />
+          Paket Barang
+          {tab === "kits" && (
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full" />
+          )}
+        </button>
       </div>
 
       {/* Loading State */}
@@ -366,64 +442,61 @@ export default function InventoryPage() {
       {/* Content (shown when not loading) */}
       {!isLoading && (
         <>
+      {tab === "products" && (
+        <>
       {/* Summary Cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <Card className="card-hover">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Produk</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{totalProducts}</p>
-            <p className="text-xs text-muted-foreground">Produk aktif</p>
-          </CardContent>
-        </Card>
-        <Card className="card-hover">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Stok</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{totalStock.toLocaleString("id-ID")}</p>
-            <p className="text-xs text-muted-foreground">Unit tersedia</p>
-          </CardContent>
-        </Card>
-        <Card className={"card-hover " + (lowStockCount > 0 ? "border-amber-300 dark:border-amber-800" : "")}>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Stok Rendah</CardTitle>
-            <TrendingDown className={`h-4 w-4 ${lowStockCount > 0 ? "text-amber-500" : "text-muted-foreground"}`} />
-          </CardHeader>
-          <CardContent>
-            <p className={`text-2xl font-bold ${lowStockCount > 0 ? "text-amber-500" : ""}`}>{lowStockCount}</p>
-            <p className="text-xs text-muted-foreground">Perlu restok</p>
-          </CardContent>
-        </Card>
-        <Card className="border-destructive/30 bg-destructive/5">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-destructive">Stok Habis</CardTitle>
-            <AlertCircle className="h-4 w-4 text-destructive" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-destructive">{outOfStockCount}</p>
-            <p className="text-xs text-destructive/80">Produk kosong</p>
-          </CardContent>
-        </Card>
-        <Card className="card-hover">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Toko Terhubung</CardTitle>
-            <Store className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{uniqueStores}</p>
-            <p className="text-xs text-muted-foreground">Toko aktif</p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-border/60 bg-card p-5 shadow-sm transition-all hover:border-primary/20 hover:shadow-md hover:-translate-y-0.5">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Total Produk</span>
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+              <Package className="h-4 w-4 text-primary" />
+            </div>
+          </div>
+          <p className="text-3xl font-bold tracking-tight">{totalProducts}</p>
+          <p className="mt-1 text-xs text-muted-foreground">Produk aktif dalam inventori</p>
+        </div>
+        <div className="rounded-xl border border-border/60 bg-card p-5 shadow-sm transition-all hover:border-primary/20 hover:shadow-md hover:-translate-y-0.5">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Total Stok</span>
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+              <Store className="h-4 w-4 text-primary" />
+            </div>
+          </div>
+          <p className="text-3xl font-bold tracking-tight">{totalStock.toLocaleString("id-ID")}</p>
+          <p className="mt-1 text-xs text-muted-foreground">Unit tersedia di semua rak</p>
+        </div>
+        <div className={"rounded-xl border p-5 shadow-sm transition-all hover:-translate-y-0.5 " + (lowStockCount > 0 ? 1 : 2)}>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Stok Rendah</span>
+            <div className={"flex h-8 w-8 items-center justify-center rounded-lg " + (lowStockCount > 0 ? 1 : 2)}>
+              <TrendingDown className={"h-4 w-4 " + (lowStockCount > 0 ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground")} />
+            </div>
+          </div>
+          <p className={"text-3xl font-bold tracking-tight " + (lowStockCount > 0 ? "text-amber-600 dark:text-amber-400" : "")}>{lowStockCount}</p>
+          <p className="mt-1 text-xs text-muted-foreground">Produk perlu restok segera</p>
+        </div>
+        <div className={"rounded-xl border p-5 shadow-sm transition-all hover:-translate-y-0.5 " + (outOfStockCount > 0 ? 1 : 2)}>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Stok Habis</span>
+            <div className={"flex h-8 w-8 items-center justify-center rounded-lg " + (outOfStockCount > 0 ? 1 : 2)}>
+              <AlertCircle className={"h-4 w-4 " + (outOfStockCount > 0 ? "text-red-600 dark:text-red-400" : "text-muted-foreground")} />
+            </div>
+          </div>
+          <p className={"text-3xl font-bold tracking-tight " + (outOfStockCount > 0 ? "text-red-600 dark:text-red-400" : "")}>{outOfStockCount}</p>
+          <p className="mt-1 text-xs text-muted-foreground">Produk kosong tanpa stok</p>
+        </div>
       </div>
 
       {/* Table Card */}
       <Card>
         <CardHeader>
-          <CardTitle>Daftar Produk</CardTitle>
+                    <div className="flex items-center justify-between">
+            <CardTitle>Daftar Produk</CardTitle>
+            <Badge variant="outline" className="text-xs font-mono">
+              {filteredProducts.length} dari {totalProducts} produk
+            </Badge>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Search & Filters */}
@@ -526,7 +599,8 @@ export default function InventoryPage() {
                 </div>
               )}
 
-              {/* Group toggles */}
+          <div className="border-t border-border/50 pt-3 mt-1">
+          {/* Group toggles */}
           <div className="flex items-center justify-end gap-2">
             {uniqueCategories.length > 0 && (
               <button
@@ -552,6 +626,7 @@ export default function InventoryPage() {
               <Layers className="h-3.5 w-3.5" />
               {groupByRak ? "Grouped by Rak" : "Group by Rak"}
             </button>
+          </div>
           </div>
 
           {/* Table / Empty State */}
@@ -603,6 +678,7 @@ export default function InventoryPage() {
                     )}
                   </TableHead>
                   <TableHead>SKU</TableHead>
+                  <TableHead>Barcode</TableHead>
                   <TableHead>Nama Produk</TableHead>
                   <TableHead>Kategori</TableHead>
                   <TableHead>Lokasi Rak</TableHead>
@@ -613,12 +689,12 @@ export default function InventoryPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {groupedByKategori ? (
-                  // ── Grouped by Kategori ──
-                  groupedByKategori.map(([kategori, items]) => (
-                    <>
-                      <TableRow className="bg-muted/40 dark:bg-muted/10">
-                        <TableCell colSpan={8} className="py-2">
+                  {groupedByKategori ? (
+                    // ── Grouped by Kategori ──
+                    groupedByKategori.map(([kategori, items]) => (
+                      <>
+                        <TableRow className="bg-muted/40 dark:bg-muted/10">
+                          <TableCell colSpan={9} className="py-2">
                           <div className="flex items-center gap-2">
                             <Palette className="h-4 w-4 text-primary" />
                             <span className="text-sm font-semibold">{kategori}</span>
@@ -629,14 +705,14 @@ export default function InventoryPage() {
                         </TableCell>
                       </TableRow>
                       {items.map((product) => {
-                        const status = getStockStatus(product.totalStock);
+                        const status = getStockStatus(product.totalStock, product.minStok);
                         const isSelected = selectedSkus.has(product.sku);
                         return (
                           <TableRow 
                             key={product.sku} 
                             className={`${status === "habis" ? "bg-destructive/5 dark:bg-destructive/10" : status === "rendah" ? "bg-amber-50/50 dark:bg-amber-950/10" : ""} ${isSelected ? "bg-primary/5 dark:bg-primary/10" : ""}`}
                           >
-                            <TableCell className="w-10">
+                            <TableCell className="w-10 py-3.5">
                               <input
                                 type="checkbox"
                                 className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary/30 cursor-pointer"
@@ -652,10 +728,13 @@ export default function InventoryPage() {
                                 }}
                               />
                             </TableCell>
-                            <TableCell className="font-mono text-xs text-muted-foreground">
+                            <TableCell className="py-3.5 font-mono text-xs text-muted-foreground">
                               {product.sku}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-3.5 font-mono text-xs text-muted-foreground">
+                              {product.barcode || <span className="text-muted-foreground/40">—</span>}
+                            </TableCell>
+                            <TableCell className="py-3.5">
                               <div className="flex items-center gap-2">
                                 {status !== "aman" && (
                                   <span className={`h-2 w-2 shrink-0 rounded-full ${status === "habis" ? "bg-destructive" : "bg-warning"}`} />
@@ -663,13 +742,13 @@ export default function InventoryPage() {
                                 <span className="font-medium">{product.name}</span>
                               </div>
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-3.5">
                               <KategoriBadge kategori={product.kategori} categories={categories} />
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-3.5">
                               <LokasiRakBadge rak={product.lokasiRak} />
                             </TableCell>
-                            <TableCell className="text-right">
+                            <TableCell className="py-3.5 text-right">
                               {status === "habis" ? (
                                 <Badge variant="destructive" className="text-xs">
                                   Habis
@@ -682,17 +761,17 @@ export default function InventoryPage() {
                                 </span>
                               )}
                             </TableCell>
-                            <TableCell className="text-right font-medium tabular-nums text-sm">
+                            <TableCell className="py-3.5 text-right font-medium tabular-nums text-sm">
                               {formatRupiah(product.price)}
                             </TableCell>
-                            <TableCell className="text-right text-sm">
+                            <TableCell className="py-3.5 text-right text-sm">
                               {product.connectedStores > 0 ? (
                                 <span className="text-muted-foreground">{product.connectedStores} toko</span>
                               ) : (
                                 <span className="text-muted-foreground">—</span>
                               )}
                             </TableCell>
-                            <TableCell className="text-right">
+                            <TableCell className="py-3.5 text-right">
                               <DropdownMenu>
                                 <DropdownMenuTrigger 
                                   render={
@@ -758,7 +837,7 @@ export default function InventoryPage() {
                   groupedProducts.map(([rak, items]) => (
                     <>
                       <TableRow className="bg-muted/40 dark:bg-muted/10">
-                        <TableCell colSpan={8} className="py-2">
+                        <TableCell colSpan={9} className="py-2">
                           <div className="flex items-center gap-2">
                             <Warehouse className="h-4 w-4 text-primary" />
                             <span className="text-sm font-semibold">{rak}</span>
@@ -769,14 +848,14 @@ export default function InventoryPage() {
                         </TableCell>
                       </TableRow>
                       {items.map((product) => {
-                        const status = getStockStatus(product.totalStock);
+                        const status = getStockStatus(product.totalStock, product.minStok);
                         const isSelected = selectedSkus.has(product.sku);
                         return (
                           <TableRow 
                             key={product.sku} 
                             className={`${status === "habis" ? "bg-destructive/5 dark:bg-destructive/10" : status === "rendah" ? "bg-amber-50/50 dark:bg-amber-950/10" : ""} ${isSelected ? "bg-primary/5 dark:bg-primary/10" : ""}`}
                           >
-                            <TableCell className="w-10">
+                            <TableCell className="w-10 py-3.5">
                               <input
                                 type="checkbox"
                                 className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary/30 cursor-pointer"
@@ -792,10 +871,13 @@ export default function InventoryPage() {
                                 }}
                               />
                             </TableCell>
-                            <TableCell className="font-mono text-xs text-muted-foreground">
+                            <TableCell className="py-3.5 font-mono text-xs text-muted-foreground">
                               {product.sku}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-3.5 font-mono text-xs text-muted-foreground">
+                              {product.barcode || <span className="text-muted-foreground/40">—</span>}
+                            </TableCell>
+                            <TableCell className="py-3.5">
                               <div className="flex items-center gap-2">
                                 {status !== "aman" && (
                                   <span className={`h-2 w-2 shrink-0 rounded-full ${status === "habis" ? "bg-destructive" : "bg-warning"}`} />
@@ -803,13 +885,13 @@ export default function InventoryPage() {
                                 <span className="font-medium">{product.name}</span>
                               </div>
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-3.5">
                               <KategoriBadge kategori={product.kategori} categories={categories} />
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="py-3.5">
                               <LokasiRakBadge rak={product.lokasiRak} />
                             </TableCell>
-                            <TableCell className="text-right">
+                            <TableCell className="py-3.5 text-right">
                               {status === "habis" ? (
                                 <Badge variant="destructive" className="text-xs">
                                   Habis
@@ -822,17 +904,17 @@ export default function InventoryPage() {
                                 </span>
                               )}
                             </TableCell>
-                            <TableCell className="text-right font-medium tabular-nums text-sm">
+                            <TableCell className="py-3.5 text-right font-medium tabular-nums text-sm">
                               {formatRupiah(product.price)}
                             </TableCell>
-                            <TableCell className="text-right text-sm">
+                            <TableCell className="py-3.5 text-right text-sm">
                               {product.connectedStores > 0 ? (
                                 <span className="text-muted-foreground">{product.connectedStores} toko</span>
                               ) : (
                                 <span className="text-muted-foreground">—</span>
                               )}
                             </TableCell>
-                            <TableCell className="text-right">
+                            <TableCell className="py-3.5 text-right">
                               <DropdownMenu>
                                 <DropdownMenuTrigger 
                                   render={
@@ -896,14 +978,14 @@ export default function InventoryPage() {
                 ) : (
                   // ── Normal Flat List ──
                   filteredProducts.map((product) => {
-                    const status = getStockStatus(product.totalStock);
+                    const status = getStockStatus(product.totalStock, product.minStok);
                     const isSelected = selectedSkus.has(product.sku);
                     return (
                       <TableRow 
                         key={product.sku} 
                         className={`${status === "habis" ? "bg-destructive/5 dark:bg-destructive/10" : status === "rendah" ? "bg-amber-50/50 dark:bg-amber-950/10" : ""} ${isSelected ? "bg-primary/5 dark:bg-primary/10" : ""}`}
                       >
-                        <TableCell className="w-10">
+                        <TableCell className="w-10 py-3.5">
                           <input
                             type="checkbox"
                             className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary/30 cursor-pointer"
@@ -919,10 +1001,13 @@ export default function InventoryPage() {
                             }}
                           />
                         </TableCell>
-                        <TableCell className="font-mono text-xs text-muted-foreground">
+                        <TableCell className="py-3.5 font-mono text-xs text-muted-foreground">
                           {product.sku}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="py-3.5 font-mono text-xs text-muted-foreground">
+                          {product.barcode || <span className="text-muted-foreground/40">—</span>}
+                        </TableCell>
+                        <TableCell className="py-3.5">
                           <div className="flex items-center gap-2">
                             {status !== "aman" && (
                               <span className={`h-2 w-2 shrink-0 rounded-full ${status === "habis" ? "bg-destructive" : "bg-warning"}`} />
@@ -930,13 +1015,13 @@ export default function InventoryPage() {
                             <span className="font-medium">{product.name}</span>
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="py-3.5">
                           <KategoriBadge kategori={product.kategori} categories={categories} />
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="py-3.5">
                           <LokasiRakBadge rak={product.lokasiRak} />
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="py-3.5 text-right">
                           {status === "habis" ? (
                             <Badge variant="destructive" className="text-xs">
                               Habis
@@ -949,17 +1034,17 @@ export default function InventoryPage() {
                             </span>
                           )}
                         </TableCell>
-                        <TableCell className="text-right font-medium tabular-nums text-sm">
+                        <TableCell className="py-3.5 text-right font-medium tabular-nums text-sm">
                           {formatRupiah(product.price)}
                         </TableCell>
-                        <TableCell className="text-right text-sm">
+                        <TableCell className="py-3.5 text-right text-sm">
                           {product.connectedStores > 0 ? (
                             <span className="text-muted-foreground">{product.connectedStores} toko</span>
                           ) : (
                             <span className="text-muted-foreground">—</span>
                           )}
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="py-3.5 text-right">
                           <DropdownMenu>
                             <DropdownMenuTrigger 
                               render={
@@ -1137,13 +1222,18 @@ export default function InventoryPage() {
             {detailTab === "info" ? (
               /* Info Tab */
               <div className="space-y-4 px-6 py-4 max-h-[50vh] overflow-y-auto">
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground uppercase">SKU</p>
-                  <p className="mt-1 text-sm font-medium">{detailView.sku}</p>
-                </div>
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground uppercase">SKU</p>
+                    <p className="mt-1 text-sm font-medium">{detailView.sku}</p>
+                  </div>
 
-                <div className="border-t border-border/50 pt-4">
-                  <p className="text-xs font-medium text-muted-foreground uppercase">Nama Produk</p>
+                  <div className="border-t border-border/50 pt-4">
+                    <p className="text-xs font-medium text-muted-foreground uppercase">Barcode</p>
+                    <p className="mt-1 text-sm font-mono">{detailView.barcode || <span className="text-muted-foreground/60">—</span>}</p>
+                  </div>
+
+                  <div className="border-t border-border/50 pt-4">
+                    <p className="text-xs font-medium text-muted-foreground uppercase">Nama Produk</p>
                   <p className="mt-1 text-sm font-medium">{detailView.name}</p>
                 </div>
 
@@ -1177,20 +1267,25 @@ export default function InventoryPage() {
                     <span className="text-sm font-medium">{detailView.totalStock} unit</span>
                     <Badge
                       variant={
-                        getStockStatus(detailView.totalStock) === "habis"
+                        getStockStatus(detailView.totalStock, detailView.minStok) === "habis"
                           ? "destructive"
-                          : getStockStatus(detailView.totalStock) === "rendah"
+                          : getStockStatus(detailView.totalStock, detailView.minStok) === "rendah"
                           ? "secondary"
                           : "default"
                       }
                     >
-                      {getStockStatus(detailView.totalStock) === "habis"
+                      {getStockStatus(detailView.totalStock, detailView.minStok) === "habis"
                         ? "Habis"
-                        : getStockStatus(detailView.totalStock) === "rendah"
+                        : getStockStatus(detailView.totalStock, detailView.minStok) === "rendah"
                         ? "Rendah"
                         : "Aman"}
                     </Badge>
                   </div>
+                  {detailView.minStok !== undefined && detailView.minStok !== 10 && (
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Batas peringatan: ≤ {detailView.minStok} unit
+                    </p>
+                  )}
                 </div>
 
                 <div className="border-t border-border/50 pt-4">
@@ -1358,6 +1453,23 @@ export default function InventoryPage() {
                 />
               </div>
 
+              {/* Barcode */}
+              <div className="space-y-2">
+                <Label htmlFor="product-barcode" className="text-sm font-medium">
+                  Barcode
+                </Label>
+                <Input
+                  id="product-barcode"
+                  value={editForm.barcode || ""}
+                  onChange={(e) => setEditForm({ ...editForm, barcode: e.target.value || undefined })}
+                  placeholder="Contoh: 8992809100012"
+                  className="border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25 font-mono"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Barcode produk (EAN-13 atau kode lain). Akan terdeteksi otomatis saat scan di POS.
+                </p>
+              </div>
+
               {/* Harga */}
               <div className="space-y-2">
                 <Label htmlFor="product-price" className="text-sm font-medium">
@@ -1372,6 +1484,8 @@ export default function InventoryPage() {
                   className="border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25"
                 />
               </div>
+
+
 
               {/* Stok Total */}
               <div className="space-y-2">
@@ -1469,7 +1583,146 @@ export default function InventoryPage() {
             </div>
           </div>
         </div>
-       )}      </>
+
+       )}</>
+        )}
+        {tab === "kits" && (
+          <>
+      {/* Kits Grid */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-semibold">Paket Barang (Item Kits)</h2>
+          <p className="text-sm text-muted-foreground">Gabungkan beberapa produk menjadi satu paket</p>
+        </div>
+        <Can permission="inventory.edit" fallback={null}>
+          <Button onClick={() => { setEditingKit(null); setKitModalOpen(true); }} className="gap-2">
+            <Plus className="h-4 w-4" />
+            Tambah Paket Baru
+          </Button>
+        </Can>
+      </div>
+      {isLoadingKits ? (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="rounded-lg border p-6 space-y-4">
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="h-4 w-20" />
+              {Array.from({ length: 2 }).map((_, j) => (
+                <div key={j} className="flex items-center gap-3">
+                  <Skeleton className="h-4 flex-1" />
+                  <Skeleton className="h-6 w-10" />
+                </div>
+              ))}
+              <Skeleton className="h-5 w-24" />
+            </div>
+          ))}
+        </div>
+      ) : kits.length === 0 ? (
+        <div className="py-12 text-center">
+          <Layers className="mx-auto h-12 w-12 text-muted-foreground/40 mb-3" />
+          <p className="text-sm text-muted-foreground">Belum ada paket barang.</p>
+          <Can permission="inventory.edit" fallback={null}>
+            <Button variant="outline" className="mt-3 gap-2" onClick={() => { setEditingKit(null); setKitModalOpen(true); }}>
+              <Plus className="h-4 w-4" />
+              Buat Paket Barang
+            </Button>
+          </Can>
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {kits.map((kit) => {
+            const minStok = (() => {
+              if (!kit.components || kit.components.length === 0) return Infinity;
+              let min = Infinity;
+              for (const comp of kit.components) {
+                const product = products.find(p => p.sku === comp.sku);
+                const stock = product ? product.totalStock : 0;
+                const available = comp.quantity > 0 ? Math.floor(stock / comp.quantity) : Infinity;
+                if (available < min) min = available;
+              }
+              return min;
+            })();
+            const totalModal = kit.components.reduce((sum, c) => {
+              const p = products.find(pr => pr.sku === c.sku);
+              return sum + (p ? p.hpp || 0 : 0) * c.quantity;
+            }, 0);
+            const marginPercent = totalModal > 0 ? ((kit.price - totalModal) / totalModal * 100) : 0;
+            return (
+              <Card key={kit.id} className="card-hover overflow-hidden">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="text-base">{kit.name}</CardTitle>
+                      <p className="text-lg font-bold text-primary mt-1">{formatRupiah(kit.price)}</p>
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger render={
+                        <Button variant="ghost" size="icon" className="h-8 w-8 -mt-1 -mr-1">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      } />
+                      <DropdownMenuContent align="end" className="w-36">
+                        <DropdownMenuItem onClick={() => { setEditingKit(kit); setKitModalOpen(true); }} className="cursor-pointer">
+                          <Edit className="mr-2 h-4 w-4" /> Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={async () => {
+                          if (!confirm(`Hapus paket "${kit.name}"?`)) return;
+                          const res = await deleteItemKit(kit.id);
+                          if (res.success) {
+                            setKits(prev => prev.filter(k => k.id !== kit.id));
+                            toast.success(`Paket "${kit.name}" dihapus`);
+                          } else {
+                            toast.error(res.error || "Gagal menghapus paket");
+                          }
+                        }} className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer">
+                          <Trash2 className="mr-2 h-4 w-4" /> Hapus
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </CardHeader>
+                <CardContent className="pb-4">
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Komponen</p>
+                    {kit.components.map((comp) => {
+                      const product = products.find(p => p.sku === comp.sku);
+                      const stock = product ? product.totalStock : 0;
+                      return (
+                        <div key={comp.sku} className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">
+                            <span className="font-medium text-foreground">{comp.quantity}x</span> {comp.name}
+                          </span>
+                          <Badge variant={stock === 0 ? "destructive" : stock > 0 && stock <= (product?.minStok ?? 10) ? "secondary" : "outline"} className="text-xs font-mono">
+                            {stock}
+                          </Badge>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-border/50 flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Stok tersedia</span>
+                    <Badge variant={minStok === Infinity ? "outline" : minStok <= 0 ? "destructive" : minStok <= 10 ? "secondary" : "default"}>
+                      {minStok === Infinity ? "—" : minStok + " paket"}
+                    </Badge>
+                  </div>
+                  {totalModal > 0 && (
+                    <div className="mt-2 flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">Margin</span>
+                      <span className={"text-xs font-medium " + (marginPercent >= 30 ? "text-emerald-600" : marginPercent >= 15 ? "text-amber-600" : "text-red-600")}>
+                        {marginPercent.toFixed(0)}%
+                      </span>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+          </>
+        )}
+      </>
     )}
 
     {/* Pindah Rak Dialog (single product) */}
@@ -1510,6 +1763,14 @@ export default function InventoryPage() {
       onClose={() => setShowKategoriModal(false)}
       categories={categories}
       onSave={() => getCategories().then((cats) => setCategories(cats))}
+    />
+
+    <KitManagerModal
+      isOpen={kitModalOpen}
+      onClose={() => { setKitModalOpen(false); setEditingKit(null); }}
+      products={products}
+      editingKit={editingKit}
+      onSave={() => getItemKits().then((k) => setKits(k))}
     />
     </div>
   );
@@ -2213,3 +2474,287 @@ function KategoriManagerModal({
   );
 }
 
+
+
+// ─── KitManagerModal Component ──────────────────────────────────────────
+
+function KitManagerModal({
+  isOpen,
+  onClose,
+  products,
+  editingKit,
+  onSave,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  products: Product[];
+  kits: ItemKit[];
+  editingKit: ItemKit | null;
+  onSave: () => void;
+}) {
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState(0);
+  const [description, setDescription] = useState("");
+  const [components, setComponents] = useState<KitComponent[]>([]);
+  const [selectedSku, setSelectedSku] = useState("");
+  const [selectedQty, setSelectedQty] = useState(1);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      if (editingKit) {
+        setName(editingKit.name);
+        setPrice(editingKit.price);
+        setDescription(editingKit.description || "");
+        setComponents(editingKit.components || []);
+      } else {
+        setName("");
+        setPrice(0);
+        setDescription("");
+        setComponents([]);
+      }
+      setSelectedSku("");
+      setSelectedQty(1);
+    }
+  }, [isOpen, editingKit]);
+
+  if (!isOpen) return null;
+
+  const handleAddComponent = () => {
+    if (!selectedSku) return;
+    const product = products.find(p => p.sku === selectedSku);
+    if (!product) return;
+    if (components.some(c => c.sku === selectedSku)) {
+      toast.error("Produk sudah ada di komponen paket");
+      return;
+    }
+    setComponents(prev => [...prev, { sku: selectedSku, name: product.name, quantity: selectedQty }]);
+    setSelectedSku("");
+    setSelectedQty(1);
+  };
+
+  const handleRemoveComponent = (sku: string) => {
+    setComponents(prev => prev.filter(c => c.sku !== sku));
+    if (selectedSku === sku) setSelectedSku("");
+  };
+
+  const handleSave = async () => {
+    if (!name.trim()) {
+      toast.error("Nama paket harus diisi");
+      return;
+    }
+    if (components.length === 0) {
+      toast.error("Tambahkan minimal 1 produk ke paket");
+      return;
+    }
+    setIsSaving(true);
+    if (editingKit) {
+      const res = await updateItemKit({
+        id: editingKit.id,
+        name: name.trim(),
+        price,
+        description: description || "",
+        components,
+        created_at: editingKit.created_at,
+        updated_at: editingKit.updated_at,
+      });
+      if (res.success) {
+        toast.success("Paket berhasil diupdate");
+        onSave();
+        onClose();
+      } else {
+        toast.error(res.error || "Gagal mengupdate paket");
+      }
+    } else {
+      const res = await addItemKit({
+        name: name.trim(),
+        price,
+        description: description || "",
+        components,
+      });
+      if (res.success) {
+        toast.success("Paket berhasil ditambahkan");
+        onSave();
+        onClose();
+      } else {
+        toast.error(res.error || "Gagal menambahkan paket");
+      }
+    }
+    setIsSaving(false);
+  };
+
+  const availableProducts = products.filter(
+    p => !components.some(c => c.sku === p.sku)
+  );
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-lg rounded-xl border border-border bg-card shadow-2xl animate-in fade-in zoom-in-95">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-border px-5 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+              <Layers className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-base font-semibold">{editingKit ? "Edit Paket Barang" : "Tambah Paket Barang"}</h3>
+              <p className="text-xs text-muted-foreground">{editingKit ? "Ubah komponen dan harga paket" : "Gabungkan beberapa produk menjadi satu paket"}</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="rounded-md p-1.5 hover:bg-muted transition-colors">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="px-5 py-4 max-h-[65vh] overflow-y-auto space-y-4">
+          {/* Nama Paket */}
+          <div className="space-y-2">
+            <Label htmlFor="kit-name" className="text-sm font-medium">Nama Paket</Label>
+            <Input
+              id="kit-name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="Contoh: Paket Seragam Lengkap"
+              className="border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25"
+            />
+          </div>
+
+          {/* Harga Paket */}
+          <div className="space-y-2">
+            <Label htmlFor="kit-price" className="text-sm font-medium">Harga Paket</Label>
+            <Input
+              id="kit-price"
+              type="number"
+              value={price || ""}
+              onChange={e => setPrice(Number(e.target.value))}
+              placeholder="Masukkan harga paket"
+              className="border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25"
+            />
+          </div>
+
+          {/* Deskripsi */}
+          <div className="space-y-2">
+            <Label htmlFor="kit-desc" className="text-sm font-medium">Deskripsi (opsional)</Label>
+            <textarea
+              id="kit-desc"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              placeholder="Deskripsi paket..."
+              rows={2}
+              className="flex min-h-[60px] w-full rounded-md border border-border/60 bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-1 focus-visible:ring-primary/25"
+            />
+          </div>
+
+          {/* Add Component */}
+          <div className="space-y-2 p-3 rounded-lg border border-dashed border-border bg-muted/20">
+            <p className="text-xs font-medium text-muted-foreground">Tambah Produk ke Paket</p>
+            <div className="flex gap-2">
+              <select
+                value={selectedSku}
+                onChange={e => setSelectedSku(e.target.value)}
+                className="flex-1 h-9 rounded-md border border-border/60 bg-background px-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary/70"
+              >
+                <option value="">— Pilih Produk —</option>
+                {availableProducts.map(p => (
+                  <option key={p.sku} value={p.sku}>{p.name} (Stok: {p.totalStock})</option>
+                ))}
+              </select>
+              <Input
+                type="number"
+                min={1}
+                value={selectedQty}
+                onChange={e => setSelectedQty(Math.max(1, Number(e.target.value) || 1))}
+                className="w-16 h-9 text-center"
+              />
+              <Button size="sm" onClick={handleAddComponent} disabled={!selectedSku} className="h-9 shrink-0 gap-1">
+                <Plus className="h-3.5 w-3.5" />
+                Tambah
+              </Button>
+            </div>
+            {availableProducts.length === 0 && (
+              <p className="text-xs text-amber-600 dark:text-amber-400">Semua produk sudah ditambahkan ke paket.</p>
+            )}
+          </div>
+
+          {/* Component List */}
+          {components.length === 0 ? (
+            <div className="py-4 text-center">
+              <Package className="mx-auto h-8 w-8 text-muted-foreground/40 mb-2" />
+              <p className="text-sm text-muted-foreground">Belum ada produk. Pilih produk di atas.</p>
+            </div>
+          ) : (
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-medium text-muted-foreground">Komponen Paket</p>
+                <span className="text-xs text-muted-foreground">{components.length} produk</span>
+              </div>
+              {components.map((comp) => {
+                const product = products.find(p => p.sku === comp.sku);
+                const stock = product ? product.totalStock : 0;
+                const canMake = comp.quantity > 0 ? Math.floor(stock / comp.quantity) : 0;
+                return (
+                  <div key={comp.sku} className="flex items-center gap-3 rounded-lg border border-border/50 px-3 py-2.5 hover:bg-muted/30 transition-colors group">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium truncate">{comp.name}</span>
+                        <span className="text-xs text-muted-foreground shrink-0">x{comp.quantity}</span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-xs text-muted-foreground">Stok: {stock}</span>
+                        {stock === 0 ? (
+                          <Badge variant="destructive" className="text-[10px] px-1 py-0 h-4">Habis</Badge>
+                        ) : canMake <= 3 ? (
+                          <Badge variant="secondary" className="text-[10px] px-1 py-0 h-4">Sisa {canMake}</Badge>
+                        ) : null}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleRemoveComponent(comp.sku)}
+                      className="text-muted-foreground hover:text-red-500 p-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Summary */}
+          {components.length > 0 && (
+            <div className="rounded-lg bg-muted/30 p-3 space-y-1">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Total Kuantitas</span>
+                <span className="font-medium">{components.reduce((sum, c) => sum + c.quantity, 0)} unit</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Komponen Unik</span>
+                <span className="font-medium">{components.length} produk</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="flex gap-3 border-t border-border px-5 py-3">
+          <Button variant="outline" onClick={onClose} className="flex-1">Batal</Button>
+          <Button onClick={handleSave} disabled={!name.trim() || components.length === 0 || isSaving} className="flex-1 gap-2">
+            {isSaving ? (
+              <>
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                Menyimpan...
+              </>
+            ) : editingKit ? (
+              <>Simpan Perubahan</>
+            ) : (
+              <>
+                <Plus className="h-4 w-4" />
+                Tambah Paket
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}

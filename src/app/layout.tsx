@@ -17,7 +17,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "MultiStock — Inventory Manager",
+  title: "MultiStore — Manajemen Toko",
   description: "Dashboard stok multi-toko dengan Next.js dan Supabase Auth",
 };
 

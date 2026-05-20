@@ -80,6 +80,7 @@ export function exportData(
 
 export const INVENTORY_EXPORT_COLUMNS: ExportColumn[] = [
   { key: "sku", label: "SKU" },
+  { key: "barcode", label: "Barcode", format: (v) => (v ? String(v) : "-") },
   { key: "name", label: "Nama Produk" },
   { key: "lokasiRak", label: "Lokasi Rak", format: (v) => (v ? String(v) : "-") },
   { key: "kategori", label: "Kategori", format: (v) => (v ? String(v) : "-") },
@@ -96,7 +97,7 @@ export const ORDERS_EXPORT_COLUMNS: ExportColumn[] = [
   { key: "tanggal_pesanan", label: "Tanggal" },
   { key: "seller_name", label: "Penjual" },
   { key: "nama_pembeli", label: "Pembeli" },
-  { key: "nama_toko_shopee", label: "Toko" },
+  { key: "nama_toko", label: "Toko" },
   { key: "status_pesanan", label: "Status" },
   { key: "total_item", label: "Total Item", format: (v) => String(v ?? 0) },
   { key: "subtotal", label: "Subtotal", format: (v) => (typeof v === "number" ? v : 0) },
