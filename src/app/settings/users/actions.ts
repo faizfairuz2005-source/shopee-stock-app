@@ -107,10 +107,10 @@ export async function getUsers(): Promise<UserManagementItem[]> {
     const { data: authUsers } = await admin.auth.admin.listUsers();
     if (!authUsers?.users) return [];
 
-    return authUsers.users.map((au: any) => ({
+    return authUsers.users.map((au: { id: string; email?: string; user_metadata?: Record<string, unknown>; app_metadata?: Record<string, unknown>; created_at: string; banned_until?: string | null }) => ({
       id: au.id,
       email: au.email ?? "",
-      full_name: au.user_metadata?.full_name ?? "",
+      full_name: (au.user_metadata?.full_name as string) ?? "",
       role: (au.app_metadata?.role as Role) ?? (au.user_metadata?.role as Role) ?? "Viewer",
       avatar_url: "",
       created_at: au.created_at,

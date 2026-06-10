@@ -61,21 +61,6 @@ function formatDate(dateStr: string) {
   }
 }
 
-function formatDateTime(dateStr: string) {
-  try {
-    const d = new Date(dateStr);
-    return new Intl.DateTimeFormat("id-ID", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(d);
-  } catch {
-    return dateStr;
-  }
-}
-
 function getToday(): string {
   return new Date().toISOString().split("T")[0];
 }

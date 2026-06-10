@@ -7,7 +7,6 @@ import {
   Download,
   Share2,
   Store,
-  FileText,
   Receipt,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";

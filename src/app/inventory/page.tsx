@@ -68,7 +68,7 @@ export default function InventoryPage() {
 
   // Pindah Rak dialog
   const [pindahRakProduct, setPindahRakProduct] = useState<Product | null>(null);
-  const [pindahRakTarget, setPindahRakTarget] = useState("");
+  const [, setPindahRakTarget] = useState<string>("");
   const [showBulkMoveDialog, setShowBulkMoveDialog] = useState(false);
   const [bulkMoveTarget, setBulkMoveTarget] = useState("");
 
@@ -80,9 +80,6 @@ export default function InventoryPage() {
   const [kategoriFilter, setKategoriFilter] = useState<string | null>(null);
   const [groupByKategori, setGroupByKategori] = useState(false);
   const [showKategoriModal, setShowKategoriModal] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<ProductCategory | null>(null);
-  const [isSavingCategory, setIsSavingCategory] = useState(false);
-
   // Read filter from URL if present
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -95,6 +92,7 @@ export default function InventoryPage() {
   }, []);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editForm, setEditForm] = useState<Product | null>(null);
+
   const [deleteConfirm, setDeleteConfirm] = useState<{ sku: string; name: string } | null>(null);
   const [detailView, setDetailView] = useState<Product | null>(null);
   const [detailTab, setDetailTab] = useState<"info" | "riwayat">("info");
@@ -105,7 +103,7 @@ export default function InventoryPage() {
   // ─── Tab state
   const [tab, setTab] = useState<"products" | "kits">("products");
   const [kits, setKits] = useState<ItemKit[]>([]);
-  const [isLoadingKits, setIsLoadingKits] = useState(false);
+  const [isLoadingKits] = useState(false);
   const [kitModalOpen, setKitModalOpen] = useState(false);
   const [editingKit, setEditingKit] = useState<ItemKit | null>(null);
 
@@ -198,8 +196,6 @@ export default function InventoryPage() {
   const totalStock = products.reduce((s, p) => s + p.totalStock, 0);
   const lowStockCount = products.filter((p) => p.totalStock > 0 && p.totalStock <= (p.minStok ?? 10)).length;
   const outOfStockCount = products.filter((p) => p.totalStock === 0).length;
-  const uniqueStores = products.reduce((max, p) => Math.max(max, p.connectedStores), 0);
-
   // Handle Edit Product
   const handleEditClick = (product: Product) => {
     setEditForm(product);
@@ -1769,6 +1765,7 @@ export default function InventoryPage() {
       isOpen={kitModalOpen}
       onClose={() => { setKitModalOpen(false); setEditingKit(null); }}
       products={products}
+      kits={kits}
       editingKit={editingKit}
       onSave={() => getItemKits().then((k) => setKits(k))}
     />
@@ -2275,7 +2272,6 @@ function KategoriManagerModal({
   const [editColor, setEditColor] = useState("#3B82F6");
   const [newName, setNewName] = useState("");
   const [newColor, setNewColor] = useState("#3B82F6");
-  const [isAdding, setIsAdding] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {

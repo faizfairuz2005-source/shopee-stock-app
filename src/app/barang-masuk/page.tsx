@@ -1051,7 +1051,6 @@ function NewProductModal({
 function ProductCombobox({
   products,
   selectedSku,
-  selectedName,
   onSelect,
   onAddNewProduct,
 }: {

@@ -8,10 +8,8 @@ import {
   Users,
   Phone,
   Mail,
-  MapPin,
   ShoppingCart,
   Receipt,
-  FileText,
   BadgePercent,
   Calendar,
   TrendingUp,
@@ -53,8 +51,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import type { Customer, CustomerOrder } from "./actions";
@@ -87,7 +83,8 @@ function formatDate(dateStr: string | null) {
   });
 }
 
-function formatDateTime(dateStr: string) {
+function formatDateTime(dateStr: string | null) {
+  if (!dateStr) return "—";
   return new Date(dateStr).toLocaleDateString("id-ID", {
     day: "numeric",
     month: "short",

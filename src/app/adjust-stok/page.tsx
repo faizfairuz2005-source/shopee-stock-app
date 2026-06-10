@@ -55,19 +55,6 @@ function formatRupiah(amount: number) {
   return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(amount);
 }
 
-function formatDate(dateStr: string) {
-  try {
-    const d = new Date(dateStr);
-    return new Intl.DateTimeFormat("id-ID", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    }).format(d);
-  } catch {
-    return dateStr;
-  }
-}
-
 function formatDateTime(dateStr: string) {
   try {
     const d = new Date(dateStr);
@@ -234,7 +221,7 @@ export default function AdjustStokPage() {
       } else {
         toast.error(result.error || "Gagal menyimpan penyesuaian");
       }
-    } catch (err) {
+    } catch {
       toast.error("Terjadi kesalahan saat menyimpan");
     } finally {
       setIsSubmitting(false);

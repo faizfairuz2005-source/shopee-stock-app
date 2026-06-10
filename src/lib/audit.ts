@@ -151,20 +151,9 @@ interface AuditLogPayload {
   [key: string]: unknown;
 }
 
-let fallbackLogs: AuditLogPayload[] = [];
+const fallbackLogs: AuditLogPayload[] = [];
 
-function addFallbackLog(entry: AuditLogPayload) {
-  const logEntry: AuditLogPayload = {
-    ...entry,
-    id: entry.id || `fallback-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    created_at: entry.created_at || new Date().toISOString(),
-  };
-  fallbackLogs.push(logEntry);
-  // Keep max 100 fallback logs in memory
-  if (fallbackLogs.length > 100) {
-    fallbackLogs = fallbackLogs.slice(-100);
-  }
-}
+
 
 /**
  * Get fallback logs (for debugging / when Supabase is down)
@@ -242,10 +231,9 @@ export async function auditLog(
         return { success: true, error: error.message };
       }
 
-      return { success: true };
-    } catch (adminErr) {
-      // Admin client not available — OK as long as local file worked
-      return { success: true };
+      return { success: true };      } catch {
+        // Admin client not available — OK as long as local file worked
+        return { success: true };
     }
   } catch (error) {
     console.error("Audit log error:", error);
