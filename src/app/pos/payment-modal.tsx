@@ -49,6 +49,8 @@ interface PaymentModalProps {
     transferAmount?: number;
   }) => void;
   isProcessing: boolean;
+  error?: string | null;
+  onErrorDismiss?: () => void;
 }
 
 // ─── Payment Modal ───────────────────────────────────────────
@@ -64,6 +66,8 @@ export function PaymentModal({
   customerName,
   onConfirm,
   isProcessing,
+  error,
+  onErrorDismiss,
 }: PaymentModalProps) {
   const [tab, setTab] = useState<PaymentTab>("cash");
   const [cashAmount, setCashAmount] = useState("");
@@ -154,6 +158,29 @@ export function PaymentModal({
             <X className="h-5 w-5 text-muted-foreground" />
           </button>
         </div>
+
+        {/* Error Banner */}
+        {error && (
+          <div className="mx-5 mt-4 rounded-2xl border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/30 p-4 animate-in slide-in-from-top-2 fade-in duration-200">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 shrink-0 text-red-500 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-red-600 dark:text-red-400">
+                  Transaksi Gagal
+                </p>
+                <p className="text-xs text-red-500/80 dark:text-red-400/80 mt-1 whitespace-pre-line">
+                  {error}
+                </p>
+              </div>
+              <button
+                onClick={onErrorDismiss}
+                className="shrink-0 rounded-lg p-1 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+              >
+                <X className="h-4 w-4 text-red-400" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Body */}
         <div className="flex-1 overflow-y-auto p-5 space-y-5">

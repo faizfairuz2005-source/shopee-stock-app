@@ -24,6 +24,8 @@ export interface InventoryProduct {
   kategori?: string;
   /** Batas minimum stok untuk peringatan stok rendah (default 10) */
   minStok?: number;
+  /** Tanggal produk pertama kali ditambahkan ke sistem (ISO string) */
+  createdAt?: string;
 }
 
 export interface OrderItem {
@@ -261,14 +263,63 @@ interface AppData {
 
 const dataFilePath = path.join(process.cwd(), "data.json");
 
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 150;
+
+/** Busy-wait for a brief delay (used inside synchronous retry loops) */
+function busyWait(ms: number): void {
+  const start = Date.now();
+  while (Date.now() - start < ms) {
+    /* busy-wait */
+  }
+}
+
+/**
+ * Read and parse data.json with retry on transient file errors (Windows file locking).
+ */
+function readDataFile(): { parsed: Record<string, unknown> } {
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      if (!fs.existsSync(dataFilePath)) {
+        throw new Error("data.json not found");
+      }
+      const content = fs.readFileSync(dataFilePath, "utf8");
+      const parsed = JSON.parse(content);
+      return { parsed };
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      if (attempt < MAX_RETRIES - 1) {
+        busyWait(RETRY_DELAY_MS);
+      }
+    }
+  }
+  throw lastError || new Error("Failed to read data.json after retries");
+}
+
+/**
+ * Write data.json with retry on transient file errors (Windows file contention).
+ */
+function writeDataFile(data: AppData): void {
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), "utf8");
+      return;
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err));
+      if (attempt < MAX_RETRIES - 1) {
+        busyWait(RETRY_DELAY_MS);
+      }
+    }
+  }
+  throw lastError || new Error("Failed to write data.json after retries");
+}
+
 // Helper to read data
 export async function getAppData(): Promise<AppData> {
   try {
-    if (!fs.existsSync(dataFilePath)) {
-      throw new Error("data.json not found");
-    }
-    const fileContents = fs.readFileSync(dataFilePath, "utf8");
-    const data = JSON.parse(fileContents);
+    const { parsed: data } = readDataFile();
 
     // Ensure orders array exists for backward compatibility
     if (!data.orders) {
@@ -305,7 +356,15 @@ export async function getAppData(): Promise<AppData> {
       data.kits = [];
     }
 
-    return data as AppData;
+    // Ensure all products have a createdAt date (backfill for existing data)
+    const products = data.inventoryProducts as InventoryProduct[];
+    for (const product of products) {
+      if (!product.createdAt) {
+        product.createdAt = "2026-01-01T00:00:00.000Z";
+      }
+    }
+
+    return data as unknown as AppData;
   } catch (error) {
     console.error("Error reading data.json:", error);
     return {
@@ -1043,9 +1102,67 @@ export async function savePosTransaction(transaction: {
   discount_note?: string;
 }) {
   try {
+    // ── Validation ──────────────────────────────────────────────
+    if (!transaction.items || transaction.items.length === 0) {
+      return { success: false, error: "Tidak ada item dalam transaksi" };
+    }
+
+    if (transaction.grand_total < 0) {
+      return { success: false, error: "Grand total tidak boleh negatif" };
+    }
+
+    if (transaction.cash_amount < 0) {
+      return { success: false, error: "Jumlah pembayaran tidak valid" };
+    }
+
+    if (transaction.change_amount < 0) {
+      return { success: false, error: "Uang yang dibayarkan kurang dari total belanja" };
+    }
+
     const data = await getAppData();
     if (!data.orders) {
       data.orders = [];
+    }
+
+    // ── Stock validation ────────────────────────────────────────
+    const stockErrors: string[] = [];
+    for (const item of transaction.items) {
+      if (item.kitComponents && item.kitComponents.length > 0) {
+        // Kit item: check stock for each component
+        for (const comp of item.kitComponents) {
+          const product = data.inventoryProducts.find(p => p.sku === comp.sku);
+          if (!product) {
+            stockErrors.push(`Komponen "${comp.sku}" tidak ditemukan di database`);
+          } else {
+            const neededQty = comp.quantity * item.quantity;
+            if (product.totalStock < neededQty) {
+              stockErrors.push(
+                `Stok "${product.name}" tidak mencukupi: tersedia ${product.totalStock}, dibutuhkan ${neededQty} (untuk paket "${item.nama_produk}" x${item.quantity})`
+              );
+            }
+          }
+        }
+      } else {
+        // Regular product
+        const product = data.inventoryProducts.find(p => p.sku === item.sku);
+        if (!product) {
+          stockErrors.push(`Produk "${item.nama_produk}" (SKU: ${item.sku}) tidak ditemukan di database`);
+        } else {
+          if (product.totalStock < item.quantity) {
+            stockErrors.push(
+              `Stok "${product.name}" tidak mencukupi: tersedia ${product.totalStock}, dibutuhkan ${item.quantity}`
+            );
+          }
+        }
+      }
+    }
+
+    if (stockErrors.length > 0) {
+      return {
+        success: false,
+        error: `Stok tidak mencukupi:\n${stockErrors.join("\n")}`,
+        stockErrors,
+      };
     }
 
     // ── Get current user info from session ──────────────────────
@@ -1063,8 +1180,6 @@ export async function savePosTransaction(transaction: {
     }
 
     // ── Determine order origin ──────────────────────────────────
-    // If customer is "Umum" (default, no specific customer), treat as offline/POS Direct.
-    // If customer has a real name, treat as Online order (even from POS).
     const isOffline = transaction.customer_name === "Umum" || !transaction.customer_name.trim();
     const storeName = isOffline ? "POS Direct" : "Online";
 
@@ -1201,7 +1316,7 @@ export async function savePosTransaction(transaction: {
     }
 
     // Audit log
-    auditLog({
+    await auditLog({
       action: "pos.transaction",
       entity_type: "order",
       entity_id: transactionNumber,
@@ -1999,10 +2114,11 @@ function maybeAutoBackup(): void {
 
 /**
  * Centralized write function that saves data to data.json and triggers auto-backup.
+ * Uses retry-safe write to handle Windows file contention.
  * Use this instead of fs.writeFileSync(dataFilePath, ...) throughout the codebase.
  */
 function writeAppData(data: AppData): void {
-  fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), "utf8");
+  writeDataFile(data);
   maybeAutoBackup();
 }
 

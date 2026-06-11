@@ -323,7 +323,8 @@ export default function LaporanPenjualan({ orders }: { orders: Order[] }) {
               <p className="text-sm text-muted-foreground">Tidak ada data penjualan di periode ini.</p>
             </div>
           ) : (
-            <Table responsive>
+            <div className="table-responsive">
+            <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead
@@ -390,6 +391,7 @@ export default function LaporanPenjualan({ orders }: { orders: Order[] }) {
                 })}
               </TableBody>
             </Table>
+            </div>
           )}
         </CardContent>
       </Card>

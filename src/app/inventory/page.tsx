@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit, MoreHorizontal, Package, Plus, Search, TrendingDown, Store, X, Eye, Trash2, AlertCircle, Warehouse, Layers, Palette, ArrowRight, Check, History, ShoppingCart, PackageOpen, RotateCcw, ArrowRightLeft, TrendingUp } from "lucide-react";
+import { Edit, MoreHorizontal, Package, Plus, Search, TrendingDown, Store, X, Eye, Trash2, AlertCircle, Warehouse, Layers, Palette, ArrowRight, Check, History, ShoppingCart, PackageOpen, RotateCcw, ArrowRightLeft, TrendingUp, CalendarDays } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { Can } from "@/components/can";
 import { usePermission } from "@/lib/use-permission";
@@ -54,12 +54,26 @@ function formatRupiah(amount: number) {
   return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(amount);
 }
 
+
+function formatDate(iso?: string): string {
+  if (!iso) return "—";
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString("id-ID", { year: "numeric", month: "short", day: "numeric" });
+  } catch {
+    return iso;
+  }
+}
+
+
 export default function InventoryPage() {
   usePermission();
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const [stockFilter, setStockFilter] = useState<StockFilter>("semua");
   const [rakFilter, setRakFilter] = useState<string | null>(null);
+  const [dateFilterStart, setDateFilterStart] = useState("");
+  const [dateFilterEnd, setDateFilterEnd] = useState("");
   const [groupByRak, setGroupByRak] = useState(false);
 
   // Rak state
@@ -71,6 +85,10 @@ export default function InventoryPage() {
   const [, setPindahRakTarget] = useState<string>("");
   const [showBulkMoveDialog, setShowBulkMoveDialog] = useState(false);
   const [bulkMoveTarget, setBulkMoveTarget] = useState("");
+  const [showBatchEdit, setShowBatchEdit] = useState(false);
+  const [isBatchEditing, setIsBatchEditing] = useState(false);
+  const [showBulkDelete, setShowBulkDelete] = useState(false);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
 
   // Checkbox selection for bulk operations
   const [selectedSkus, setSelectedSkus] = useState<Set<string>>(new Set());
@@ -149,7 +167,11 @@ export default function InventoryPage() {
       (stockFilter === "habis" && status === "habis");
     const matchRak = !rakFilter || product.lokasiRak === rakFilter;
     const matchKategori = !kategoriFilter || product.kategori === kategoriFilter;
-    return matchSearch && matchStock && matchRak && matchKategori;
+    // Date filter (compare YYYY-MM-DD only)
+    const matchDate =
+      !dateFilterStart || !dateFilterEnd ||
+      (product.createdAt && product.createdAt.slice(0, 10) >= dateFilterStart && product.createdAt.slice(0, 10) <= dateFilterEnd);
+    return matchSearch && matchStock && matchRak && matchKategori && matchDate;
   }).sort((a, b) => {
     if (a.totalStock === 0 && b.totalStock !== 0) return -1;
     if (a.totalStock !== 0 && b.totalStock === 0) return 1;
@@ -303,6 +325,62 @@ export default function InventoryPage() {
     }
     setShowBulkMoveDialog(false);
     setBulkMoveTarget("");
+  };
+
+  // Handle Batch Edit
+  const handleBatchEdit = async (fields: { price?: string; hpp?: string; minStok?: string; kategori?: string }) => {
+    if (selectedSkus.size === 0) return;
+    setIsBatchEditing(true);
+    try {
+      const updated = products.map((p) =>
+        selectedSkus.has(p.sku)
+          ? {
+              ...p,
+              ...(fields.price !== undefined && fields.price !== "" ? { price: Number(fields.price) } : {}),
+              ...(fields.hpp !== undefined && fields.hpp !== "" ? { hpp: Number(fields.hpp) } : {}),
+              ...(fields.minStok !== undefined && fields.minStok !== "" ? { minStok: Number(fields.minStok) } : {}),
+              ...(fields.kategori !== undefined ? { kategori: fields.kategori } : {}),
+            }
+          : p
+      );
+      setProducts(updated);
+      const res = await updateInventory(updated);
+      if (res.success) {
+        toast.success(`${selectedSkus.size} produk berhasil diupdate`);
+        setSelectedSkus(new Set());
+      } else {
+        toast.error("Gagal menyimpan perubahan");
+      }
+    } catch (err) {
+      toast.error("Terjadi kesalahan saat menyimpan");
+    } finally {
+      setIsBatchEditing(false);
+    }
+    setShowBatchEdit(false);
+  };
+
+  // Handle Bulk Delete
+  const handleBulkDelete = async () => {
+    if (selectedSkus.size === 0) return;
+    setIsBulkDeleting(true);
+    try {
+      const updated = products.filter((p) => !selectedSkus.has(p.sku));
+      setProducts(updated);
+      const res = await updateInventory(updated);
+      if (res.success) {
+        toast.success(`${selectedSkus.size} produk berhasil dihapus`);
+        setSelectedSkus(new Set());
+      } else {
+        toast.error("Gagal menghapus produk");
+        // Rollback - reload from server
+        getAppData().then((data) => { setProducts(data.inventoryProducts || []); });
+      }
+    } catch (err) {
+      toast.error("Terjadi kesalahan saat menghapus");
+    } finally {
+      setIsBulkDeleting(false);
+    }
+    setShowBulkDelete(false);
   };
 
   // Clear selected products
@@ -595,6 +673,39 @@ export default function InventoryPage() {
                 </div>
               )}
 
+          {/* Date Filter */}
+          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/50 mt-2">
+            <div className="flex items-center gap-1.5">
+              <CalendarDays className="h-4 w-4 text-muted-foreground" />
+              <span className="text-xs font-medium text-muted-foreground">Ditambahkan:</span>
+            </div>
+            <input
+              type="date"
+              value={dateFilterStart}
+              onChange={(e) => setDateFilterStart(e.target.value)}
+              className="h-8 rounded-md border border-border/60 bg-background px-2 text-xs focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-1 focus-visible:ring-primary/25"
+              title="Dari tanggal"
+            />
+            <span className="text-xs text-muted-foreground">—</span>
+            <input
+              type="date"
+              value={dateFilterEnd}
+              onChange={(e) => setDateFilterEnd(e.target.value)}
+              className="h-8 rounded-md border border-border/60 bg-background px-2 text-xs focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-1 focus-visible:ring-primary/25"
+              title="Sampai tanggal"
+            />
+            {(dateFilterStart || dateFilterEnd) && (
+              <button
+                onClick={() => { setDateFilterStart(""); setDateFilterEnd(""); }}
+                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              >
+                <X className="h-3 w-3" />
+                Reset
+              </button>
+            )}
+          </div>
+
+
           <div className="border-t border-border/50 pt-3 mt-1">
           {/* Group toggles */}
           <div className="flex items-center justify-end gap-2">
@@ -645,6 +756,8 @@ export default function InventoryPage() {
                     onClick={() => {
                       setSearch("");
                       setStockFilter("semua");
+                      setDateFilterStart("");
+                      setDateFilterEnd("");
                     }}
                   >
                     <X className="h-4 w-4" />
@@ -1128,6 +1241,74 @@ export default function InventoryPage() {
                 <Warehouse className="h-4 w-4" />
                 Pindah Rak
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                onClick={() => setShowBatchEdit(true)}
+              >
+                <Edit className="h-4 w-4" />
+                Batch Edit
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 hover:border-red-300"
+                onClick={() => setShowBulkDelete(true)}
+              >
+                <Trash2 className="h-4 w-4" />
+                Hapus
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Delete Confirmation Modal */}
+      {showBulkDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-sm rounded-lg border border-border bg-card shadow-lg animate-in fade-in zoom-in-95">
+            <div className="space-y-4 p-6">
+              <div className="space-y-2">
+                <h2 className="text-lg font-semibold text-foreground">Hapus {selectedSkus.size} Produk?</h2>
+                <p className="text-sm text-muted-foreground">
+                  Anda yakin ingin menghapus <span className="font-medium">{selectedSkus.size} produk</span> yang dipilih? Tindakan ini tidak dapat dibatalkan.
+                </p>
+              </div>
+              <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/20 px-3 py-2">
+                <p className="text-xs text-amber-700 dark:text-amber-400">
+                  <AlertCircle className="mr-1 inline h-3 w-3" />
+                  Semua data produk yang dipilih akan dihapus permanen.
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowBulkDelete(false)}
+                  className="flex-1"
+                  disabled={isBulkDeleting}
+                >
+                  Batal
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={handleBulkDelete}
+                  className="flex-1"
+                  disabled={isBulkDeleting}
+                >
+                  {isBulkDeleting ? (
+                    <>
+                      <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                      Menghapus...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Hapus {selectedSkus.size} Produk
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -1747,6 +1928,16 @@ export default function InventoryPage() {
         }}
       />
     )}
+    {/* Batch Edit Dialog */}
+    {showBatchEdit && (
+      <BatchEditDialog
+        count={selectedSkus.size}
+        categories={categories}
+        onClose={() => setShowBatchEdit(false)}
+        onConfirm={handleBatchEdit}
+        isEditing={isBatchEditing}
+      />
+    )}
 
     {/* Rak Manager Modal */}
     <RackManagerModal
@@ -1933,6 +2124,143 @@ function BulkMoveDialog({
           >
             <Warehouse className="h-4 w-4" />
             Pindahkan {count} Produk
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Batch Edit Dialog ─────────────────────────────────────────────────
+
+function BatchEditDialog({
+  count,
+  categories,
+  onClose,
+  onConfirm,
+  isEditing,
+}: {
+  count: number;
+  categories: ProductCategory[];
+  onClose: () => void;
+  onConfirm: (fields: { price?: string; hpp?: string; minStok?: string; kategori?: string }) => void;
+  isEditing: boolean;
+}) {
+  const [price, setPrice] = useState("");
+  const [hpp, setHpp] = useState("");
+  const [minStok, setMinStok] = useState("");
+  const [kategori, setKategori] = useState("");
+
+  const hasChanges = price !== "" || hpp !== "" || minStok !== "" || kategori !== "";
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-md rounded-lg border border-border bg-card shadow-lg animate-in fade-in zoom-in-95">
+        {/* Header */}
+        <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+              <Edit className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-base font-semibold">Batch Edit Produk</h3>
+              <p className="text-xs text-muted-foreground">{count} produk akan diedit</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="rounded-md p-1.5 hover:bg-muted transition-colors">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="px-5 py-4 space-y-4 max-h-[60vh] overflow-y-auto">
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Harga Jual</Label>
+            <div className="relative">
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">Rp</span>
+              <Input
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="Kosongkan jika tidak diubah"
+                className="pl-8 border-border/60"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">Isi untuk mengubah harga jual semua produk terpilih</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">HPP (Harga Pokok)</Label>
+            <div className="relative">
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">Rp</span>
+              <Input
+                type="number"
+                value={hpp}
+                onChange={(e) => setHpp(e.target.value)}
+                placeholder="Kosongkan jika tidak diubah"
+                className="pl-8 border-border/60"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">Isi untuk mengubah HPP semua produk terpilih</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Min. Stok</Label>
+            <Input
+              type="number"
+              value={minStok}
+              onChange={(e) => setMinStok(e.target.value)}
+              placeholder="Kosongkan jika tidak diubah"
+              className="border-border/60"
+            />
+            <p className="text-xs text-muted-foreground">Batas minimal stok untuk peringatan</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Kategori</Label>
+            <div className="relative">
+              <Palette className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <select
+                value={kategori}
+                onChange={(e) => setKategori(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-border/60 bg-background pl-9 pr-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-1 focus-visible:ring-primary/25 appearance-none"
+              >
+                <option value="">— Tidak diubah —</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.name}>{cat.name}</option>
+                ))}
+              </select>
+            </div>
+            <p className="text-xs text-muted-foreground">Pilih kategori baru atau biarkan "Tidak diubah"</p>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex gap-3 border-t border-border px-5 py-3">
+          <Button variant="outline" onClick={onClose} className="flex-1">Batal</Button>
+          <Button
+            onClick={() => {
+              const fields: { price?: string; hpp?: string; minStok?: string; kategori?: string } = {};
+              if (price !== "") fields.price = price;
+              if (hpp !== "") fields.hpp = hpp;
+              if (minStok !== "") fields.minStok = minStok;
+              if (kategori !== "") fields.kategori = kategori;
+              onConfirm(fields);
+            }}
+            disabled={!hasChanges || isEditing}
+            className="flex-1 gap-2"
+          >
+            {isEditing ? (
+              <>
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                Menyimpan...
+              </>
+            ) : (
+              <>
+                <Edit className="h-4 w-4" />
+                Update {count} Produk
+              </>
+            )}
           </Button>
         </div>
       </div>

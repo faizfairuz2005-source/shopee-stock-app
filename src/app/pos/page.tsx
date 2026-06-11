@@ -37,6 +37,7 @@ import { InvoiceModal } from "@/components/invoice/invoice-modal";
 import { PaymentModal } from "./payment-modal";
 import { ThermalReceiptModal, type ThermalReceiptData } from "@/components/pos/thermal-receipt";
 import { savePosTransaction } from "@/app/actions";
+import { toast } from "sonner";
 import type { ProductCategory, ItemKit } from "@/app/actions";
 import { getCustomersForPos } from "@/app/pelanggan/actions";
 
@@ -279,6 +280,7 @@ export default function PosPage() {
   const [thermalReceiptData, setThermalReceiptData] = useState<ThermalReceiptData | null>(null);
   const [poinRedeem, setPoinRedeem] = useState(0);
   const [selectedCustomerPoin, setSelectedCustomerPoin] = useState(0);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   const searchRef = useRef<HTMLInputElement>(null);
   const barcodeRef = useRef<HTMLInputElement>(null);
@@ -509,7 +511,32 @@ export default function PosPage() {
       changeAmount: number;
       transferAmount?: number;
     }) => {
+      // Clear previous error
+      setPaymentError(null);
       setIsProcessingPayment(true);
+
+      // ── Client-side validation ───────────────────────────────────
+      if (cart.length === 0) {
+        setPaymentError("Keranjang belanja kosong. Silakan tambahkan produk terlebih dahulu.");
+        setIsProcessingPayment(false);
+        toast.error("Keranjang kosong");
+        return;
+      }
+
+      if (data.cashAmount < 0) {
+        setPaymentError("Jumlah pembayaran tidak valid");
+        setIsProcessingPayment(false);
+        toast.error("Jumlah pembayaran tidak valid");
+        return;
+      }
+
+      if (data.changeAmount < 0) {
+        setPaymentError("Uang yang dibayarkan kurang dari total belanja");
+        setIsProcessingPayment(false);
+        toast.error("Uang tidak mencukupi. Silakan masukkan jumlah yang cukup.");
+        return;
+      }
+
       try {
         const result = await savePosTransaction({
           customer_name: selectedCustomer,
@@ -574,6 +601,10 @@ export default function PosPage() {
           setShowPayment(false);
           setShowSuccess(true);
 
+          toast.success("Pembayaran berhasil!", {
+            description: `No. Transaksi: ${txn.nomor_order}`,
+          });
+
           // Prepare thermal receipt data
           setThermalReceiptData({
             storeName: "MultiStore",
@@ -614,10 +645,20 @@ export default function PosPage() {
             setShowThermalReceipt(true);
           }, 800);
         } else {
-          alert(result.error || "Gagal menyimpan transaksi");
+          // Show server-side validation/error
+          const errorMsg = result.error || "Gagal menyimpan transaksi";
+          setPaymentError(errorMsg);
+          toast.error("Transaksi gagal", {
+            description: errorMsg,
+          });
         }
-      } catch {
-        alert("Terjadi kesalahan saat memproses pembayaran");
+      } catch (err) {
+        console.error("[POS Payment Error]:", err);
+        const msg = err instanceof Error ? err.message : String(err);
+        setPaymentError(msg);
+        toast.error("Gagal memproses pembayaran", {
+          description: msg,
+        });
       } finally {
         setIsProcessingPayment(false);
       }
@@ -1280,7 +1321,7 @@ export default function PosPage() {
       {/* ═══════════════════════════════════════════════════════════ */}
       {/*  MAIN LAYOUT — Produk (kiri) | Keranjang + Ringkasan (kanan) */}
       {/* ═══════════════════════════════════════════════════════════ */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 flex-col lg:flex-row overflow-hidden">
         {/* ═══ LEFT PANEL: Product Grid ═══ */}
         <main className="flex flex-1 flex-col overflow-hidden bg-gradient-to-r from-background to-muted/20">
           {/* Category Filter Bar */}
@@ -1379,7 +1420,7 @@ export default function PosPage() {
         </main>
 
         {/* ═══ RIGHT SIDEBAR: Cart + Summary ═══ */}
-        <aside className="relative z-20 flex w-[22rem] shrink-0 flex-col border-l-2 border-border/40 bg-card shadow-[-4px_0_12px_-6px_rgba(0,0,0,0.08)]">
+        <aside className="relative z-20 flex w-full lg:w-[22rem] shrink-0 flex-col border-t-2 lg:border-l-2 lg:border-t-0 border-border/40 bg-card shadow-[-4px_0_12px_-6px_rgba(0,0,0,0.08)] max-h-[50vh] lg:max-h-none">
           {/* ═══ CART ═══ */}
           <div className="flex flex-col flex-1 overflow-hidden">
             {/* Cart Header */}
@@ -1806,7 +1847,7 @@ export default function PosPage() {
               >
                 {/* Shine effect */}
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                <Banknote className="h-6 w-6" />
+                <Banknote className="h-5 w-5 lg:h-6 lg:w-6" />
                 Bayar {formatCurrency(grandTotal)}
               </Button>
 
@@ -1847,7 +1888,10 @@ export default function PosPage() {
       {/* ═══ PAYMENT MODAL ═══ */}
       <PaymentModal
         isOpen={showPayment}
-        onClose={() => setShowPayment(false)}
+        onClose={() => {
+          setShowPayment(false);
+          setPaymentError(null);
+        }}
         cartItems={cart.map((item) => ({
           ...item,
           subtotal: itemSubtotal(item),
@@ -1861,6 +1905,8 @@ export default function PosPage() {
         customerName={selectedCustomer}
         onConfirm={handlePaymentConfirm}
         isProcessing={isProcessingPayment}
+        error={paymentError}
+        onErrorDismiss={() => setPaymentError(null)}
       />
 
       {/* ═══ THERMAL RECEIPT MODAL ═══ */}

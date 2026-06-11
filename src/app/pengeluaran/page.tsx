@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   X,
   Calendar,
+  CalendarDays,
   Trash2,
   Smartphone,
   CreditCard,
@@ -125,17 +126,23 @@ export default function PengeluaranPage() {
   }, []);
 
   // ── Summary calculations ─────────────────────────────────────────────
-  const totalPengeluaran = useMemo(
-    () => expenses.reduce((sum, e) => sum + e.jumlah, 0),
-    [expenses]
-  );
+  const pengeluaranHariIni = useMemo(() => {
+    const today = getToday();
+    const todayExpenses = expenses.filter((e) => e.tanggal === today);
+    return {
+      total: todayExpenses.reduce((sum, e) => sum + e.jumlah, 0),
+      count: todayExpenses.length,
+    };
+  }, [expenses]);
 
   const pengeluaranBulanIni = useMemo(() => {
     const now = new Date();
     const prefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-    return expenses
-      .filter((e) => e.tanggal.startsWith(prefix))
-      .reduce((sum, e) => sum + e.jumlah, 0);
+    const monthExpenses = expenses.filter((e) => e.tanggal.startsWith(prefix));
+    return {
+      total: monthExpenses.reduce((sum, e) => sum + e.jumlah, 0),
+      count: monthExpenses.length,
+    };
   }, [expenses]);
 
   const kategoriTotals = useMemo(() => {
@@ -276,32 +283,42 @@ export default function PengeluaranPage() {
           {/* ═════════════════════════════════════════════════════════════╗
            ║  SUMMARY CARDS                                              ║
            ╚══════════════════════════════════════════════════════════════ */}
-          <div className="grid gap-4 md:grid-cols-4">
-            <Card className="card-hover border-primary/20">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {/* Pengeluaran Hari Ini */}
+            <Card className="card-hover border-sky-200 dark:border-sky-900/30">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Pengeluaran</CardTitle>
-                <Wallet className="h-4 w-4 text-primary" />
+                <CardTitle className="text-sm font-medium">Pengeluaran Hari Ini</CardTitle>
+                <CalendarDays className="h-4 w-4 text-sky-500" />
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold tabular-nums">{formatRupiah(totalPengeluaran)}</p>
-                <p className="text-xs text-muted-foreground">{expenses.length} transaksi</p>
+                <p className="text-2xl font-bold tabular-nums text-sky-600 dark:text-sky-400">
+                  {formatRupiah(pengeluaranHariIni.total)}
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {pengeluaranHariIni.count} transaksi
+                </p>
               </CardContent>
             </Card>
+            {/* Pengeluaran Bulan Ini */}
             <Card className="card-hover border-amber-200 dark:border-amber-900/30">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Bulan Ini</CardTitle>
+                <CardTitle className="text-sm font-medium">Pengeluaran Bulan Ini</CardTitle>
                 <TrendingDown className="h-4 w-4 text-amber-500" />
               </CardHeader>
               <CardContent>
                 <p className="text-2xl font-bold tabular-nums text-amber-600 dark:text-amber-400">
-                  {formatRupiah(pengeluaranBulanIni)}
+                  {formatRupiah(pengeluaranBulanIni.total)}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground mt-1">
+                  {pengeluaranBulanIni.count} transaksi
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">
                   {new Date().toLocaleDateString("id-ID", { month: "long", year: "numeric" })}
                 </p>
               </CardContent>
             </Card>
-            <Card className="card-hover border-emerald-200 dark:border-emerald-900/30 md:col-span-2">
+            {/* Kategori Tertinggi Bulan Ini */}
+            <Card className="card-hover border-emerald-200 dark:border-emerald-900/30 md:col-span-2 lg:col-span-2">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Kategori Tertinggi Bulan Ini</CardTitle>
                 <Filter className="h-4 w-4 text-emerald-500" />
@@ -312,7 +329,7 @@ export default function PengeluaranPage() {
                     <p className="text-sm text-muted-foreground">Belum ada pengeluaran bulan ini</p>
                   ) : (
                     kategoriTotals.map(([kat, total]) => (
-                      <div key={kat} className="flex items-center justify-between">
+                      <div key={kat} className="flex items-center justify-between py-0.5">
                         <span className="text-xs text-muted-foreground flex items-center gap-1">
                           <span>{KATEGORI_ICONS[kat] || "📋"}</span>
                           {kat}
