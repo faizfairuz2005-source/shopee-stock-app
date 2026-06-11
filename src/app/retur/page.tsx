@@ -6,11 +6,9 @@ import {
   Plus,
   Minus,
   AlertTriangle,
-  Package,
   History,
   CheckCircle2,
   X,
-  ArrowUpDown,
   User,
   Calendar,
   ShoppingCart,
@@ -36,6 +34,7 @@ import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton, TableSkeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/toast";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -44,7 +43,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Separator } from "@/components/ui/separator";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
 
@@ -59,21 +57,6 @@ function formatDate(dateStr: string) {
       day: "numeric",
       month: "short",
       year: "numeric",
-    }).format(d);
-  } catch {
-    return dateStr;
-  }
-}
-
-function formatDateTime(dateStr: string) {
-  try {
-    const d = new Date(dateStr);
-    return new Intl.DateTimeFormat("id-ID", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
     }).format(d);
   } catch {
     return dateStr;
@@ -111,7 +94,8 @@ export default function ReturPage() {
 
   // ── Data state ───────────────────────────────────────────────────────
   const [orders, setOrders] = useState<Order[]>([]);
-  const [products, setProducts] = useState<InventoryProduct[]>([]);
+  const [, setProducts] = useState<InventoryProduct[]>([]);
+
   const [returns, setReturns] = useState<GoodsReturn[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -304,7 +288,7 @@ export default function ReturPage() {
       } else {
         toast.error(result.error || "Gagal menyimpan retur");
       }
-    } catch (err) {
+    } catch {
       toast.error("Terjadi kesalahan saat menyimpan retur");
     } finally {
       setIsSubmitting(false);

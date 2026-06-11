@@ -32,7 +32,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EmptyState } from "@/components/ui/empty-state";
-import { toast } from "@/components/toast";
 import {
   Table,
   TableBody,
@@ -51,12 +50,10 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import type { AuditAction } from "@/lib/audit";
-
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 interface AuditLogEntry {
-  id: string;
+  id?: string;
   user_id: string | null;
   user_name: string;
   action: string;
@@ -285,7 +282,7 @@ export function ActivityClient() {
         setLogs([]);
         setTotal(0);
       }
-    } catch (err) {
+    } catch {
       setError("Gagal terhubung ke server");
       setLogs([]);
       setTotal(0);
@@ -618,7 +615,7 @@ export function ActivityClient() {
                             variant="ghost"
                             size="sm"
                             className="h-7 w-7 p-0 text-muted-foreground"
-                            onClick={() => setExpandedId(isExpanded ? null : log.id)}
+                            onClick={() => setExpandedId(isExpanded ? null : log.id ?? null)}
                             disabled={!details && !log.entity_name}
                             title={details ? "Lihat detail" : "Tidak ada detail"}
                           >

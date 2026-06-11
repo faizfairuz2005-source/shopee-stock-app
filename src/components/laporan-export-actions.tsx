@@ -1,6 +1,5 @@
 "use client"
 
-import { Download } from "lucide-react"
 import { ExportButton } from "@/components/export-button"
 import {
   LAPORAN_SALES_EXPORT_COLUMNS,
@@ -42,16 +41,12 @@ interface StockAdjustmentExport {
 interface LaporanExportActionsProps {
   flattenedSales: FlattenedSale[]
   stockItems: StockStatusItem[]
-  lowStockItems: StockStatusItem[]
-  outOfStockItems: StockStatusItem[]
   stockAdjustments?: StockAdjustmentExport[]
 }
 
 export function LaporanExportActions({
   flattenedSales,
   stockItems,
-  lowStockItems,
-  outOfStockItems,
   stockAdjustments,
 }: LaporanExportActionsProps) {
   return (

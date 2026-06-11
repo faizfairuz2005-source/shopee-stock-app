@@ -913,7 +913,7 @@ export async function saveReturn(returnInput: ReturnInput): Promise<{
       nomor_order: returnInput.nomor_order,
       customer_name: returnInput.customer_name || "Umum",
       alasan: returnInput.alasan,
-      items: returnInput.items.map((item, idx) => ({
+      items: returnInput.items.map((item) => ({
         sku: item.sku,
         nama_produk: item.nama_produk,
         quantity: item.quantity,
@@ -2477,8 +2477,7 @@ export async function restoreDatabase(
     fs.writeFileSync(path.join(BACKUP_DIR, autoBackupName), currentData, "utf8");
 
     // Write restored data
-    const prettyJson = JSON.stringify(parsed, null, 2);
-    writeAppData(parsed as Record<string, unknown>);
+    writeAppData(parsed as AppData);
 
     const report = {
       tables: Object.keys(data).filter((k) => Array.isArray(data[k])),

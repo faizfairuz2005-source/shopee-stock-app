@@ -10,13 +10,12 @@ import {
   AlertCircle,
   Usb,
   Wifi,
-  WifiOff,
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { formatCurrency, formatDate, formatTime } from "@/lib/utils/invoice-utils";
+import { formatCurrency, formatDate } from "@/lib/utils/invoice-utils";
 import { useThermalPrinter } from "@/lib/use-thermal-printer";
 import { buildEscposFromReceiptData } from "@/lib/escpos";
 
@@ -93,10 +92,7 @@ function generateThermalHtml(
     return `<div style="display:flex;justify-content:space-between">${left}${dots}${right}</div>`;
   };
 
-  const bold = (text: string) =>
-    `<span style="font-weight:700">${text}</span>`;
-
-  // Generate copies HTML
+    // Generate copies HTML
   let copiesHtml = "";
   for (let c = 0; c < copies; c++) {
     copiesHtml += `
@@ -290,7 +286,7 @@ export function ThermalReceiptModal({
     if (isOpen && printer.isSupported) {
       printer.reconnectSaved();
     }
-  }, [isOpen]);
+  }, [isOpen, printer]);
 
   // Auto-print on mount
   useEffect(() => {
@@ -302,7 +298,7 @@ export function ThermalReceiptModal({
     }
     // We intentionally only auto-print once on modal open
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, [isOpen, printer]);
 
   // Cleanup timer on unmount
   useEffect(() => {

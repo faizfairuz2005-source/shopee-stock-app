@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   X,
   Package,
-  AlertCircle,
   User,
   Calendar,
   Plus,
@@ -51,19 +50,6 @@ import {
 } from "@/components/ui/table";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
-
-function formatDate(dateStr: string) {
-  try {
-    const d = new Date(dateStr);
-    return new Intl.DateTimeFormat("id-ID", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    }).format(d);
-  } catch {
-    return dateStr;
-  }
-}
 
 function formatDateTime(dateStr: string) {
   try {
@@ -212,7 +198,7 @@ export default function TransferRakPage() {
       } else {
         toast.error(result.error || "Gagal menyimpan transfer");
       }
-    } catch (err) {
+    } catch {
       toast.error("Terjadi kesalahan saat menyimpan");
     } finally {
       setIsSubmitting(false);

@@ -12,7 +12,6 @@ import {
   Package,
   ScanLine,
   Camera,
-  CreditCard,
   Banknote,
   CheckCircle2,
   Printer,
@@ -23,10 +22,8 @@ import {
   Users,
   History,
   ChevronDown,
-  GripVertical,
   AlertCircle,
   Circle,
-  Palette,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +32,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { InvoiceData } from "@/lib/types/invoice";
 import { formatCurrency, formatDate, formatTime, generateInvoiceNumber } from "@/lib/utils/invoice-utils";
+
 import { InvoiceModal } from "@/components/invoice/invoice-modal";
 import { PaymentModal } from "./payment-modal";
 import { ThermalReceiptModal, type ThermalReceiptData } from "@/components/pos/thermal-receipt";
@@ -358,7 +356,7 @@ export default function PosPage() {
       result = result.filter(p => p.kategori === kategoriFilter);
     }
     return result;
-  }, [search, kategoriFilter, posKits]);
+  }, [search, kategoriFilter]);
 
   // ─── Cart Totals ────────────────────────────────────────────────
   const totalItems = useMemo(
@@ -388,7 +386,6 @@ export default function PosPage() {
   // Poin discount: 1 poin = Rp1.000
   const poinDiscountAmount = poinRedeem * 1000;
   const maxPoinRedeem = selectedCustomerPoin;
-  const maxPoinDiscount = maxPoinRedeem * 1000;
 
   const ppnAmount = useMemo(
     () => (usePPN ? Math.round(dpp * (PPN_RATE / 100)) : 0),
@@ -485,7 +482,7 @@ export default function PosPage() {
     saveHeldBills(updated);
     clearCart();
     setShowHeldBills(true);
-  }, [cart, selectedCustomer, transactionDiscount, grandTotal, totalItems, heldBills, saveHeldBills, clearCart]);
+  }, [cart, selectedCustomer, transactionDiscount, grandTotal, totalItems, heldBills, saveHeldBills, clearCart, usePPN]);
 
   const handleRestoreBill = useCallback((bill: HeldBill) => {
     setCart(bill.items);
@@ -619,13 +616,13 @@ export default function PosPage() {
         } else {
           alert(result.error || "Gagal menyimpan transaksi");
         }
-      } catch (err) {
+      } catch {
         alert("Terjadi kesalahan saat memproses pembayaran");
       } finally {
         setIsProcessingPayment(false);
       }
     },
-    [cart, selectedCustomer, subtotal, perItemDiscountTotal, transactionDiscount, transactionDiscountAmount, ppnAmount, usePPN, grandTotal, poinRedeem],
+    [cart, selectedCustomer, subtotal, perItemDiscountTotal, transactionDiscount, transactionDiscountAmount, ppnAmount, usePPN, grandTotal, poinRedeem, discountNote],
   );
 
   const handleNewTransaction = useCallback(() => {

@@ -16,7 +16,7 @@ import {
   RotateCcw,
   Wallet,
 } from "lucide-react";
-import { getAppData, getReturns, type Order, type StockAdjustment, type GoodsReturn, type Expense } from "@/app/actions";
+import { getAppData, getReturns, type Order } from "@/app/actions";
 import ProfitLossSection from "@/components/profit-loss-section";
 import LaporanPenjualan from "@/components/laporan-penjualan";
 import { LaporanExportActions } from "@/components/laporan-export-actions";
@@ -92,7 +92,6 @@ export default async function LaporanPage() {
 
   // ── Stock Adjustment Stats ────────────────────────────────────────
   const adjustments = stockAdjustments || [];
-  const totalAdjustedItems = adjustments.reduce((s, a) => s + a.jumlah, 0);
   const totalAdjustedTambah = adjustments.filter((a) => a.jenis === "tambah").reduce((s, a) => s + a.jumlah, 0);
   const totalAdjustedKurang = adjustments.filter((a) => a.jenis === "kurangi").reduce((s, a) => s + a.jumlah, 0);
   const totalKerugian = adjustments.reduce((s, a) => s + (a.nilai_kerugian || 0), 0);
@@ -134,18 +133,6 @@ export default async function LaporanPage() {
             name: p.name,
             totalStock: p.totalStock,
             status: p.totalStock === 0 ? "Habis" : p.totalStock <= (p.minStok ?? 10) ? "Rendah" : "Aman",
-          }))}
-          lowStockItems={lowStockItems.map((p) => ({
-            sku: p.sku,
-            name: p.name,
-            totalStock: p.totalStock,
-            status: "Rendah",
-          }))}
-          outOfStockItems={outOfStockItems.map((p) => ({
-            sku: p.sku,
-            name: p.name,
-            totalStock: p.totalStock,
-            status: "Habis",
           }))}
           stockAdjustments={adjustments}
         />
