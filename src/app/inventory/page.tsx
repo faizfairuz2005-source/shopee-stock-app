@@ -658,6 +658,7 @@ export default function InventoryPage() {
               }
             />
           ) : (
+            <div className="table-responsive">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -734,7 +735,7 @@ export default function InventoryPage() {
                             <TableCell className="py-3.5 font-mono text-xs text-muted-foreground">
                               {product.barcode || <span className="text-muted-foreground/40">—</span>}
                             </TableCell>
-                            <TableCell className="py-3.5">
+                            <TableCell className="py-3.5" data-label="Nama Produk">
                               <div className="flex items-center gap-2">
                                 {status !== "aman" && (
                                   <span className={`h-2 w-2 shrink-0 rounded-full ${status === "habis" ? "bg-destructive" : "bg-warning"}`} />
@@ -742,13 +743,13 @@ export default function InventoryPage() {
                                 <span className="font-medium">{product.name}</span>
                               </div>
                             </TableCell>
-                            <TableCell className="py-3.5">
+                            <TableCell className="py-3.5" data-label="Kategori">
                               <KategoriBadge kategori={product.kategori} categories={categories} />
                             </TableCell>
-                            <TableCell className="py-3.5">
+                            <TableCell className="py-3.5" data-label="Lokasi Rak">
                               <LokasiRakBadge rak={product.lokasiRak} />
                             </TableCell>
-                            <TableCell className="py-3.5 text-right">
+                            <TableCell className="py-3.5 text-right" data-label="Stok">
                               {status === "habis" ? (
                                 <Badge variant="destructive" className="text-xs">
                                   Habis
@@ -761,17 +762,17 @@ export default function InventoryPage() {
                                 </span>
                               )}
                             </TableCell>
-                            <TableCell className="py-3.5 text-right font-medium tabular-nums text-sm">
+                            <TableCell className="py-3.5 text-right font-medium tabular-nums text-sm" data-label="Harga">
                               {formatRupiah(product.price)}
                             </TableCell>
-                            <TableCell className="py-3.5 text-right text-sm">
+                            <TableCell className="py-3.5 text-right text-sm" data-label="Toko">
                               {product.connectedStores > 0 ? (
                                 <span className="text-muted-foreground">{product.connectedStores} toko</span>
                               ) : (
                                 <span className="text-muted-foreground">—</span>
                               )}
                             </TableCell>
-                            <TableCell className="py-3.5 text-right">
+                            <TableCell className="py-3.5 text-right" data-label="Aksi">
                               <DropdownMenu>
                                 <DropdownMenuTrigger 
                                   render={
@@ -837,7 +838,7 @@ export default function InventoryPage() {
                   groupedProducts.map(([rak, items]) => (
                     <>
                       <TableRow className="bg-muted/40 dark:bg-muted/10">
-                        <TableCell colSpan={9} className="py-2">
+                        <TableCell colSpan={10} className="py-2">
                           <div className="flex items-center gap-2">
                             <Warehouse className="h-4 w-4 text-primary" />
                             <span className="text-sm font-semibold">{rak}</span>
@@ -877,7 +878,7 @@ export default function InventoryPage() {
                             <TableCell className="py-3.5 font-mono text-xs text-muted-foreground">
                               {product.barcode || <span className="text-muted-foreground/40">—</span>}
                             </TableCell>
-                            <TableCell className="py-3.5">
+                            <TableCell className="py-3.5" data-label="Nama Produk">
                               <div className="flex items-center gap-2">
                                 {status !== "aman" && (
                                   <span className={`h-2 w-2 shrink-0 rounded-full ${status === "habis" ? "bg-destructive" : "bg-warning"}`} />
@@ -885,13 +886,13 @@ export default function InventoryPage() {
                                 <span className="font-medium">{product.name}</span>
                               </div>
                             </TableCell>
-                            <TableCell className="py-3.5">
+                            <TableCell className="py-3.5" data-label="Kategori">
                               <KategoriBadge kategori={product.kategori} categories={categories} />
                             </TableCell>
-                            <TableCell className="py-3.5">
+                            <TableCell className="py-3.5" data-label="Lokasi Rak">
                               <LokasiRakBadge rak={product.lokasiRak} />
                             </TableCell>
-                            <TableCell className="py-3.5 text-right">
+                            <TableCell className="py-3.5 text-right" data-label="Stok">
                               {status === "habis" ? (
                                 <Badge variant="destructive" className="text-xs">
                                   Habis
@@ -904,17 +905,17 @@ export default function InventoryPage() {
                                 </span>
                               )}
                             </TableCell>
-                            <TableCell className="py-3.5 text-right font-medium tabular-nums text-sm">
+                            <TableCell className="py-3.5 text-right font-medium tabular-nums text-sm" data-label="Harga">
                               {formatRupiah(product.price)}
                             </TableCell>
-                            <TableCell className="py-3.5 text-right text-sm">
+                            <TableCell className="py-3.5 text-right text-sm" data-label="Toko">
                               {product.connectedStores > 0 ? (
                                 <span className="text-muted-foreground">{product.connectedStores} toko</span>
                               ) : (
                                 <span className="text-muted-foreground">—</span>
                               )}
                             </TableCell>
-                            <TableCell className="py-3.5 text-right">
+                            <TableCell className="py-3.5 text-right" data-label="Aksi">
                               <DropdownMenu>
                                 <DropdownMenuTrigger 
                                   render={
@@ -985,7 +986,7 @@ export default function InventoryPage() {
                         key={product.sku} 
                         className={`${status === "habis" ? "bg-destructive/5 dark:bg-destructive/10" : status === "rendah" ? "bg-amber-50/50 dark:bg-amber-950/10" : ""} ${isSelected ? "bg-primary/5 dark:bg-primary/10" : ""}`}
                       >
-                        <TableCell className="w-10 py-3.5">
+                        <TableCell className="w-10 py-3.5" data-label="Pilih">
                           <input
                             type="checkbox"
                             className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary/30 cursor-pointer"
@@ -1001,10 +1002,10 @@ export default function InventoryPage() {
                             }}
                           />
                         </TableCell>
-                        <TableCell className="py-3.5 font-mono text-xs text-muted-foreground">
+                        <TableCell className="py-3.5 font-mono text-xs text-muted-foreground" data-label="SKU">
                           {product.sku}
                         </TableCell>
-                        <TableCell className="py-3.5 font-mono text-xs text-muted-foreground">
+                        <TableCell className="py-3.5 font-mono text-xs text-muted-foreground" data-label="Barcode">
                           {product.barcode || <span className="text-muted-foreground/40">—</span>}
                         </TableCell>
                         <TableCell className="py-3.5">
@@ -1095,6 +1096,7 @@ export default function InventoryPage() {
                 )}
               </TableBody>
             </Table>
+            </div>
           )}
         </CardContent>
       </Card>

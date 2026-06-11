@@ -388,7 +388,7 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
               }
             />
           ) : (
-            <div className="rounded-md border">
+            <div className="rounded-md border table-responsive">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -409,7 +409,7 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                       className="cursor-pointer transition-colors hover:bg-muted/50"
                       onClick={() => openHistory(customer)}
                     >
-                      <TableCell>
+                      <TableCell data-label="Nama">
                         <div className="flex items-center gap-3">
                           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
                             <Users className="h-4 w-4 text-primary" />
@@ -426,13 +426,13 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell data-label="No. HP">
                         <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
                           <Phone className="h-3 w-3 text-muted-foreground/50" />
                           {customer.nomor_hp}
                         </span>
                       </TableCell>
-                      <TableCell>
+                      <TableCell data-label="Email">
                         {customer.email ? (
                           <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
                             <Mail className="h-3 w-3 text-muted-foreground/50" />
@@ -444,12 +444,12 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                           </span>
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell data-label="Total">
                         <span className="font-semibold tabular-nums text-sm">
                           {formatCurrency(customer.total_transaksi)}
                         </span>
                       </TableCell>
-                      <TableCell className="text-center">
+                      <TableCell data-label="Poin" className="text-center">
                         {customer.total_poin > 0 ? (
                           <Badge
                             className="cursor-pointer bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:hover:bg-amber-800/50 border-0 text-xs font-semibold transition-colors"
@@ -464,15 +464,15 @@ export function PelangganClient({ initialCustomers }: PelangganClientProps) {
                           <span className="text-xs text-muted-foreground/40">—</span>
                         )}
                       </TableCell>
-                      <TableCell className="text-center">
+                      <TableCell data-label="Pesanan" className="text-center">
                         <Badge variant="outline" className="text-xs font-mono tabular-nums">
                           {customer.total_orders ?? 0}x
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
+                      <TableCell data-label="Terakhir" className="text-sm text-muted-foreground">
                         {formatDate(customer.terakhir_transaksi)}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell data-label="Aksi" className="text-right">
                         <div
                           className="flex items-center justify-end gap-1"
                           onClick={(e) => e.stopPropagation()}

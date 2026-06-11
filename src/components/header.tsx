@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useContext } from "react";
-import { Bell, Check, ChevronDown, LogOut, Loader2, PackageOpen, AlertTriangle } from "lucide-react";
+import { Bell, Check, ChevronDown, LogOut, Loader2, Menu, PackageOpen, AlertTriangle } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -28,9 +28,10 @@ interface StockAlert {
 interface HeaderProps {
   userEmail: string;
   userName?: string;
+  onMenuClick?: () => void;
 }
 
-export function Header({ userEmail, userName }: HeaderProps) {
+export function Header({ userEmail, userName, onMenuClick }: HeaderProps) {
   const role = useContext(DashboardRoleContext);
   const [alerts, setAlerts] = useState<StockAlert[]>([]);
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set());
@@ -77,8 +78,16 @@ export function Header({ userEmail, userName }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-card px-6 shadow-sm">
-      <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-card px-4 sm:px-6 shadow-sm">
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Hamburger menu - only visible on mobile */}
+        <button
+          onClick={onMenuClick}
+          className="inline-flex lg:hidden h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+          aria-label="Buka menu navigasi"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
         {role && <RoleBadge role={role} />}
       </div>
 

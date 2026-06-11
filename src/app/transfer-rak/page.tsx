@@ -639,7 +639,7 @@ export default function TransferRakPage() {
                   }
                 />
               ) : (
-                <div className="rounded-lg border">
+                <div className="rounded-lg border table-responsive">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -653,29 +653,29 @@ export default function TransferRakPage() {
                     <TableBody>
                       {filteredHistory.map((t) => (
                         <TableRow key={t.id} className="even:bg-muted/20">
-                          <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                          <TableCell data-label="Tanggal" className="text-xs text-muted-foreground whitespace-nowrap">
                             <div className="flex items-center gap-1.5">
                               <Calendar className="h-3 w-3" />
                               {formatDateTime(t.created_at)}
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell data-label="Produk">
                             <div>
                               <p className="text-sm font-medium">{t.nama_produk}</p>
                               <p className="text-xs text-muted-foreground font-mono">{t.sku}</p>
                             </div>
                           </TableCell>
-                          <TableCell className="text-center">
+                          <TableCell data-label="Transfer" className="text-center">
                             <div className="flex items-center justify-center gap-2">
                               <LokasiRakBadge rak={t.dari_rak} />
                               <ArrowRightLeft className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                               <LokasiRakBadge rak={t.ke_rak} />
                             </div>
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate">
+                          <TableCell data-label="Catatan" className="text-xs text-muted-foreground max-w-[200px] truncate">
                             {t.catatan || "—"}
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">
+                          <TableCell data-label="User" className="text-xs text-muted-foreground">
                             <div className="flex items-center gap-1">
                               <User className="h-3 w-3" />
                               {t.user_name || "—"}

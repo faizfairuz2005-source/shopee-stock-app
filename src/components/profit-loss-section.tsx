@@ -409,7 +409,7 @@ export default function ProfitLossSection({
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <div className="rounded-md border">
+            <div className="rounded-md border table-responsive">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -424,31 +424,31 @@ export default function ProfitLossSection({
                 <TableBody>
                   {storeBreakdown.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center text-muted-foreground py-6">
+                        <TableCell className="text-center text-muted-foreground py-6" data-label="Status">
                         Tidak ada data penjualan bulan ini
                       </TableCell>
                     </TableRow>
                   ) : (
                     storeBreakdown.map((s) => (
                       <TableRow key={s.store}>
-                        <TableCell className="font-medium">{s.store}</TableCell>
-                        <TableCell className="text-right tabular-nums">
+                        <TableCell className="font-medium" data-label="Toko">{s.store}</TableCell>
+                        <TableCell className="text-right tabular-nums" data-label="Pendapatan">
                           {formatCompact(s.revenue)}
                         </TableCell>
-                        <TableCell className="text-right tabular-nums">
+                        <TableCell className="text-right tabular-nums" data-label="HPP">
                           {formatCompact(s.hpp)}
                         </TableCell>
-                        <TableCell className="text-right tabular-nums text-success">
+                        <TableCell className="text-right tabular-nums text-success" data-label="Laba Kotor">
                           {formatCompact(s.grossProfit)}
                         </TableCell>
-                        <TableCell className="text-right tabular-nums">
+                        <TableCell className="text-right tabular-nums" data-label="Laba Bersih">
                           <span
                             className={s.netProfit >= 0 ? "text-success" : "text-destructive"}
                           >
                             {formatCompact(s.netProfit)}
                           </span>
                         </TableCell>
-                        <TableCell className="text-right tabular-nums">
+                        <TableCell className="text-right tabular-nums" data-label="Margin">
                           {s.margin.toFixed(1)}%
                         </TableCell>
                       </TableRow>

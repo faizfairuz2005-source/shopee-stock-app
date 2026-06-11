@@ -226,6 +226,7 @@ export function UserManagementClient({ initialUsers }: UserManagementClientProps
               }
             />
           ) : (
+            <div className="table-responsive">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -240,18 +241,18 @@ export function UserManagementClient({ initialUsers }: UserManagementClientProps
               <TableBody>
                 {filteredUsers.map((user) => (
                   <TableRow key={user.id}>
-                    <TableCell>
+                    <TableCell data-label="Nama">
                       <span className="font-medium">{user.full_name || "—"}</span>
                     </TableCell>
-                    <TableCell className="text-muted-foreground">
+                    <TableCell className="text-muted-foreground" data-label="Email">
                       {user.email || (
                         <span className="text-xs italic">Email tidak tersedia</span>
                       )}
                     </TableCell>
-                    <TableCell>
+                    <TableCell data-label="Role">
                       <RoleBadge role={user.role} />
                     </TableCell>
-                    <TableCell>
+                    <TableCell data-label="Status">
                       {user.is_active ? (
                         <Badge variant="default" className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800">
                           <CheckCircle className="mr-1 h-3 w-3" />
@@ -264,10 +265,10 @@ export function UserManagementClient({ initialUsers }: UserManagementClientProps
                         </Badge>
                       )}
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
+                    <TableCell className="text-sm text-muted-foreground" data-label="Tanggal Bergabung">
                       {formatDate(user.created_at)}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right" data-label="Aksi">
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           render={
@@ -295,6 +296,7 @@ export function UserManagementClient({ initialUsers }: UserManagementClientProps
                 ))}
               </TableBody>
             </Table>
+            </div>
           )}
         </CardContent>
       </Card>

@@ -413,7 +413,7 @@ export default function RiwayatBarangMasukPage() {
                   }
                 />
               ) : (
-                <div className="overflow-hidden rounded-xl border border-border">
+                <div className="overflow-hidden rounded-xl border border-border table-responsive">
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-muted/30 hover:bg-muted/40">
@@ -470,20 +470,20 @@ export default function RiwayatBarangMasukPage() {
                                 setExpandedId(isExpanded ? null : receipt.id)
                               }
                             >
-                              <TableCell className="text-muted-foreground">
+                              <TableCell data-label="" className="text-muted-foreground">
                                 {isExpanded ? (
                                   <ChevronUp className="h-4 w-4" />
                                 ) : (
                                   <ChevronDown className="h-4 w-4" />
                                 )}
                               </TableCell>
-                              <TableCell className="font-mono text-xs text-primary font-medium">
+                              <TableCell data-label="Penerimaan" className="font-mono text-xs text-primary font-medium">
                                 {formatReceiptNumber(receipt.id)}
                               </TableCell>
-                              <TableCell className="text-sm whitespace-nowrap">
+                              <TableCell data-label="Tanggal" className="text-sm whitespace-nowrap">
                                 {formatDateShort(receipt.tanggal)}
                               </TableCell>
-                              <TableCell>
+                              <TableCell data-label="Supplier">
                                 <div className="flex items-center gap-2">
                                   <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary shrink-0">
                                     {receipt.supplier.charAt(0).toUpperCase()}
@@ -493,7 +493,7 @@ export default function RiwayatBarangMasukPage() {
                                   </span>
                                 </div>
                               </TableCell>
-                              <TableCell className="text-sm text-muted-foreground">
+                              <TableCell data-label="Faktur" className="text-sm text-muted-foreground">
                                 {receipt.nomor_faktur ? (
                                   <code className="rounded bg-muted/50 px-1.5 py-0.5 text-xs font-mono">
                                     {receipt.nomor_faktur}
@@ -502,7 +502,7 @@ export default function RiwayatBarangMasukPage() {
                                   <span className="text-xs text-muted-foreground/60">—</span>
                                 )}
                               </TableCell>
-                              <TableCell>
+                              <TableCell data-label="Produk">
                                 <div className="flex -space-x-1.5">
                                   {receipt.items.slice(0, 3).map((item, idx) => (
                                     <div
@@ -520,12 +520,12 @@ export default function RiwayatBarangMasukPage() {
                                   )}
                                 </div>
                               </TableCell>
-                              <TableCell className="text-right">
+                              <TableCell data-label="Jumlah" className="text-right">
                                 <Badge variant="secondary" className="text-xs font-medium">
                                   {receipt.total_item} item
                                 </Badge>
                               </TableCell>
-                              <TableCell className="text-right font-medium tabular-nums text-sm">
+                              <TableCell data-label="Biaya" className="text-right font-medium tabular-nums text-sm">
                                 {formatRupiah(receipt.total_biaya)}
                               </TableCell>
                               <TableCell className="text-xs text-muted-foreground">

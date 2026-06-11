@@ -6,6 +6,7 @@ import { type Role } from "@/lib/permissions";
 
 import { Header } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 export const DashboardRoleContext = createContext<Role | null>(null);
 
@@ -44,6 +45,7 @@ export function DashboardShell({
   const pathname = usePathname();
   const [displayName, setDisplayName] = useState(userName?.trim() || userEmail);
   const [collapsed, setCollapsed] = useState(getInitialCollapsed);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleToggle = useCallback(() => {
     setCollapsed((prev) => {
@@ -55,6 +57,14 @@ export function DashboardShell({
     });
   }, []);
 
+  const handleMobileMenuToggle = useCallback(() => {
+    setMobileMenuOpen((prev) => !prev);
+  }, []);
+
+  const handleMobileMenuClose = useCallback(() => {
+    setMobileMenuOpen(false);
+  }, []);
+
   const contextValue = useMemo(
     () => ({
       displayName,
@@ -64,12 +74,28 @@ export function DashboardShell({
     [displayName, userEmail]
   );
 
-  const mainMargin = collapsed ? "pl-16" : "pl-64";
+  const mainMargin = collapsed ? "pl-0 lg:pl-16" : "pl-0 lg:pl-64";
 
   return (
     <DashboardRoleContext.Provider value={userRole ?? null}>
       <DashboardProfileContext.Provider value={contextValue}>
         <div className="min-h-screen bg-background">
+          {/* Mobile: Sheet (drawer) - visible only on screens below lg */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetContent side="left" className="w-72 p-0">
+              <Sidebar
+                variant="drawer"
+                activePath={pathname}
+                userEmail={userEmail}
+                userName={displayName}
+                collapsed={false}
+                onToggle={handleMobileMenuClose}
+                onNavigate={handleMobileMenuClose}
+              />
+            </SheetContent>
+          </Sheet>
+
+          {/* Desktop: Fixed sidebar - hidden below lg */}
           <Sidebar
             activePath={pathname}
             userEmail={userEmail}
@@ -78,7 +104,11 @@ export function DashboardShell({
             onToggle={handleToggle}
           />
           <div className={`flex flex-col transition-[padding] duration-300 ease-out ${mainMargin}`}>
-            <Header userEmail={userEmail} userName={displayName} />
+            <Header
+              userEmail={userEmail}
+              userName={displayName}
+              onMenuClick={handleMobileMenuToggle}
+            />
             <main className="flex-1">
               <div className="mx-auto w-full max-w-[1280px] px-6 py-6 sm:px-8 sm:py-8">
                 {children}

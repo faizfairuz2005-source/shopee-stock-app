@@ -818,7 +818,7 @@ export function OrdersClient({
                   </Button>
                 </div>
               ) : (
-                <div className="rounded-md border max-h-[500px] overflow-auto">
+                <div className="rounded-md border max-h-[500px] overflow-auto table-responsive">
                   <Table>
                     <TableHeader className="sticky top-0 bg-background z-10 shadow-sm">
                       <TableRow>
@@ -838,31 +838,31 @@ export function OrdersClient({
                           const StatusIcon = statusConfig[order.status_pesanan].icon;
                           return (
                             <TableRow key={order.id} className="cursor-pointer hover:bg-muted/50">
-                              <TableCell className="font-mono text-xs whitespace-nowrap">
+                              <TableCell data-label="Order" className="font-mono text-xs whitespace-nowrap">
                                 {order.nomor_order}
                               </TableCell>
-                              <TableCell className="whitespace-nowrap">
+                              <TableCell data-label="Tanggal" className="whitespace-nowrap">
                                 {new Date(order.tanggal_pesanan).toLocaleDateString("id-ID")}
                               </TableCell>
-                              <TableCell className="font-medium">{order.nama_pembeli}</TableCell>
-                              <TableCell>
+                              <TableCell data-label="Pembeli" className="font-medium">{order.nama_pembeli}</TableCell>
+                              <TableCell data-label="Penjual">
                                 <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary dark:bg-primary/20">
                                   {order.seller_name}
                                 </span>
                               </TableCell>
-                              <TableCell>
+                              <TableCell data-label="Toko">
                                 <StoreCell name={order.nama_toko} />
                               </TableCell>
-                              <TableCell className="text-center">
+                              <TableCell data-label="Item" className="text-center">
                                 <span className="inline-flex items-center gap-1">
                                   <Package className="h-3 w-3" />
                                   {order.items.length} barang
                                 </span>
                               </TableCell>
-                              <TableCell className="text-right font-medium tabular-nums">
+                              <TableCell data-label="Total" className="text-right font-medium tabular-nums">
                                 {formatRupiah(order.grand_total)}
                               </TableCell>
-                              <TableCell className="text-center">
+                              <TableCell data-label="Status" className="text-center">
                                 <span
                                   className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${statusConfig[order.status_pesanan].color}`}
                                 >
@@ -870,7 +870,7 @@ export function OrdersClient({
                                   {statusConfig[order.status_pesanan].label}
                                 </span>
                               </TableCell>
-                              <TableCell>
+                              <TableCell data-label="Aksi">
                                 <div className="flex items-center justify-center gap-1">
                                   <Button
                                     variant="outline"

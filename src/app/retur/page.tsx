@@ -876,7 +876,7 @@ export default function ReturPage() {
                   }
                 />
               ) : (
-                <div className="rounded-lg border">
+                <div className="rounded-lg border table-responsive">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -893,28 +893,28 @@ export default function ReturPage() {
                     <TableBody>
                       {filteredReturns.map((ret) => (
                         <TableRow key={ret.id} className="even:bg-orange-50/30 dark:even:bg-orange-950/10">
-                          <TableCell>
+                          <TableCell data-label="No. Retur">
                             <span className="font-mono text-xs font-medium text-orange-600 dark:text-orange-400">
                               {ret.nomor_retur}
                             </span>
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                          <TableCell data-label="Tanggal" className="text-xs text-muted-foreground whitespace-nowrap">
                             <div className="flex items-center gap-1.5">
                               <Calendar className="h-3 w-3" />
                               {formatDate(ret.tanggal)}
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell data-label="Pesanan">
                             <span className="text-xs font-mono">{ret.nomor_order}</span>
                           </TableCell>
-                          <TableCell className="text-sm">{ret.customer_name}</TableCell>
-                          <TableCell className="text-center text-sm tabular-nums">
+                          <TableCell data-label="Pelanggan" className="text-sm">{ret.customer_name}</TableCell>
+                          <TableCell data-label="Item" className="text-center text-sm tabular-nums">
                             {ret.total_item}
                           </TableCell>
-                          <TableCell className="text-right tabular-nums font-medium text-destructive">
+                          <TableCell data-label="Refund" className="text-right tabular-nums font-medium text-destructive">
                             {formatRupiah(ret.total_refund)}
                           </TableCell>
-                          <TableCell>
+                          <TableCell data-label="Alasan">
                             <span className="text-xs">{ret.alasan}</span>
                             {ret.items.length > 1 && (
                               <p className="text-[10px] text-muted-foreground mt-0.5">
@@ -922,7 +922,7 @@ export default function ReturPage() {
                               </p>
                             )}
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">
+                          <TableCell data-label="User" className="text-xs text-muted-foreground">
                             <div className="flex items-center gap-1">
                               <User className="h-3 w-3" />
                               {ret.user_name || "—"}

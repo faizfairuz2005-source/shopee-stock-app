@@ -443,7 +443,7 @@ export default function BarangMasukPage() {
                   }
                 />
               ) : (
-                <div className="overflow-hidden rounded-xl border border-border">
+                <div className="overflow-hidden rounded-xl border border-border table-responsive">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -468,32 +468,32 @@ export default function BarangMasukPage() {
                               )
                             }
                           >
-                            <TableCell className="text-muted-foreground">
+                            <TableCell data-label="" className="text-muted-foreground">
                               {expandedReceiptId === String(receipt.id) ? (
                                 <ChevronUp className="h-4 w-4" />
                               ) : (
                                 <ChevronDown className="h-4 w-4" />
                               )}
                             </TableCell>
-                            <TableCell className="font-mono text-xs text-muted-foreground">
+                            <TableCell data-label="ID" className="font-mono text-xs text-muted-foreground">
                               {formatReceiptNumber(receipt.id)}
                             </TableCell>
-                            <TableCell className="text-sm">
+                            <TableCell data-label="Tanggal" className="text-sm">
                               {formatDateShort(receipt.tanggal)}
                             </TableCell>
-                            <TableCell className="font-medium">{receipt.supplier}</TableCell>
-                            <TableCell className="text-sm text-muted-foreground">
+                            <TableCell data-label="Supplier" className="font-medium">{receipt.supplier}</TableCell>
+                            <TableCell data-label="Faktur" className="text-sm text-muted-foreground">
                               {receipt.nomor_faktur || "—"}
                             </TableCell>
-                            <TableCell className="text-right">
+                            <TableCell data-label="Item" className="text-right">
                               <Badge variant="secondary" className="text-xs font-medium">
                                 {receipt.total_item} item
                               </Badge>
                             </TableCell>
-                            <TableCell className="text-right font-medium tabular-nums text-sm">
+                            <TableCell data-label="Biaya" className="text-right font-medium tabular-nums text-sm">
                               {formatRupiah(receipt.total_biaya)}
                             </TableCell>
-                            <TableCell className="text-right">
+                            <TableCell data-label="Aksi" className="text-right">
                               <Button
                                 variant="ghost"
                                 size="sm"

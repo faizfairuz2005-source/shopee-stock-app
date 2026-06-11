@@ -665,7 +665,7 @@ export default function PengeluaranPage() {
                   }
                 />
               ) : (
-                <div className="rounded-lg border">
+                <div className="rounded-lg border table-responsive">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -681,19 +681,19 @@ export default function PengeluaranPage() {
                     <TableBody>
                       {filteredExpenses.map((exp) => (
                         <TableRow key={exp.id} className="even:bg-amber-50/30 dark:even:bg-amber-950/10">
-                          <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                          <TableCell data-label="Tanggal" className="text-xs text-muted-foreground whitespace-nowrap">
                             <div className="flex items-center gap-1.5">
                               <Calendar className="h-3 w-3" />
                               {formatDate(exp.tanggal)}
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell data-label="Kategori">
                             <Badge variant="outline" className="text-xs font-normal">
                               <span className="mr-1">{KATEGORI_ICONS[exp.kategori] || "📋"}</span>
                               {exp.kategori}
                             </Badge>
                           </TableCell>
-                          <TableCell>
+                          <TableCell data-label="Deskripsi">
                             <div>
                               <p className="text-sm font-medium">{exp.deskripsi}</p>
                               {exp.catatan && (
@@ -701,7 +701,7 @@ export default function PengeluaranPage() {
                               )}
                             </div>
                           </TableCell>
-                          <TableCell className="text-center">
+                          <TableCell data-label="Metode" className="text-center">
                             {exp.metode === "tunai" ? (
                               <Wallet className="h-3.5 w-3.5 inline text-emerald-500" />
                             ) : exp.metode === "transfer" ? (
@@ -711,13 +711,13 @@ export default function PengeluaranPage() {
                             )}
                             <span className="text-xs text-muted-foreground ml-1 capitalize">{exp.metode}</span>
                           </TableCell>
-                          <TableCell className="text-right tabular-nums font-semibold text-amber-600 dark:text-amber-400">
+                          <TableCell data-label="Jumlah" className="text-right tabular-nums font-semibold text-amber-600 dark:text-amber-400">
                             {formatRupiah(exp.jumlah)}
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">
+                          <TableCell data-label="User" className="text-xs text-muted-foreground">
                             {exp.user_name || "—"}
                           </TableCell>
-                          <TableCell className="text-right">
+                          <TableCell data-label="Aksi" className="text-right">
                             <Button
                               variant="ghost"
                               size="sm"

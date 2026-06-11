@@ -539,7 +539,7 @@ export function ActivityClient() {
               }
             />
           ) : (
-            <div className="rounded-md border">
+            <div className="rounded-md border table-responsive">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -565,7 +565,7 @@ export function ActivityClient() {
                           "hover:bg-muted/50"
                         )}
                       >
-                        <TableCell className="align-top">
+                        <TableCell className="align-top" data-label="Waktu">
                           <div className="flex flex-col">
                             <span className="text-xs tabular-nums text-foreground">
                               {formatDateTime(log.created_at)}
@@ -575,7 +575,7 @@ export function ActivityClient() {
                             </span>
                           </div>
                         </TableCell>
-                        <TableCell className="align-top">
+                        <TableCell className="align-top" data-label="User">
                           <div className="flex items-center gap-1.5">
                             <UserCircle className="h-3.5 w-3.5 text-muted-foreground/50" />
                             <span className="text-sm truncate max-w-[120px]">
@@ -583,7 +583,7 @@ export function ActivityClient() {
                             </span>
                           </div>
                         </TableCell>
-                        <TableCell className="align-top">
+                        <TableCell className="align-top" data-label="Aksi">
                           <div className="flex items-center gap-2">
                             <div className={cn("flex h-6 w-6 items-center justify-center rounded-full", getActionColor(log.action))}>
                               <Icon className="h-3 w-3" />
@@ -596,7 +596,7 @@ export function ActivityClient() {
                             </Badge>
                           </div>
                         </TableCell>
-                        <TableCell className="align-top">
+                        <TableCell className="align-top" data-label="Entitas">
                           <div className="flex flex-col gap-0.5">
                             <span className="text-xs text-muted-foreground">
                               {getEntityTypeLabel(log.entity_type)}
@@ -613,7 +613,7 @@ export function ActivityClient() {
                             )}
                           </div>
                         </TableCell>
-                        <TableCell className="text-right align-top">
+                        <TableCell className="text-right align-top" data-label="Detail">
                           <Button
                             variant="ghost"
                             size="sm"

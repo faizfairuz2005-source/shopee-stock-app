@@ -323,7 +323,7 @@ export default function LaporanPenjualan({ orders }: { orders: Order[] }) {
               <p className="text-sm text-muted-foreground">Tidak ada data penjualan di periode ini.</p>
             </div>
           ) : (
-            <Table>
+            <Table responsive>
               <TableHeader>
                 <TableRow>
                   <TableHead
@@ -362,17 +362,17 @@ export default function LaporanPenjualan({ orders }: { orders: Order[] }) {
                   const pct = row.revenue / maxRevenue
                   return (
                     <TableRow key={i} className="hover:bg-muted/40 transition-colors">
-                      <TableCell className="font-medium">
+                      <TableCell data-label={tab === "harian" ? "Tanggal" : "Bulan"} className="font-medium">
                         {"label" in row ? (row as DailyRow | MonthlyRow).label : ""}
                       </TableCell>
-                      <TableCell className="text-right tabular-nums">{row.transactions}</TableCell>
-                      <TableCell className="text-right tabular-nums font-medium">
+                      <TableCell data-label="Transaksi" className="text-right tabular-nums">{row.transactions}</TableCell>
+                      <TableCell data-label="Revenue" className="text-right tabular-nums font-medium">
                         {formatRupiah(row.revenue)}
                       </TableCell>
-                      <TableCell className="text-right tabular-nums text-muted-foreground">
+                      <TableCell data-label="Item Terjual" className="text-right tabular-nums text-muted-foreground">
                         {row.items.toLocaleString("id-ID")}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell data-label="Grafik" className="text-right">
                         <div className="flex items-center justify-end gap-1.5">
                           <div className="w-24 h-2 rounded-full bg-muted overflow-hidden">
                             <div

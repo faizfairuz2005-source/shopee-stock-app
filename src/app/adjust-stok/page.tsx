@@ -757,7 +757,7 @@ export default function AdjustStokPage() {
                   }
                 />
               ) : (
-                <div className="rounded-lg border">
+                <div className="rounded-lg border table-responsive">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -778,19 +778,19 @@ export default function AdjustStokPage() {
                             ? "even:bg-emerald-50/30 dark:even:bg-emerald-950/10"
                             : "even:bg-red-50/30 dark:even:bg-red-950/10"
                         }>
-                          <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                          <TableCell data-label="Tanggal" className="text-xs text-muted-foreground whitespace-nowrap">
                             <div className="flex items-center gap-1.5">
                               <Calendar className="h-3 w-3" />
                               {formatDateTime(adj.created_at)}
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell data-label="Produk">
                             <div>
                               <p className="text-sm font-medium">{adj.nama_produk}</p>
                               <p className="text-xs text-muted-foreground font-mono">{adj.sku}</p>
                             </div>
                           </TableCell>
-                          <TableCell className="text-center">
+                          <TableCell data-label="Jenis" className="text-center">
                             {adj.jenis === "tambah" ? (
                               <Badge variant="default" className="bg-emerald-600 hover:bg-emerald-700 text-xs">
                                 <Plus className="h-3 w-3 mr-0.5" />
@@ -803,26 +803,26 @@ export default function AdjustStokPage() {
                               </Badge>
                             )}
                           </TableCell>
-                          <TableCell className="text-right tabular-nums text-sm">
+                          <TableCell data-label="Sebelum" className="text-right tabular-nums text-sm">
                             {adj.stok_sebelum}
                           </TableCell>
-                          <TableCell className="text-right">
+                          <TableCell data-label="Jumlah" className="text-right">
                             <span className={`font-medium tabular-nums ${
                               adj.jenis === "tambah" ? "text-emerald-600" : "text-red-600"
                             }`}>
                               {adj.jenis === "tambah" ? "+" : "-"}{adj.jumlah}
                             </span>
                           </TableCell>
-                          <TableCell className="text-right tabular-nums text-sm font-semibold">
+                          <TableCell data-label="Sesudah" className="text-right tabular-nums text-sm font-semibold">
                             {adj.stok_sesudah}
                           </TableCell>
-                          <TableCell>
+                          <TableCell data-label="Alasan">
                             <span className="text-xs">{adj.alasan}</span>
                             {adj.catatan && (
                               <p className="text-xs text-muted-foreground mt-0.5">{adj.catatan}</p>
                             )}
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">
+                          <TableCell data-label="User" className="text-xs text-muted-foreground">
                             <div className="flex items-center gap-1">
                               <User className="h-3 w-3" />
                               {adj.user_name || "—"}

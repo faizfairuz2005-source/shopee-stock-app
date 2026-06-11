@@ -431,7 +431,7 @@ export default async function LaporanPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="rounded-md border max-h-[400px] overflow-auto">
+            <div className="rounded-md border max-h-[400px] overflow-auto table-responsive">
               <Table>
                 <TableHeader className="sticky top-0 bg-background z-10 shadow-sm">
                   <TableRow>
@@ -447,17 +447,17 @@ export default async function LaporanPage() {
                 <TableBody>
                   {flattenedSales.slice().reverse().map((record, index) => (
                     <TableRow key={index}>
-                      <TableCell className="font-mono text-xs">{record.orderNumber}</TableCell>
-                      <TableCell className="whitespace-nowrap">{new Date(record.date).toLocaleDateString('id-ID')}</TableCell>
-                      <TableCell className="font-mono text-xs text-muted-foreground">{record.sku}</TableCell>
-                      <TableCell className="font-medium">{record.nama_produk}</TableCell>
-                      <TableCell>
+                      <TableCell data-label="Order" className="font-mono text-xs">{record.orderNumber}</TableCell>
+                      <TableCell data-label="Tanggal" className="whitespace-nowrap">{new Date(record.date).toLocaleDateString('id-ID')}</TableCell>
+                      <TableCell data-label="SKU" className="font-mono text-xs text-muted-foreground">{record.sku}</TableCell>
+                      <TableCell data-label="Produk" className="font-medium">{record.nama_produk}</TableCell>
+                      <TableCell data-label="Penjual">
                         <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary dark:bg-primary/20">
                           {record.seller}
                         </span>
                       </TableCell>
-                      <TableCell className="text-right">{record.quantity}</TableCell>
-                      <TableCell className="text-right font-medium tabular-nums">{formatRupiah(record.subtotal)}</TableCell>
+                      <TableCell data-label="Qty" className="text-right">{record.quantity}</TableCell>
+                      <TableCell data-label="Subtotal" className="text-right font-medium tabular-nums">{formatRupiah(record.subtotal)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -485,7 +485,7 @@ export default async function LaporanPage() {
                 Belum ada penyesuaian stok.
               </p>
             ) : (
-              <div className="rounded-md border max-h-[400px] overflow-auto">
+              <div className="rounded-md border max-h-[400px] overflow-auto table-responsive">
                 <Table>
                   <TableHeader className="sticky top-0 bg-background z-10 shadow-sm">
                     <TableRow>
@@ -504,14 +504,14 @@ export default async function LaporanPage() {
                           ? ""
                           : ""
                       }>
-                        <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                        <TableCell data-label="Tanggal" className="text-xs text-muted-foreground whitespace-nowrap">
                           {new Date(adj.created_at).toLocaleDateString('id-ID')}
                         </TableCell>
-                        <TableCell>
+                        <TableCell data-label="Produk">
                           <p className="text-sm font-medium">{adj.nama_produk}</p>
                           <p className="text-xs text-muted-foreground font-mono">{adj.sku}</p>
                         </TableCell>
-                        <TableCell className="text-center">
+                        <TableCell data-label="Jenis" className="text-center">
                           {adj.jenis === "tambah" ? (
                             <Badge variant="outline" className="border-emerald-300 text-emerald-600 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/20 text-xs">
                               <Plus className="h-3 w-3 mr-0.5" />
@@ -524,12 +524,12 @@ export default async function LaporanPage() {
                             </Badge>
                           )}
                         </TableCell>
-                        <TableCell className="text-right tabular-nums text-sm font-medium">{adj.jumlah}</TableCell>
-                        <TableCell className="text-xs text-muted-foreground max-w-[140px] truncate" title={adj.alasan}>
+                        <TableCell data-label="Jumlah" className="text-right tabular-nums text-sm font-medium">{adj.jumlah}</TableCell>
+                        <TableCell data-label="Alasan" className="text-xs text-muted-foreground max-w-[140px] truncate" title={adj.alasan}>
                           {adj.alasan}
                         </TableCell>
                         {totalKerugian > 0 && (
-                          <TableCell className="text-right text-xs tabular-nums text-amber-600 dark:text-amber-400">
+                          <TableCell data-label="Kerugian" className="text-right text-xs tabular-nums text-amber-600 dark:text-amber-400">
                             {adj.nilai_kerugian ? formatRupiah(adj.nilai_kerugian) : "—"}
                           </TableCell>
                         )}

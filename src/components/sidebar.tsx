@@ -60,17 +60,17 @@ interface SidebarProps {
   userName?: string;
   collapsed: boolean;
   onToggle: () => void;
+  onNavigate?: () => void;
+  variant?: "desktop" | "drawer";
 }
 
-export function Sidebar({ activePath, userEmail, userName, collapsed, onToggle }: SidebarProps) {
+function SidebarContent({ activePath, userEmail, userName, collapsed, onToggle, onNavigate }: SidebarProps) {
   const role = useContext(DashboardRoleContext);
   const displayName = userName?.trim() || userEmail;
-  const width = collapsed ? "w-16" : "w-64";
-
   const visibleItems = navItems.filter((item) => hasPermission(role, item.permission));
 
   return (
-    <aside className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r border-border bg-sidebar transition-[width,background-color] duration-300 ease-out ${width}`}>
+    <>
       {/* Logo & Toggle — always visible */}
       <div className={`flex h-16 items-center border-b border-border ${collapsed ? "justify-center px-2" : "gap-2.5 px-5"}`}>
         <div className="group/logo flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary">
@@ -88,7 +88,7 @@ export function Sidebar({ activePath, userEmail, userName, collapsed, onToggle }
         )}
         <button
           onClick={onToggle}
-          className="shrink-0 rounded-md p-1.5 hover:bg-sidebar-accent/50 transition-colors"
+          className="hidden lg:inline-flex shrink-0 rounded-md p-1.5 hover:bg-sidebar-accent/50 transition-colors"
           aria-label={collapsed ? "Perluas sidebar" : "Ciutkan sidebar"}
           title={collapsed ? "Perluas sidebar" : "Ciutkan sidebar"}
         >
@@ -119,6 +119,7 @@ export function Sidebar({ activePath, userEmail, userName, collapsed, onToggle }
                 key={item.href}
                 href={item.href}
                 title={collapsed ? item.label : undefined}
+                onClick={onNavigate}
                 className={`group/nav flex items-center rounded-lg px-3 py-2 text-sm font-medium outline-none transition-[background-color,color] duration-150 ${
                   isActive
                     ? "bg-sidebar-accent text-sidebar-accent-foreground"
@@ -171,6 +172,21 @@ export function Sidebar({ activePath, userEmail, userName, collapsed, onToggle }
           </Button>
         </form>
       </div>
+    </>
+  );
+}
+
+export function Sidebar({ variant = "desktop", ...props }: SidebarProps) {
+  const { collapsed } = props;
+  const width = collapsed ? "w-16" : "w-64";
+
+  if (variant === "drawer") {
+    return <SidebarContent {...props} />;
+  }
+
+  return (
+    <aside className={`fixed inset-y-0 left-0 z-40 flex-col border-r border-border bg-sidebar transition-[width,background-color] duration-300 ease-out ${width} hidden lg:flex`}>
+      <SidebarContent {...props} />
     </aside>
   );
 }

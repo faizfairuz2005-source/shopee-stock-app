@@ -274,7 +274,7 @@ export function SupplierClient({ initialSuppliers }: SupplierClientProps) {
               }
             />
           ) : (
-            <div className="rounded-md border">
+            <div className="rounded-md border table-responsive">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -289,7 +289,7 @@ export function SupplierClient({ initialSuppliers }: SupplierClientProps) {
                 <TableBody>
                   {filteredSuppliers.map((supplier) => (
                     <TableRow key={supplier.id} className="transition-colors hover:bg-muted/50">
-                      <TableCell>
+                      <TableCell data-label="Nama">
                         <div className="flex items-center gap-3">
                           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
                             <Building2 className="h-4 w-4 text-primary" />
@@ -304,14 +304,14 @@ export function SupplierClient({ initialSuppliers }: SupplierClientProps) {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell data-label="Kontak">
                         {supplier.contact_person ? (
                           <span className="text-sm">{supplier.contact_person}</span>
                         ) : (
                           <span className="text-sm text-muted-foreground/40 italic">—</span>
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell data-label="Telepon">
                         {supplier.phone ? (
                           <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
                             <Phone className="h-3 w-3 text-muted-foreground/50" />
@@ -321,7 +321,7 @@ export function SupplierClient({ initialSuppliers }: SupplierClientProps) {
                           <span className="text-sm text-muted-foreground/40 italic">—</span>
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell data-label="Email">
                         {supplier.email ? (
                           <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
                             <Mail className="h-3 w-3 text-muted-foreground/50" />
@@ -331,7 +331,7 @@ export function SupplierClient({ initialSuppliers }: SupplierClientProps) {
                           <span className="text-sm text-muted-foreground/40 italic">—</span>
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell data-label="Alamat">
                         {supplier.address ? (
                           <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
                             <MapPin className="h-3 w-3 text-muted-foreground/50 shrink-0" />
@@ -341,7 +341,7 @@ export function SupplierClient({ initialSuppliers }: SupplierClientProps) {
                           <span className="text-sm text-muted-foreground/40 italic">—</span>
                         )}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell data-label="Aksi" className="text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger
                             render={
