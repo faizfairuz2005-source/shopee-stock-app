@@ -1,6 +1,6 @@
 # MultiStock — Product Requirements Document (PRD)
 
-**Versi:** 1.1  
+**Versi:** 1.2  
 **Status:** ✅ Production Ready  
 **Stack:** Next.js 15, TypeScript, Tailwind CSS 4, Supabase, shadcn/ui  
 **Last Updated:** Juni 2026
@@ -47,6 +47,7 @@ MultiStock adalah aplikasi web manajemen inventory dan POS (Point of Sale) untuk
 | Edit massal produk | P2 | ✅ |
 | Hapus massal produk (bulk delete) | P2 | ✅ |
 | Filter tanggal produk ditambahkan | P2 | ✅ |
+| Status stok dengan warna (hijau/amber/merah) pada summary cards | P1 | ✅ |
 | Mobile responsive table (card layout di HP, data-label) | P1 | ✅ |
 | Export produk ke CSV | P2 | ✅ |
 
@@ -130,9 +131,10 @@ MultiStock adalah aplikasi web manajemen inventory dan POS (Point of Sale) untuk
 |---|---|---|
 | Catat pengeluaran (kategori, deskripsi, jumlah) | P1 | ✅ |
 | Kategori pengeluaran (Listrik, Air, Sewa, dll) | P1 | ✅ |
-| Ringkasan Pengeluaran Hari Ini (baru) | P1 | ✅ |
+| Ringkasan Pengeluaran Hari Ini | P1 | ✅ |
 | Ringkasan Pengeluaran Bulan Ini (dengan jumlah transaksi) | P1 | ✅ |
-| Kategori Tertinggi Bulan Ini | P1 | ✅ |
+| Kategori Tertinggi per Bulan | P1 | ✅ |
+| **Filter bulan dengan navigasi prev/next + tombol Bulan Ini** | **P1** | **✅** |
 | Riwayat dan total per periode | P1 | ✅ |
 | Hapus pengeluaran | P1 | ✅ |
 
@@ -150,6 +152,7 @@ MultiStock adalah aplikasi web manajemen inventory dan POS (Point of Sale) untuk
 | Laporan Laba Rugi (P&L) | P1 | ✅ |
 | Laporan Penjualan detail per produk | P1 | ✅ |
 | Filter tanggal | P1 | ✅ |
+| **Perbandingan Pemasukan vs Pengeluaran (3 kartu: pemasukan, pengeluaran, selisih)** | **P1** | **✅** |
 | Export ke Excel (xlsx) | P2 | ✅ |
 | Export ke CSV | P2 | ✅ |
 
@@ -186,8 +189,8 @@ MultiStock adalah aplikasi web manajemen inventory dan POS (Point of Sale) untuk
 | **Icons** | Lucide React | Icons modern dan konsisten |
 | **Charts** | Recharts | Grafik interaktif |
 | **Notifications** | Sonner | Toast notifications |
-| **Backend/Database** | Supabase | Auth, Database, RLS |
-| **Data Storage** | Supabase (primary) + data.json (local fallback) | Hybrid data layer |
+| **Backend/Database** | Supabase | Auth only (login/logout) |
+| **Data Storage** | data.json (file-based) | Semua data CRUD via file I/O dengan retry mechanism |
 | **Export** | xlsx | Excel/CSV export |
 
 ### 3.2 Struktur Data (AppData - data.json)
@@ -217,7 +220,7 @@ interface AppData {
 | `/login` | Login page | No |
 | `/dashboard` | Dashboard utama | Yes |
 | `/pos` | POS Kasir | Yes |
-| `/inventory` | Manajemen inventory | Yes |
+| `/inventory` | Manajemen inventory (Stok Sentral) | Yes |
 | `/orders` | Manajemen pesanan | Yes |
 | `/pelanggan` | Manajemen pelanggan | Yes |
 | `/supplier` | Manajemen supplier | Yes |
@@ -225,8 +228,8 @@ interface AppData {
 | `/adjust-stok` | Penyesuaian stok | Yes |
 | `/retur` | Retur barang | Yes |
 | `/transfer-rak` | Transfer rak | Yes |
-| `/pengeluaran` | Pengeluaran harian | Yes |
-| `/laporan` | Laporan keuangan | Yes |
+| `/pengeluaran` | Pengeluaran harian (dengan filter bulan) | Yes |
+| `/laporan` | Laporan keuangan + P&L | Yes |
 | `/riwayat-activity` | Audit trail | Yes |
 | `/settings` | Settings & users | Yes |
 
@@ -248,8 +251,7 @@ Viewer    → Read-only (dashboard, inventory, orders, laporan)
 |---|---|
 | **Server Actions** | Try-catch dengan return `{ success: boolean, error?: string }` |
 | **Form Validation** | Client-side + server-side validasi |
-| **File I/O** | Retry 3x dengan delay untuk Windows ENOENT |
-| **API Errors** | Graceful fallback (contoh: Supabase down → local file) |
+| **File I/O** | Retry 3x dengan delay untuk Windows ENOENT (file contention) |
 | **UI Errors** | Toast notifications + inline error banner di modal |
 | **Network Errors** | Catch block di client dengan deskripsi error |
 
@@ -303,10 +305,10 @@ Viewer    → Read-only (dashboard, inventory, orders, laporan)
 - **Admin client:** Service role key untuk bypass RLS (server-only)
 
 ### 5.3 Reliability
-- **Data persistence:** Dual storage (Supabase + local JSON file)
-- **File contention:** Retry mechanism untuk Windows ENOENT
-- **Audit trail:** Semua operasi dicatat (local + Supabase)
-- **Backup:** Auto-backup configurable + manual export
+- **Data persistence:** File-based (data.json) dengan retry mechanism
+- **File contention:** Retry 3x mechanism untuk Windows ENOENT
+- **Audit trail:** Semua operasi dicatat di audit-logs.json
+- **Backup:** Auto-backup configurable + manual export JSON
 
 ### 5.4 Compatibility
 - **Browser:** Chrome, Firefox, Edge (modern)
@@ -328,6 +330,7 @@ Viewer    → Read-only (dashboard, inventory, orders, laporan)
 | RoleBadge | `components/role-badge.tsx` | Badge role user |
 | ExportButton | `components/export-button.tsx` | Export Excel/CSV |
 | InvoiceModal | `components/invoice/invoice-modal.tsx` | Invoice print |
+| ProfitLossSection | `components/profit-loss-section.tsx` | Laporan laba rugi dengan perbandingan Pemasukan vs Pengeluaran |
 
 ### 6.2 UI Components (shadcn/ui)
 - Button, Card, Badge, Input, Label, Select, Switch
@@ -343,7 +346,11 @@ Viewer    → Read-only (dashboard, inventory, orders, laporan)
 - Supabase project (free tier)
 - Environment variables (`.env.local`)
 
-### 7.2 Database Migrations (Supabase)
+### 7.2 Data Architecture
+
+**Current:** Semua data disimpan di `data.json` (file-based). Supabase hanya dipakai untuk autentikasi (login/logout).
+
+**Future:** Migration SQL tersedia di `supabase/migrations/` jika ingin migrasi ke Supabase database:
 ```
 001_initial_schema.sql     → Users & shops
 002_profiles_rls.sql       → RLS policies
@@ -352,6 +359,7 @@ Viewer    → Read-only (dashboard, inventory, orders, laporan)
 005_customers.sql          → Customers + procedures
 006_customers_total_orders.sql → Customer stats
 007_audit_logs.sql         → Audit trail
+008_full_data_tables.sql   → Product categories, racks, orders, returns, expenses
 ```
 
 ### 7.3 Quick Start
@@ -374,11 +382,13 @@ npm run dev                  # Buka http://localhost:3000
 | Laporan keuangan lengkap (Neraca, Arus Kas) | P2 | High |
 | Integrasi payment gateway (Midtrans, Xendit) | P2 | Medium |
 | Barcode label printing | P2 | Low |
+| Filter bulan untuk semua laporan (konsistensi) | P2 | Medium |
 | Stock opname (siklus fisik) | P2 | Medium |
 | Manajemen diskon & promo | P2 | Medium |
 | Dark mode lebih optimal | P3 | Low |
 | Unit testing (Jest + Testing Library) | P3 | Medium |
 | E2E testing (Playwright/Cypress) | P3 | High |
+| Migrasi data ke Supabase database | P2 | Medium |
 
 ---
 

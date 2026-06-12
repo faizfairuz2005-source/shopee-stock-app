@@ -5,26 +5,28 @@
       "name": "Celana Jeans Slim Fit",
       "price": 249000,
       "hpp": 155000,
-      "totalStock": 10,
+      "totalStock": 9,
       "description": "Celana jeans slim fit untuk gaya kasual sehari-hari.",
       "connectedStores": 2,
-      "sales": 24,
+      "sales": 25,
       "lokasiRak": "Rak-A-01",
       "kategori": "Pakaian Bawah",
-      "barcode": "8992809100002"
+      "barcode": "8992809100002",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     },
     {
       "sku": "SKU-005",
       "name": "Tas Ransel Waterproof",
       "price": 285000,
       "hpp": 175000,
-      "totalStock": 15,
+      "totalStock": 7,
       "description": "Tas ransel anti air untuk pekerja harian.",
       "connectedStores": 2,
-      "sales": 15,
+      "sales": 23,
       "lokasiRak": "Rak-A-02",
       "kategori": "Tas & Ransel",
-      "barcode": "8992809100005"
+      "barcode": "8992809100005",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     },
     {
       "sku": "SKU-007",
@@ -37,20 +39,22 @@
       "sales": 19,
       "lokasiRak": "Rak-A-03",
       "kategori": "Pakaian Atas",
-      "barcode": "8992809100007"
+      "barcode": "8992809100007",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     },
     {
       "sku": "SKU-012",
       "name": "Kaos Polos Oversize",
       "price": 79000,
       "hpp": 47000,
-      "totalStock": 30,
+      "totalStock": 27,
       "description": "Kaos oversized dengan potongan relaxed fit yang nyaman.",
       "connectedStores": 2,
-      "sales": 42,
+      "sales": 45,
       "lokasiRak": "Rak-B-01",
       "kategori": "Pakaian Atas",
-      "barcode": "8992809100012"
+      "barcode": "8992809100012",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     },
     {
       "sku": "SKU-018",
@@ -63,20 +67,22 @@
       "sales": 47,
       "lokasiRak": "Rak-B-02",
       "kategori": "Alas Kaki",
-      "barcode": "8992809100018"
+      "barcode": "8992809100018",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     },
     {
       "sku": "SKU-023",
       "name": "Hoodie Basic",
       "price": 189000,
       "hpp": 115000,
-      "totalStock": 31,
+      "totalStock": 26,
       "description": "Hoodie basic nyaman dengan bahan cotton fleece tebal.",
       "connectedStores": 2,
-      "sales": 49,
+      "sales": 54,
       "lokasiRak": "Rak-C-01",
       "kategori": "Pakaian Atas",
-      "barcode": "8992809100023"
+      "barcode": "8992809100023",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     },
     {
       "sku": "SKU-029",
@@ -89,7 +95,8 @@
       "sales": 21,
       "lokasiRak": "Rak-C-02",
       "kategori": "Pakaian Atas",
-      "barcode": "8992809100029"
+      "barcode": "8992809100029",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     },
     {
       "sku": "SKU-035",
@@ -102,7 +109,8 @@
       "sales": 37,
       "lokasiRak": "Rak-D-01",
       "kategori": "Perlengkapan",
-      "barcode": "8992809100035"
+      "barcode": "8992809100035",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     },
     {
       "sku": "SKU-041",
@@ -115,20 +123,22 @@
       "sales": 16,
       "lokasiRak": "Rak-D-02",
       "kategori": "Pakaian Atas",
-      "barcode": "8992809100041"
+      "barcode": "8992809100041",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     },
     {
       "sku": "SKU-048",
       "name": "Dompet Kulit Premium",
       "price": 159000,
       "hpp": 95000,
-      "totalStock": 17,
+      "totalStock": 14,
       "description": "Dompet kulit asli premium dengan banyak kompartemen.",
       "connectedStores": 2,
-      "sales": 31,
+      "sales": 34,
       "lokasiRak": "Rak-E-01",
       "kategori": "Aksesoris",
-      "barcode": "8992809100048"
+      "barcode": "8992809100048",
+      "createdAt": "2026-01-01T00:00:00.000Z"
     }
   ],
   "orders": [
@@ -2774,6 +2784,126 @@
       "subtotal": 570000,
       "ongkir": 0,
       "grand_total": 632700
+    },
+    {
+      "id": 79,
+      "nomor_order": "POS-000079",
+      "tanggal_pesanan": "2026-06-11T05:43:17.253Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-002",
+          "nama_produk": "Celana Jeans Slim Fit",
+          "harga": 249000,
+          "quantity": 1,
+          "subtotal": 249000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "harga": 285000,
+          "quantity": 2,
+          "subtotal": 570000
+        }
+      ],
+      "subtotal": 819000,
+      "ongkir": 0,
+      "grand_total": 909090
+    },
+    {
+      "id": 80,
+      "nomor_order": "POS-000080",
+      "tanggal_pesanan": "2026-06-11T05:46:16.966Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "quantity": 2,
+          "subtotal": 318000
+        }
+      ],
+      "subtotal": 318000,
+      "ongkir": 0,
+      "grand_total": 352980
+    },
+    {
+      "id": 81,
+      "nomor_order": "POS-000081",
+      "tanggal_pesanan": "2026-06-12T07:21:57.772Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "aziz",
+      "alamat_pengiriman": "",
+      "nama_toko": "Online",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "quantity": 3,
+          "subtotal": 237000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-048",
+          "nama_produk": "Dompet Kulit Premium",
+          "harga": 159000,
+          "quantity": 1,
+          "subtotal": 159000
+        }
+      ],
+      "subtotal": 396000,
+      "ongkir": 0,
+      "grand_total": 439560
+    },
+    {
+      "id": 82,
+      "nomor_order": "POS-000082",
+      "tanggal_pesanan": "2026-06-12T07:59:22.464Z",
+      "user_id": "d0980b44-1ced-48ca-a291-4859e504e687",
+      "seller_name": "Fairuz",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-005",
+          "nama_produk": "Tas Ransel Waterproof",
+          "harga": 285000,
+          "quantity": 6,
+          "subtotal": 1710000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-023",
+          "nama_produk": "Hoodie Basic",
+          "harga": 189000,
+          "quantity": 5,
+          "subtotal": 945000
+        }
+      ],
+      "subtotal": 2655000,
+      "ongkir": 0,
+      "grand_total": 2947050
     }
   ],
   "sampleStoreCount": 2,
@@ -2971,6 +3101,26 @@
   ],
   "expenses": [
     {
+      "id": 3,
+      "tanggal": "2026-06-12",
+      "kategori": "Gaji Karyawan",
+      "deskripsi": "gaji",
+      "jumlah": 1000000,
+      "metode": "transfer",
+      "created_at": "2026-06-12T07:58:58.612Z",
+      "user_name": "Fairuz"
+    },
+    {
+      "id": 2,
+      "tanggal": "2026-06-11",
+      "kategori": "Transportasi",
+      "deskripsi": "bensin",
+      "jumlah": 20000,
+      "metode": "tunai",
+      "created_at": "2026-06-11T06:43:00.399Z",
+      "user_name": "Fairuz"
+    },
+    {
       "id": 1,
       "tanggal": "2026-05-18",
       "kategori": "Konsumsi",
@@ -3039,6 +3189,17 @@
       "referensi": "POS-000077",
       "detail": "Poin dari transaksi POS-000077 Ã¢â‚¬â€ belanja Rp 1.162.170",
       "created_at": "2026-05-20T04:18:33.446Z"
+    },
+    {
+      "id": "poin-earn-81-1781248918600",
+      "tanggal": "2026-06-12T07:21:58.600Z",
+      "customer_name": "aziz",
+      "tipe": "earned",
+      "jumlah": 43,
+      "saldo_setelah": 256,
+      "referensi": "POS-000081",
+      "detail": "Poin dari transaksi POS-000081 — belanja Rp 439.560",
+      "created_at": "2026-06-12T07:21:58.600Z"
     }
   ],
   "kits": []

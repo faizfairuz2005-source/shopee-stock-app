@@ -957,7 +957,7 @@ export default function PosPage() {
         {/* Logo */}
         <div className="flex items-center gap-2.5 mr-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/70 shadow-md shadow-primary/20">
-            <Store className="h-4.5 w-4.5 text-primary-foreground" />
+            <Store className="h-5 w-5 text-primary-foreground" />
           </div>
           <div className="hidden sm:block">
             <span className="text-sm font-bold text-foreground tracking-tight">

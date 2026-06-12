@@ -108,6 +108,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 required
+                autoComplete="email"
                 className="border-border/60 bg-background/80 transition-[border-color,box-shadow] duration-200 ease-out focus-visible:border-primary/50 focus-visible:ring-primary/20"
               />
             </div>
@@ -120,6 +121,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 required
+                autoComplete="current-password"
                 className="border-border/60 bg-background/80 transition-[border-color,box-shadow] duration-200 ease-out focus-visible:border-primary/50 focus-visible:ring-primary/20"
               />
             </div>

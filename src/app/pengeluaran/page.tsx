@@ -120,6 +120,40 @@ export default function PengeluaranPage() {
   const [historySearch, setHistorySearch] = useState("");
   const [kategoriFilter, setKategoriFilter] = useState<string | null>(null);
 
+  // ── Month filter state ──────────────────────────────────────────────
+  const now = new Date();
+  const [selectedMonth, setSelectedMonth] = useState(
+    `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`
+  );
+
+  const monthLabel = useMemo(() => {
+    const [y, m] = selectedMonth.split("-");
+    const d = new Date(parseInt(y), parseInt(m) - 1);
+    return d.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+  }, [selectedMonth]);
+
+  const goToPrevMonth = () => {
+    setSelectedMonth((prev) => {
+      const [y, m] = prev.split("-").map(Number);
+      const d = new Date(y, m - 2); // month is 0-indexed, go back 1
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    });
+  };
+
+  const goToNextMonth = () => {
+    setSelectedMonth((prev) => {
+      const [y, m] = prev.split("-").map(Number);
+      const d = new Date(y, m); // month is 0-indexed, go forward 1
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    });
+  };
+
+  const isCurrentMonth = useMemo(() => {
+    const now = new Date();
+    const current = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    return selectedMonth === current;
+  }, [selectedMonth]);
+
   // ── Load data ────────────────────────────────────────────────────────
   useEffect(() => {
     getExpenses().then(setExpenses).finally(() => setIsLoading(false));
@@ -136,21 +170,17 @@ export default function PengeluaranPage() {
   }, [expenses]);
 
   const pengeluaranBulanIni = useMemo(() => {
-    const now = new Date();
-    const prefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-    const monthExpenses = expenses.filter((e) => e.tanggal.startsWith(prefix));
+    const monthExpenses = expenses.filter((e) => e.tanggal.startsWith(selectedMonth));
     return {
       total: monthExpenses.reduce((sum, e) => sum + e.jumlah, 0),
       count: monthExpenses.length,
     };
-  }, [expenses]);
+  }, [expenses, selectedMonth]);
 
   const kategoriTotals = useMemo(() => {
     const map = new Map<string, number>();
-    const now = new Date();
-    const prefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
     expenses
-      .filter((e) => e.tanggal.startsWith(prefix))
+      .filter((e) => e.tanggal.startsWith(selectedMonth))
       .forEach((e) => {
         map.set(e.kategori, (map.get(e.kategori) || 0) + e.jumlah);
       });
@@ -162,6 +192,8 @@ export default function PengeluaranPage() {
   // ── Filtered history ─────────────────────────────────────────────────
   const filteredExpenses = useMemo(() => {
     let result = expenses;
+    // Filter by selected month
+    result = result.filter((e) => e.tanggal.startsWith(selectedMonth));
     const q = historySearch.trim().toLowerCase();
     if (q) {
       result = result.filter(
@@ -175,7 +207,7 @@ export default function PengeluaranPage() {
       result = result.filter((e) => e.kategori === kategoriFilter);
     }
     return result;
-  }, [expenses, historySearch, kategoriFilter]);
+  }, [expenses, selectedMonth, historySearch, kategoriFilter]);
 
   // ── Unique categories from data ──────────────────────────────────────
   const uniqueCategories = useMemo(() => {
@@ -313,20 +345,20 @@ export default function PengeluaranPage() {
                   {pengeluaranBulanIni.count} transaksi
                 </p>
                 <p className="text-[10px] text-muted-foreground mt-0.5">
-                  {new Date().toLocaleDateString("id-ID", { month: "long", year: "numeric" })}
+                  {monthLabel}
                 </p>
               </CardContent>
             </Card>
             {/* Kategori Tertinggi Bulan Ini */}
             <Card className="card-hover border-emerald-200 dark:border-emerald-900/30 md:col-span-2 lg:col-span-2">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Kategori Tertinggi Bulan Ini</CardTitle>
+                <CardTitle className="text-sm font-medium">Kategori Tertinggi</CardTitle>
                 <Filter className="h-4 w-4 text-emerald-500" />
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
                   {kategoriTotals.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">Belum ada pengeluaran bulan ini</p>
+                    <p className="text-sm text-muted-foreground">Belum ada pengeluaran untuk {monthLabel}</p>
                   ) : (
                     kategoriTotals.map(([kat, total]) => (
                       <div key={kat} className="flex items-center justify-between py-0.5">
@@ -613,6 +645,51 @@ export default function PengeluaranPage() {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Month Selector */}
+              <div className="flex items-center justify-between bg-muted/40 rounded-lg px-4 py-2 border border-border/40">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-semibold">{monthLabel}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-lg"
+                    onClick={goToPrevMonth}
+                    title="Bulan sebelumnya"
+                  >
+                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 px-3 text-xs font-medium rounded-lg"
+                    onClick={() => {
+                      const now = new Date();
+                      setSelectedMonth(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`);
+                    }}
+                    disabled={isCurrentMonth}
+                  >
+                    Bulan Ini
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-lg"
+                    onClick={goToNextMonth}
+                    disabled={isCurrentMonth}
+                    title="Bulan berikutnya"
+                  >
+                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M9 18l6-6-6-6" />
+                    </svg>
+                  </Button>
+                </div>
+              </div>
+
               {/* Filters */}
               <div className="flex flex-wrap items-center gap-3">
                 <div className="relative flex-1 max-w-sm">

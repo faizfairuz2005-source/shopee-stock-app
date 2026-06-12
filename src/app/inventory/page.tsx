@@ -55,16 +55,6 @@ function formatRupiah(amount: number) {
 }
 
 
-function formatDate(iso?: string): string {
-  if (!iso) return "—";
-  try {
-    const d = new Date(iso);
-    return d.toLocaleDateString("id-ID", { year: "numeric", month: "short", day: "numeric" });
-  } catch {
-    return iso;
-  }
-}
-
 
 export default function InventoryPage() {
   usePermission();
@@ -351,7 +341,7 @@ export default function InventoryPage() {
       } else {
         toast.error("Gagal menyimpan perubahan");
       }
-    } catch (err) {
+    } catch {
       toast.error("Terjadi kesalahan saat menyimpan");
     } finally {
       setIsBatchEditing(false);
@@ -375,7 +365,7 @@ export default function InventoryPage() {
         // Rollback - reload from server
         getAppData().then((data) => { setProducts(data.inventoryProducts || []); });
       }
-    } catch (err) {
+    } catch {
       toast.error("Terjadi kesalahan saat menghapus");
     } finally {
       setIsBulkDeleting(false);
@@ -540,20 +530,20 @@ export default function InventoryPage() {
           <p className="text-3xl font-bold tracking-tight">{totalStock.toLocaleString("id-ID")}</p>
           <p className="mt-1 text-xs text-muted-foreground">Unit tersedia di semua rak</p>
         </div>
-        <div className={"rounded-xl border p-5 shadow-sm transition-all hover:-translate-y-0.5 " + (lowStockCount > 0 ? 1 : 2)}>
+        <div className={`rounded-xl border p-5 shadow-sm transition-all hover:-translate-y-0.5 ${lowStockCount > 0 ? "border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/20" : "border-border/60 bg-card"}`}>
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Stok Rendah</span>
-            <div className={"flex h-8 w-8 items-center justify-center rounded-lg " + (lowStockCount > 0 ? 1 : 2)}>
+            <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${lowStockCount > 0 ? "bg-amber-100 dark:bg-amber-900/30" : "bg-muted"}`}>
               <TrendingDown className={"h-4 w-4 " + (lowStockCount > 0 ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground")} />
             </div>
           </div>
           <p className={"text-3xl font-bold tracking-tight " + (lowStockCount > 0 ? "text-amber-600 dark:text-amber-400" : "")}>{lowStockCount}</p>
           <p className="mt-1 text-xs text-muted-foreground">Produk perlu restok segera</p>
         </div>
-        <div className={"rounded-xl border p-5 shadow-sm transition-all hover:-translate-y-0.5 " + (outOfStockCount > 0 ? 1 : 2)}>
+        <div className={`rounded-xl border p-5 shadow-sm transition-all hover:-translate-y-0.5 ${outOfStockCount > 0 ? "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/20" : "border-border/60 bg-card"}`}>
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Stok Habis</span>
-            <div className={"flex h-8 w-8 items-center justify-center rounded-lg " + (outOfStockCount > 0 ? 1 : 2)}>
+            <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${outOfStockCount > 0 ? "bg-red-100 dark:bg-red-900/30" : "bg-muted"}`}>
               <AlertCircle className={"h-4 w-4 " + (outOfStockCount > 0 ? "text-red-600 dark:text-red-400" : "text-muted-foreground")} />
             </div>
           </div>
@@ -2231,7 +2221,7 @@ function BatchEditDialog({
                 ))}
               </select>
             </div>
-            <p className="text-xs text-muted-foreground">Pilih kategori baru atau biarkan "Tidak diubah"</p>
+            <p className="text-xs text-muted-foreground">Pilih kategori baru atau biarkan &ldquo;Tidak diubah&rdquo;</p>
           </div>
         </div>
 

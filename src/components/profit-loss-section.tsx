@@ -398,6 +398,81 @@ export default function ProfitLossSection({
         })}
       </div>
 
+      {/* ═══ Pemasukan vs Pengeluaran Comparison ═══ */}
+      <div className="rounded-2xl border-2 border-border/60 bg-gradient-to-br from-primary/5 via-background to-card p-6 shadow-sm">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-md shadow-emerald-500/20">
+            <BarChart3 className="h-5 w-5 text-white" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-foreground">Pemasukan vs Pengeluaran</h3>
+            <p className="text-xs text-muted-foreground">
+              Perbandingan pendapatan dan biaya — {MONTHS_INA[selectedMonth]} {selectedYear}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          {/* Pemasukan */}
+          <div className="rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-50/30 dark:from-emerald-950/20 dark:to-emerald-950/10 border border-emerald-200/60 dark:border-emerald-800/30 p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20">
+                <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <span className="text-sm font-semibold text-foreground">Pemasukan</span>
+            </div>
+            <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+              {formatRupiah(currentPL.revenue)}
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">Total pendapatan penjualan</p>
+          </div>
+
+          {/* Pengeluaran */}
+          <div className="rounded-xl bg-gradient-to-br from-red-50 to-red-50/30 dark:from-red-950/20 dark:to-red-950/10 border border-red-200/60 dark:border-red-800/30 p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500/20">
+                <TrendingDown className="h-4 w-4 text-red-600 dark:text-red-400" />
+              </div>
+              <span className="text-sm font-semibold text-foreground">Pengeluaran</span>
+            </div>
+            <p className="text-2xl font-bold text-red-600 dark:text-red-400 tabular-nums">
+              {formatRupiah(totalDeductions + currentPL.hpp)}
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              HPP + Biaya Operasional + Kerugian Stok + Retur
+            </p>
+          </div>
+
+          {/* Selisih (Laba/Rugi Bersih) */}
+          <div className={`rounded-xl bg-gradient-to-br p-4 ${
+            netProfit >= 0
+              ? "from-primary/5 to-primary/5 border border-primary/20"
+              : "from-red-50 to-red-50/30 dark:from-red-950/20 dark:to-red-950/10 border border-red-200/60 dark:border-red-800/30"
+          }`}>
+            <div className="flex items-center gap-2 mb-2">
+              <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${
+                netProfit >= 0 ? "bg-primary/20" : "bg-red-500/20"
+              }`}>
+                <PiggyBank className={`h-4 w-4 ${
+                  netProfit >= 0 ? "text-primary" : "text-red-600 dark:text-red-400"
+                }`} />
+              </div>
+              <span className="text-sm font-semibold text-foreground">Selisih</span>
+            </div>
+            <p className={`text-2xl font-bold tabular-nums ${
+              netProfit >= 0
+                ? "text-primary"
+                : "text-red-600 dark:text-red-400"
+            }`}>
+              {netProfit >= 0 ? "" : "-"}{formatRupiah(Math.abs(netProfit))}
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {netProfit >= 0 ? "Laba bersih" : "Rugi bersih"}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Breakdown Table + Chart */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Breakdown per Toko */}
