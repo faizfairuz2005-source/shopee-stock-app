@@ -38,7 +38,7 @@ export function ExportButton({
     try {
       // Use setTimeout to let the UI update before the potentially blocking export
       await new Promise((r) => setTimeout(r, 50))
-      exportData(data, columns, filenamePrefix, format)
+      await exportData(data, columns, filenamePrefix, format)
       const ext = format === "xlsx" ? "Excel" : "CSV"
       toast.success(`${filenamePrefix}.${format === "xlsx" ? "xlsx" : "csv"} berhasil di-export`, {
         description: `Format ${ext} — ${data.length} baris data`,
@@ -113,7 +113,7 @@ export function SimpleExportButton({
     setExporting(true)
     try {
       await new Promise((r) => setTimeout(r, 50))
-      exportData(data, columns, filenamePrefix, "xlsx")
+      await exportData(data, columns, filenamePrefix, "xlsx")
     } catch (err) {
       console.error("Export failed:", err)
     } finally {

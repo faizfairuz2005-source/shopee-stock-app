@@ -11,6 +11,7 @@
   "dependencies": {
     "@base-ui/react": "^1.4.0",
     "@radix-ui/react-select": "^2.2.6",
+    "@serwist/next": "^9.5.11",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.103.0",
     "class-variance-authority": "^0.7.1",
@@ -37,6 +38,7 @@
     "@types/xlsx": "^0.0.35",
     "eslint": "^8.57.1",
     "eslint-config-next": "^15.5.15",
+    "serwist": "^9.5.11",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

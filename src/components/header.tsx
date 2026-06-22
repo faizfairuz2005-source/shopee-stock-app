@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import { Bell, Check, ChevronDown, LogOut, Loader2, Menu, PackageOpen, AlertTriangle } from "lucide-react";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,10 +28,11 @@ interface StockAlert {
 interface HeaderProps {
   userEmail: string;
   userName?: string;
+  avatarUrl?: string;
   onMenuClick?: () => void;
 }
 
-export function Header({ userEmail, userName, onMenuClick }: HeaderProps) {
+export function Header({ userEmail, userName, avatarUrl, onMenuClick }: HeaderProps) {
   const role = useContext(DashboardRoleContext);
   const [alerts, setAlerts] = useState<StockAlert[]>([]);
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set());
@@ -189,6 +190,9 @@ export function Header({ userEmail, userName, onMenuClick }: HeaderProps) {
         <DropdownMenu>
           <DropdownMenuTrigger className="group/menu flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-medium transition-[background-color,transform] duration-200 ease-out hover:bg-accent active:scale-[0.98]">
             <Avatar className="h-7 w-7 transition-transform duration-200 ease-out group-hover/menu:scale-105">
+              {avatarUrl ? (
+                <AvatarImage src={avatarUrl} alt={displayName} className="object-cover" />
+              ) : null}
               <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
                 {initials}
               </AvatarFallback>

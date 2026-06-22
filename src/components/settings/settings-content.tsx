@@ -13,12 +13,13 @@ import {
   LogOut,
   MonitorCog,
   Shield,
+  Trash2,
   Upload,
   User,
   Users,
 } from "lucide-react"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -29,7 +30,7 @@ import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { RoleBadge } from "@/components/role-badge"
 import { type Role, hasPermission } from "@/lib/permissions"
-import { updateProfileAction } from "@/app/settings/actions"
+import { updateProfileAction, uploadAvatarAction, deleteAvatarAction } from "@/app/settings/actions"
 import { useLogout } from "@/hooks/use-logout"
 import Link from "next/link"
 
@@ -58,7 +59,7 @@ export function SettingsContent({
   initialPhone: string
   userRole?: Role | null
 }) {
-  const { setDisplayName } = useDashboardProfile()
+  const { setDisplayName, avatarUrl: contextAvatarUrl, setAvatarUrl } = useDashboardProfile()
   const { logout, isLoading } = useLogout()
   const [notifications, setNotifications] = useState<NotificationState>({
     lowStockAlert: true,
@@ -74,7 +75,93 @@ export function SettingsContent({
   const [isPending, startTransition] = useTransition()
   const [toastMessage, setToastMessage] = useState<string | null>(null)
   const [toastType, setToastType] = useState<"success" | "error">("success")
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
   const initials = (fullName.trim() || email).slice(0, 2).toUpperCase()
+  const [avatarUrl, setLocalAvatarUrl] = useState(contextAvatarUrl || "")
+
+  // Sync from localStorage cache if context is empty
+  useEffect(() => {
+    if (!contextAvatarUrl) {
+      try {
+        const saved = localStorage.getItem("user-avatar-url")
+        if (saved) setLocalAvatarUrl(saved)
+      } catch { /* noop */ }
+    }
+  }, [contextAvatarUrl])
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Client-side validation
+    if (!["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type)) {
+      setToastType("error")
+      setToastMessage("Hanya file JPEG, PNG, WebP, atau GIF yang diperbolehkan.")
+      return
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setToastType("error")
+      setToastMessage("Ukuran file maksimal 2MB.")
+      return
+    }
+
+    // Show preview immediately
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      setAvatarPreview(ev.target?.result as string)
+    }
+    reader.readAsDataURL(file)
+
+    // Upload to server
+    setIsUploadingAvatar(true)
+    try {
+      const formData = new FormData()
+      formData.append("avatar", file)
+      const result = await uploadAvatarAction(formData)
+      if (result.success && result.avatarUrl) {
+        setLocalAvatarUrl(result.avatarUrl)
+        setAvatarPreview(null)
+        setAvatarUrl(result.avatarUrl)
+        setToastType("success")
+        setToastMessage("Foto profil berhasil diupload!")
+        try { localStorage.setItem("user-avatar-url", result.avatarUrl) } catch { /* noop */ }
+      } else {
+        setAvatarPreview(null)
+        setToastType("error")
+        setToastMessage(result.error || "Gagal mengupload foto profil")
+      }
+    } catch {
+      setAvatarPreview(null)
+      setToastType("error")
+      setToastMessage("Gagal mengupload foto profil")
+    } finally {
+      setIsUploadingAvatar(false)
+    }
+  }
+
+  const handleDeleteAvatar = async () => {
+    setIsUploadingAvatar(true)
+    try {
+      const result = await deleteAvatarAction()
+      if (result.success) {
+        setLocalAvatarUrl("")
+        setAvatarUrl("")
+        setAvatarPreview(null)
+        setToastType("success")
+        setToastMessage("Foto profil berhasil dihapus")
+        try { localStorage.removeItem("user-avatar-url") } catch { /* noop */ }
+      } else {
+        setToastType("error")
+        setToastMessage(result.error || "Gagal menghapus foto profil")
+      }
+    } catch {
+      setToastType("error")
+      setToastMessage("Gagal menghapus foto profil")
+    } finally {
+      setIsUploadingAvatar(false)
+    }
+  }
 
   useEffect(() => {
     if (!toastMessage) return
@@ -414,14 +501,49 @@ export function SettingsContent({
             </CardHeader>
             <CardContent className="space-y-5">
               <div className="flex items-center gap-4">
-                <Avatar className="h-16 w-16">
-                  <AvatarFallback className="bg-primary/10 text-lg font-semibold text-primary">
-                    {initials}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                  <Avatar className="h-16 w-16 ring-2 ring-primary/10">
+                    {avatarPreview ? (
+                      <AvatarImage src={avatarPreview} alt="Preview" className="object-cover" />
+                    ) : avatarUrl ? (
+                      <AvatarImage src={avatarUrl} alt={fullName} className="object-cover" />
+                    ) : null}
+                    <AvatarFallback className="bg-primary/10 text-lg font-semibold text-primary">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  {isUploadingAvatar && (
+                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40">
+                      <Loader2 className="h-5 w-5 animate-spin text-white" />
+                    </div>
+                  )}
+                </div>
                 <div className="space-y-2">
-                  <Button size="sm" variant="outline">Upload Foto</Button>
-                  <p className="text-xs text-muted-foreground">PNG/JPG maksimal 2MB.</p>
+                  <div className="flex items-center gap-2">
+                    <label className="relative inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-sm font-medium text-foreground hover:bg-muted hover:text-foreground transition-colors">
+                      <Upload className="h-3.5 w-3.5" />
+                      {avatarUrl ? "Ganti Foto" : "Upload Foto"}
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        onChange={handleAvatarUpload}
+                        className="absolute inset-0 cursor-pointer opacity-0"
+                        disabled={isUploadingAvatar}
+                      />
+                    </label>
+                    {avatarUrl && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={handleDeleteAvatar}
+                        disabled={isUploadingAvatar}
+                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">PNG/JPG/WebP maksimal 2MB.</p>
                 </div>
               </div>
 

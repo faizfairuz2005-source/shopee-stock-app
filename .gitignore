@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Serwist (PWA service worker)
+public/sw*
+public/swe-worker*
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -266,6 +266,28 @@ const dataFilePath = path.join(process.cwd(), "data.json");
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 150;
 
+// ─── In-memory cache for server-side getAppData() ───────────────────────
+const CACHE_TTL_MS = 2_000; // 2 seconds — short enough for real-time, long enough to skip redundant reads
+let cacheData: AppData | null = null;
+let cacheTime = 0;
+
+function invalidateCache(): void {
+  cacheData = null;
+  cacheTime = 0;
+}
+
+function getCachedData(): AppData | null {
+  if (cacheData && Date.now() - cacheTime < CACHE_TTL_MS) {
+    return cacheData;
+  }
+  return null;
+}
+
+function setCachedData(data: AppData): void {
+  cacheData = data;
+  cacheTime = Date.now();
+}
+
 /** Busy-wait for a brief delay (used inside synchronous retry loops) */
 function busyWait(ms: number): void {
   const start = Date.now();
@@ -318,8 +340,13 @@ function writeDataFile(data: AppData): void {
 
 // Helper to read data
 export async function getAppData(): Promise<AppData> {
+  // Check in-memory cache first
+  const cached = getCachedData();
+  if (cached) return cached;
+
   try {
     const { parsed: data } = readDataFile();
+    const appData = data as unknown as AppData;
 
     // Ensure orders array exists for backward compatibility
     if (!data.orders) {
@@ -364,7 +391,8 @@ export async function getAppData(): Promise<AppData> {
       }
     }
 
-    return data as unknown as AppData;
+    setCachedData(appData);
+    return appData;
   } catch (error) {
     console.error("Error reading data.json:", error);
     return {
@@ -2119,6 +2147,7 @@ function maybeAutoBackup(): void {
  */
 function writeAppData(data: AppData): void {
   writeDataFile(data);
+  invalidateCache(); // Invalidate cache after any write
   maybeAutoBackup();
 }
 

@@ -13,7 +13,9 @@ export const DashboardRoleContext = createContext<Role | null>(null);
 type DashboardProfileContextValue = {
   displayName: string;
   email: string;
+  avatarUrl: string;
   setDisplayName: (name: string) => void;
+  setAvatarUrl: (url: string) => void;
 };
 
 const DashboardProfileContext = createContext<DashboardProfileContextValue | null>(null);
@@ -41,9 +43,11 @@ export function DashboardShell({
   userEmail,
   userName,
   userRole,
-}: Readonly<{ children: React.ReactNode; userEmail: string; userName?: string; userRole?: Role | null }>) {
+  userAvatarUrl,
+}: Readonly<{ children: React.ReactNode; userEmail: string; userName?: string; userRole?: Role | null; userAvatarUrl?: string }>) {
   const pathname = usePathname();
   const [displayName, setDisplayName] = useState(userName?.trim() || userEmail);
+  const [avatarUrl, setAvatarUrl] = useState(userAvatarUrl || "");
   const [collapsed, setCollapsed] = useState(getInitialCollapsed);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -69,9 +73,11 @@ export function DashboardShell({
     () => ({
       displayName,
       email: userEmail,
+      avatarUrl,
       setDisplayName,
+      setAvatarUrl,
     }),
-    [displayName, userEmail]
+    [displayName, userEmail, avatarUrl]
   );
 
   const mainMargin = collapsed ? "pl-0 lg:pl-16" : "pl-0 lg:pl-64";
@@ -107,6 +113,7 @@ export function DashboardShell({
             <Header
               userEmail={userEmail}
               userName={displayName}
+              avatarUrl={avatarUrl}
               onMenuClick={handleMobileMenuToggle}
             />
             <main className="flex-1">

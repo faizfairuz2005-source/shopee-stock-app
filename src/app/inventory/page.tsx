@@ -108,6 +108,25 @@ export default function InventoryPage() {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // ─── Add Product state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addForm, setAddForm] = useState<Partial<Product>>({
+    sku: "",
+    name: "",
+    barcode: undefined,
+    price: 0,
+    hpp: 0,
+    totalStock: 0,
+    description: "",
+    connectedStores: 1,
+    sales: 0,
+    lokasiRak: undefined,
+    kategori: undefined,
+    minStok: 10,
+    createdAt: new Date().toISOString(),
+  });
+  const [isAdding, setIsAdding] = useState(false);
+
   // ─── Tab state
   const [tab, setTab] = useState<"products" | "kits">("products");
   const [kits, setKits] = useState<ItemKit[]>([]);
@@ -373,6 +392,86 @@ export default function InventoryPage() {
     setShowBulkDelete(false);
   };
 
+  // ─── Handle Add Product
+  const handleAddProduct = () => {
+    // Generate a new SKU based on max existing SKU number
+    const maxSkuNum = products.reduce((max, p) => {
+      const match = p.sku.match(/SKU-(\d+)/);
+      return match ? Math.max(max, parseInt(match[1], 10)) : max;
+    }, 0);
+    const newSku = `SKU-${String(maxSkuNum + 1).padStart(3, "0")}`;
+    setAddForm({
+      sku: newSku,
+      name: "",
+      barcode: undefined,
+      price: 0,
+      hpp: 0,
+      totalStock: 0,
+      description: "",
+      connectedStores: 1,
+      sales: 0,
+      lokasiRak: undefined,
+      kategori: undefined,
+      minStok: 10,
+      createdAt: new Date().toISOString(),
+    });
+    setShowAddModal(true);
+  };
+
+  const handleSaveNewProduct = async () => {
+    if (!addForm?.name?.trim()) {
+      toast.error("Nama produk wajib diisi");
+      return;
+    }
+    if (!addForm?.sku?.trim()) {
+      toast.error("SKU wajib diisi");
+      return;
+    }
+
+    // Check duplicate SKU
+    if (products.some(p => p.sku === addForm.sku)) {
+      toast.error("SKU sudah digunakan");
+      return;
+    }
+
+    setIsAdding(true);
+    try {
+      const newProduct: Product = {
+        sku: addForm.sku.trim(),
+        name: addForm.name.trim(),
+        barcode: addForm.barcode?.trim() || undefined,
+        price: addForm.price || 0,
+        hpp: addForm.hpp || 0,
+        totalStock: addForm.totalStock || 0,
+        description: addForm.description?.trim() || "",
+        connectedStores: addForm.connectedStores || 1,
+        sales: addForm.sales || 0,
+        lokasiRak: addForm.lokasiRak?.trim() || undefined,
+        kategori: addForm.kategori?.trim() || undefined,
+        minStok: addForm.minStok || 10,
+        createdAt: new Date().toISOString(),
+      };
+
+      const updated = [...products, newProduct];
+      setProducts(updated);
+
+      const res = await updateInventory(updated);
+      if (res.success) {
+        toast.success(`Produk "${newProduct.name}" berhasil ditambahkan`);
+        setShowAddModal(false);
+      } else {
+        toast.error(res.error || "Gagal menyimpan produk");
+        // Rollback
+        getAppData().then((data) => { setProducts(data.inventoryProducts || []); });
+      }
+    } catch (err) {
+      console.error("Error adding product:", err);
+      toast.error("Terjadi kesalahan saat menambah produk");
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
   // Clear selected products
   const clearSelection = () => setSelectedSkus(new Set());
 
@@ -436,7 +535,7 @@ export default function InventoryPage() {
                 label="Export"
               />
               <Can permission="inventory.edit" fallback={null}>
-                <Button className="gap-2 shadow-sm">
+                <Button className="gap-2 shadow-sm" onClick={handleAddProduct}>
                   <Plus className="h-4 w-4" />
                   Tambah Produk
                 </Button>
@@ -1755,6 +1854,223 @@ export default function InventoryPage() {
 
        )}</>
         )}
+
+      {/* Add Product Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-lg border border-border bg-card shadow-lg animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-border px-6 py-4">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+                  <Plus className="h-4 w-4 text-primary" />
+                </div>
+                <h2 className="text-lg font-semibold">Tambah Produk</h2>
+              </div>
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="rounded-md p-1 hover:bg-muted transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="space-y-4 px-6 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+              {/* Nama Produk */}
+              <div className="space-y-2">
+                <Label htmlFor="add-product-name" className="text-sm font-medium">
+                  Nama Produk <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="add-product-name"
+                  value={addForm.name || ""}
+                  onChange={(e) => setAddForm({ ...addForm, name: e.target.value })}
+                  placeholder="Masukkan nama produk"
+                  className="border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25"
+                  autoFocus
+                />
+              </div>
+
+              {/* SKU */}
+              <div className="space-y-2">
+                <Label htmlFor="add-product-sku" className="text-sm font-medium">
+                  SKU <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="add-product-sku"
+                  value={addForm.sku || ""}
+                  onChange={(e) => setAddForm({ ...addForm, sku: e.target.value })}
+                  placeholder="Masukkan SKU"
+                  className="border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25 font-mono"
+                />
+                <p className="text-xs text-muted-foreground">SKU akan digenerate otomatis. Bisa diubah manual.</p>
+              </div>
+
+              {/* Barcode */}
+              <div className="space-y-2">
+                <Label htmlFor="add-product-barcode" className="text-sm font-medium">
+                  Barcode
+                </Label>
+                <Input
+                  id="add-product-barcode"
+                  value={addForm.barcode || ""}
+                  onChange={(e) => setAddForm({ ...addForm, barcode: e.target.value || undefined })}
+                  placeholder="Contoh: 8992809100012"
+                  className="border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25 font-mono"
+                />
+              </div>
+
+              {/* Harga */}
+              <div className="space-y-2">
+                <Label htmlFor="add-product-price" className="text-sm font-medium">
+                  Harga Jual
+                </Label>
+                <Input
+                  id="add-product-price"
+                  type="number"
+                  value={addForm.price || 0}
+                  onChange={(e) => setAddForm({ ...addForm, price: Number(e.target.value) })}
+                  placeholder="Masukkan harga jual"
+                  className="border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25"
+                />
+              </div>
+
+              {/* HPP */}
+              <div className="space-y-2">
+                <Label htmlFor="add-product-hpp" className="text-sm font-medium">
+                  HPP (Harga Pokok)
+                </Label>
+                <Input
+                  id="add-product-hpp"
+                  type="number"
+                  value={addForm.hpp || 0}
+                  onChange={(e) => setAddForm({ ...addForm, hpp: Number(e.target.value) })}
+                  placeholder="Masukkan HPP"
+                  className="border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25"
+                />
+              </div>
+
+              {/* Stok Total */}
+              <div className="space-y-2">
+                <Label htmlFor="add-product-stock" className="text-sm font-medium">
+                  Stok Awal
+                </Label>
+                <Input
+                  id="add-product-stock"
+                  type="number"
+                  value={addForm.totalStock || 0}
+                  onChange={(e) => setAddForm({ ...addForm, totalStock: Number(e.target.value) })}
+                  placeholder="Masukkan stok awal"
+                  className="border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25"
+                />
+              </div>
+
+              {/* Min Stok */}
+              <div className="space-y-2">
+                <Label htmlFor="add-product-minstock" className="text-sm font-medium">
+                  Min. Stok Peringatan
+                </Label>
+                <Input
+                  id="add-product-minstock"
+                  type="number"
+                  value={addForm.minStok || 10}
+                  onChange={(e) => setAddForm({ ...addForm, minStok: Number(e.target.value) })}
+                  placeholder="Minimal stok"
+                  className="border-border/60 focus-visible:border-primary/70 focus-visible:ring-primary/25"
+                />
+                <p className="text-xs text-muted-foreground">Stok di bawah nilai ini akan ditandai sebagai &quot;Stok Rendah&quot;. Default: 10</p>
+              </div>
+
+              {/* Kategori */}
+              <div className="space-y-2">
+                <Label htmlFor="add-product-kategori" className="text-sm font-medium">
+                  Kategori
+                </Label>
+                <div className="relative">
+                  <Palette className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <select
+                    id="add-product-kategori"
+                    value={addForm.kategori || ""}
+                    onChange={(e) => setAddForm({ ...addForm, kategori: e.target.value || undefined })}
+                    className="flex h-10 w-full rounded-md border border-border/60 bg-background pl-9 pr-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-1 focus-visible:ring-primary/25 appearance-none"
+                  >
+                    <option value="">— Pilih Kategori —</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.name}>{cat.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Lokasi Rak */}
+              <div className="space-y-2">
+                <Label htmlFor="add-product-rak" className="text-sm font-medium">
+                  Lokasi Rak
+                </Label>
+                <div className="relative">
+                  <Warehouse className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    id="add-product-rak"
+                    list="add-rak-suggestions"
+                    value={addForm.lokasiRak || ""}
+                    onChange={(e) => setAddForm({ ...addForm, lokasiRak: e.target.value })}
+                    placeholder="Contoh: Rak-A-01"
+                    className="flex h-10 w-full rounded-md border border-border/60 bg-background pl-9 pr-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-1 focus-visible:ring-primary/25"
+                  />
+                  <datalist id="add-rak-suggestions">
+                    {uniqueRakLocations.map((rak) => (
+                      <option key={rak} value={rak} />
+                    ))}
+                  </datalist>
+                </div>
+              </div>
+
+              {/* Deskripsi */}
+              <div className="space-y-2">
+                <Label htmlFor="add-product-description" className="text-sm font-medium">
+                  Deskripsi
+                </Label>
+                <textarea
+                  id="add-product-description"
+                  value={addForm.description || ""}
+                  onChange={(e) => setAddForm({ ...addForm, description: e.target.value })}
+                  placeholder="Masukkan deskripsi produk"
+                  rows={3}
+                  className="flex min-h-[80px] w-full rounded-md border border-border/60 bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-primary/70 focus-visible:ring-1 focus-visible:ring-primary/25"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 border-t border-border px-6 py-4">
+              <Button
+                variant="outline"
+                onClick={() => setShowAddModal(false)}
+                className="flex-1"
+                disabled={isAdding}
+              >
+                Batal
+              </Button>
+              <Button
+                onClick={handleSaveNewProduct}
+                className="flex-1 bg-primary hover:bg-primary/90 gap-2"
+                disabled={isAdding}
+              >
+                {isAdding ? (
+                  <>
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    Menyimpan...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4" />
+                    Tambah Produk
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
         {tab === "kits" && (
           <>
       {/* Kits Grid */}

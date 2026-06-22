@@ -1,4 +1,17 @@
+import { spawnSync } from "node:child_process";
+import withSerwistInit from "@serwist/next";
 import type { NextConfig } from "next";
+
+const revision = spawnSync("git", ["rev-parse", "HEAD"], {
+  encoding: "utf-8",
+}).stdout?.trim() ?? crypto.randomUUID();
+
+const withSerwist = withSerwistInit({
+  swSrc: "src/app/sw.ts",
+  swDest: "public/sw.js",
+  additionalPrecacheEntries: [{ url: "/login", revision }],
+  reloadOnOnline: true,
+});
 
 const nextConfig: NextConfig = {
   // Security: Disable X-Powered-By header
@@ -23,4 +36,4 @@ const nextConfig: NextConfig = {
   compress: true,
 };
 
-export default nextConfig;
+export default withSerwist(nextConfig);

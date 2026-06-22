@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="80" fill="url(#bg)"/>
+  <g transform="translate(256,256)">
+    <!-- Box icon -->
+    <rect x="-100" y="-75" width="200" height="140" rx="14" fill="none" stroke="white" stroke-width="10"/>
+    <path d="M-100,-50 L200,-50" transform="translate(-100,0)" stroke="white" stroke-width="10" opacity="0.6"/>
+    <path d="M0,-75 L0,65" stroke="white" stroke-width="8" opacity="0.8"/>
+    <!-- Checkmark -->
+    <path d="M-20,12 L-5,30 L45,-20" fill="none" stroke="#22c55e" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
