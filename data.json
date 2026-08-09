@@ -47,10 +47,10 @@
       "name": "Kaos Polos Oversize",
       "price": 79000,
       "hpp": 47000,
-      "totalStock": 23,
+      "totalStock": 20,
       "description": "Kaos oversized dengan potongan relaxed fit yang nyaman.",
       "connectedStores": 2,
-      "sales": 49,
+      "sales": 52,
       "lokasiRak": "Rak-B-01",
       "kategori": "Pakaian Atas",
       "barcode": "8992809100012",
@@ -61,10 +61,10 @@
       "name": "Sepatu Sneakers Hitam",
       "price": 349000,
       "hpp": 210000,
-      "totalStock": 18,
+      "totalStock": 16,
       "description": "Sepatu sneakers hitamÃ¦â€”Â¶Ã¥Â°Å¡ untuk gaya sehari-hari yang sporty.",
       "connectedStores": 1,
-      "sales": 49,
+      "sales": 51,
       "lokasiRak": "Rak-B-02",
       "kategori": "Alas Kaki",
       "barcode": "8992809100018",
@@ -2960,6 +2960,38 @@
       "subtotal": 567000,
       "ongkir": 0,
       "grand_total": 629370
+    },
+    {
+      "id": 85,
+      "nomor_order": "POS-000085",
+      "tanggal_pesanan": "2026-07-08T17:18:52.778Z",
+      "user_id": "3a4efdc2-b0b6-4399-b7f5-33da20ef1d6d",
+      "seller_name": "Kasir Toko",
+      "nama_pembeli": "Umum",
+      "alamat_pengiriman": "",
+      "nama_toko": "POS Direct",
+      "status_pesanan": "selesai",
+      "items": [
+        {
+          "id": 1,
+          "sku": "SKU-012",
+          "nama_produk": "Kaos Polos Oversize",
+          "harga": 79000,
+          "quantity": 3,
+          "subtotal": 237000
+        },
+        {
+          "id": 2,
+          "sku": "SKU-018",
+          "nama_produk": "Sepatu Sneakers Hitam",
+          "harga": 349000,
+          "quantity": 2,
+          "subtotal": 698000
+        }
+      ],
+      "subtotal": 935000,
+      "ongkir": 0,
+      "grand_total": 1037850
     }
   ],
   "sampleStoreCount": 2,
